@@ -1,6 +1,6 @@
 ---
 title: jaylenchan
-titleTemplate: home
+titleTemplate: 首页
 
 layout: home
 
