@@ -10,20 +10,15 @@ const { page, theme, frontmatter } = useData()
 </script>
 
 <template>
-  <ClientOnly>
-    <Layout>
-      <template #doc-footer-before>
-        <Copyright
-          v-if="(frontmatter?.aside ?? true) && (frontmatter?.showArticleMetadata ?? true) && !(frontmatter.authorLink)"
-          :key="md5(page.relativePath)"
-        />
-      </template>
-      <template #doc-after>
-        <Comment
-          v-if="(theme.commentConfig?.showComment ?? true) && (frontmatter?.showComment ?? true)"
-          :key="md5(page.relativePath)" :comment-config="theme.commentConfig"
-        />
-      </template>
-    </Layout>
-  </ClientOnly>
+  <Layout>
+    <template #doc-footer-before>
+      <Copyright
+        v-if="(frontmatter?.aside ?? true) && (frontmatter?.showArticleMetadata ?? true) && !(frontmatter.authorLink)"
+        :key="md5(page.relativePath)" />
+    </template>
+    <template #doc-after>
+      <Comment v-if="(theme.commentConfig?.showComment ?? true) && (frontmatter?.showComment ?? true)"
+        :key="md5(page.relativePath)" :comment-config="theme.commentConfig" />
+    </template>
+  </Layout>
 </template>
