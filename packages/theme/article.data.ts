@@ -1,5 +1,5 @@
 import fs from 'node:fs'
-import {resolve}from 'node:path'
+import { resolve } from 'node:path'
 import path from 'node:path'
 import parseFrontmatter from 'gray-matter'
 
@@ -22,14 +22,15 @@ export default {
         return !!data.publish
       })
       .map((articleFile: string) => {
-      const articleContent = fs.readFileSync(articleFile, 'utf-8')
-      const { data } = parseFrontmatter(articleContent)
+        const articleContent = fs.readFileSync(articleFile, 'utf-8')
+        const { data } = parseFrontmatter(articleContent)
+        const path = articleFile.split('/docs/src')[1].replace(/\.md$/, '')
 
-      return {
-        ...data,
-        path: articleFile.substring(articleFile.lastIndexOf('/docs/') + 6).replace(/\.md$/, ''),
-      }
-    })
+        return {
+          ...data,
+          path
+        }
+      })
 
     return articles
   },
