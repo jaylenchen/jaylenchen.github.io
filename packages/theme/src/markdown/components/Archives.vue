@@ -19,7 +19,7 @@ import DogSvg from '../../assets/svgs/chinese-zodiac/dog.svg';
 import PigSvg from '../../assets/svgs/chinese-zodiac/pig.svg';
 
 // @ts-ignore
-import { data as articleData } from '../../../article.data'
+import { data as articleData } from '../../../../../config/article.data'
 import { goToArchivesPage } from '../../utils/route';
 import { getQueryParam, getChineseZodiac } from '../../utils/utils';
 

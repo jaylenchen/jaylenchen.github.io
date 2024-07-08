@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import md5 from 'blueimp-md5';
 import { getQueryParam } from '../../utils/utils';
 // @ts-ignore
-import { data as articleData } from '../../../article.data'
+import { data as articleData } from '../../../../../config/article.data'
 import { Row, Col, Tag, Card, List, ListItem } from 'ant-design-vue'
 import ArticleMetadata from '../../global/components/ArticleMetadata.vue'
 

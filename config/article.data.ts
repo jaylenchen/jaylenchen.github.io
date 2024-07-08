@@ -6,7 +6,7 @@ import parseFrontmatter from 'gray-matter'
 const excludedFiles = ['index.md', 'tags.md', 'archives.md']
 
 export default {
-  watch: [resolve(__dirname, '../docs/src/**/*.md')],
+  watch: [resolve(__dirname, '../packages/docs/src/**/*.md')],
   load(watchedFiles: any[]) {
     // 解析文章 Frontmatter
     const articles = watchedFiles

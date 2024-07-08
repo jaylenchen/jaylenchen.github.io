@@ -23,3 +23,4 @@ cache/
 .vite_opt_cache
 
 **/.vitepress/cache
+*.mjs
