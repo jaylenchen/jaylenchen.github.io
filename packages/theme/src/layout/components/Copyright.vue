@@ -43,7 +43,7 @@ const licenseText = ref(theme.value.customConfig.copyrightConfig?.license)
           <path d="M349.053 488.452L601.907 670.56l-28.725 39.887L320.307 528.34z" fill="#FFF" />
         </svg>
         <span>版权：</span>
-        <span><a :href="licenseLink" target="_blank">{{ licenseText }}</a> 许可协议授权</span>
+        <span><a :href="licenseLink" target="_self">{{ licenseText }}</a> 许可协议授权</span>
       </div>
     </div>
   </div>

@@ -77,15 +77,15 @@ if (tag && tag.trim() != '') {
             共 {{ tags[selectTag].length }} 篇文章
           </template>
           <ListItem v-for="(article) in tags[selectTag]" :key="article.path">
-              <div class="result-item">
-                <h3 class="result-item-title">
-                  <ArticleSvg class="title"></ArticleSvg>
-                  <a :href="article.path" class="title" target="_blank">{{ article.title }}</a>
-                </h3>
-                <!-- 文章元数据信息 -->
-                <ArticleMetadata :article="article" :key="md5(article.date)" />
-              </div>
-            </ListItem>
+            <div class="result-item">
+              <h3 class="result-item-title">
+                <ArticleSvg class="title"></ArticleSvg>
+                <a :href="article.path" class="title" target="_self">{{ article.title }}</a>
+              </h3>
+              <!-- 文章元数据信息 -->
+              <ArticleMetadata :article="article" :key="md5(article.date)" />
+            </div>
+          </ListItem>
         </List>
         <Card :style="{ width: '100%' }" class="no-result" v-if="!selectTag">
           <EmptySvg></EmptySvg>

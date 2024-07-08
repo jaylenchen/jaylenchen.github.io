@@ -173,7 +173,7 @@ watch([year], () => {
           <div class="articles">
             <span v-for="article in articles" class="article">
               <ArticleSvg></ArticleSvg>
-              <a :href="article.path" class="title" target="_blank">{{ article.title }}</a>
+              <a :href="article.path" class="title" target="_self">{{ article.title }}</a>
               <ArticleMetadata :article="article" />
             </span>
           </div>
