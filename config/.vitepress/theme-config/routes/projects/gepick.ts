@@ -1,15 +1,15 @@
 import { DefaultTheme } from 'vitepress';
 
-export const gepick = (subPath: string) => '/projects/gepick' + subPath
+const gepick = (subPath: string) => '/projects/gepick' + subPath
 
-export const manage = (subPath: string) => gepick('/manage/' + subPath)
-export const editor = (subPath: string) => gepick('/editor/' + subPath)
-export const server = (subPath: string) => gepick('/server/' + subPath)
-export const explore = (subPath: string) => gepick('/explore/' + subPath)
+const manage = (subPath: string) => gepick('/manage/' + subPath)
+// const editor = (subPath: string) => gepick('/editor/' + subPath)
+// const server = (subPath: string) => gepick('/server/' + subPath)
+// const explore = (subPath: string) => gepick('/explore/' + subPath)
 
-export const gepickNav = { text: 'gepick', link: manage('聊聊插件化系统设计') }
+const nav = { text: 'gepick', link: manage('聊聊插件化系统设计') }
 
-export const gepickSidebar: DefaultTheme.Config['sidebar'] = {
+const sidebar: DefaultTheme.Config['sidebar'] = {
   [gepick('/')]: [
     {
       text: '项目组织',
@@ -52,4 +52,9 @@ export const gepickSidebar: DefaultTheme.Config['sidebar'] = {
     //   collapsed: true
     // },
   ]
+}
+
+export default {
+  nav,
+  sidebar
 }

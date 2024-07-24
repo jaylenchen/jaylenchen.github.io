@@ -1,25 +1,17 @@
 import type { DefaultTheme } from 'vitepress';
-import { gepickNav, gepickSidebar } from './gepick'
+import common from './common/common-route'
+import projects from './projects/projects-route'
+import tag from './tag/tag-route'
+import archives from './archives/archives-route'
 
 export const nav: DefaultTheme.Config['nav'] = [
-  {
-    text: '项目',
-    items: [
-      gepickNav
-    ],
-  },
-  {
-    text: '标签',
-    link: '/tags',
-    activeMatch: '/tags'
-  },
-  {
-    text: '归档',
-    link: '/archives',
-    activeMatch: '/archives'
-  },
+  common.nav,
+  projects.nav,
+  tag.nav,
+  archives.nav
 ];
 
 export const sidebar: DefaultTheme.Config['sidebar'] = {
-  ...gepickSidebar
+  ...common.sidebar,
+  ...projects.sidebar
 }
