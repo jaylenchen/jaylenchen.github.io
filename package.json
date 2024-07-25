@@ -1,19 +1,15 @@
 {
-  "name": "@jaylenchan/blog",
+  "name": "blog",
   "type": "module",
   "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "packages/*",
-    "config"
-  ],
   "packageManager": "pnpm@9.4.0+sha1.9217c800d4ab947a7aee520242a7b70d64fc7638",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jaylenchan/jaylenchan.github.io.git"
   },
   "scripts": {
-    "dev:docs": "pnpm --filter @jaylenchan/config dev",
+    "dev:docs": "pnpm --filter @blog/config dev",
     "prepare": "husky"
   },
   "dependencies": {

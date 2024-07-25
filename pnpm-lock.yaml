@@ -13,10 +13,10 @@ importers:
         version: 2.4.31
       '@jaylenchan/docs':
         specifier: workspace:*
-        version: link:packages/docs
+        version: link:docs
       '@jaylenchan/theme':
         specifier: workspace:*
-        version: link:packages/theme
+        version: link:theme
       blueimp-md5:
         specifier: ^2.19.0
         version: 2.19.0
@@ -90,9 +90,9 @@ importers:
 
   config: {}
 
-  packages/docs: {}
+  docs: {}
 
-  packages/theme: {}
+  theme: {}
 
 packages:
 

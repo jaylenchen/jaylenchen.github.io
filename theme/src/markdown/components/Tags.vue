@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import md5 from 'blueimp-md5';
-import { getQueryParam } from '../../utils/utils';
-// @ts-ignore
-import { data as articleData } from '../../../../../config/article.data'
 import { Row, Col, Tag, Card, List, ListItem } from 'ant-design-vue'
-import ArticleMetadata from '../../global/components/ArticleMetadata.vue'
 
-import ArticleSvg from '../../assets/svgs/article.svg';
-import EmptySvg from '../../assets/svgs/empty.svg';
+import { getQueryParam } from '@blog/theme/utils/utils';
+import ArticleMetadata from '@blog/theme/global/components/ArticleMetadata.vue'
+import ArticleSvg from '@blog/theme/assets/svgs/article.svg';
+import EmptySvg from '@blog/theme/assets/svgs/empty.svg';
+
+// @ts-ignore
+import { data as articleData } from '../../../../config/article.data'
 
 
 const tags = computed(() => initTags(articleData));

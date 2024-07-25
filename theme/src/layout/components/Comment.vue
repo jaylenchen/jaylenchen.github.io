@@ -6,7 +6,8 @@ import $ from 'jquery';
 import { message } from 'ant-design-vue';
 import "ant-design-vue/es/message/style/index.js"
 import Gitalk from 'gitalk';
-import '../styles/gitalk.css';
+
+import '@blog/theme/layout/styles/gitalk.css';
 
 // 定义属性
 const props = defineProps({

@@ -4,11 +4,10 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
-import TimeSvg from '../../assets/svgs/time.svg'
-import ProjectSvg from '../../assets/svgs/project.svg'
-import TagSvg from '../../assets/svgs/tag.svg'
-
-import { goToArchivesPage } from '../../utils/route';
+import TimeSvg from '@blog/theme/assets/svgs/time.svg'
+import ProjectSvg from '@blog/theme/assets/svgs/project.svg'
+import TagSvg from '@blog/theme/assets/svgs/tag.svg'
+import { goToArchivesPage } from '@blog/theme/utils/route';
 
 
 interface Props {

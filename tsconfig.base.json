@@ -11,11 +11,9 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "paths": {
-      "@jaylenchan/config/*": [
-        "./config/*"
-      ],
-      "@jaylenchan/docs/*": ["./packages/docs/src/*"],
-      "@jaylenchan/theme/*": ["./packages/theme/src/*"]
+      "@blog/config/*": ["./config/*"],
+      "@blog/docs/*": ["./docs/src/*"],
+      "@blog/theme/*": ["./theme/src/*"]
     },
     "resolveJsonModule": true,
     "allowArbitraryExtensions": true,

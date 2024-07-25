@@ -1,7 +1,0 @@
-{
-  "extends": "../../tsconfig.base.json",
-  "include": [
-    "src",
-    "../docs/article.data.ts"
-  ]
-}
