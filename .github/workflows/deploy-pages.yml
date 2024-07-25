@@ -1,8 +1,6 @@
 name: deploy-blog-to-github-pages
 
 on:
-  # 在针对 `main` 分支的推送上运行。如果你
-  # 使用 `master` 分支作为默认分支，请将其更改为 `master`
   push:
     branches: [main]
 
@@ -22,7 +20,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # 构建工作
   build:
     runs-on: ubuntu-latest
     steps:
@@ -47,14 +44,13 @@ jobs:
         run: pnpm i
 
       - name: Build with VitePress
-        run: pnpm --filter @jaylenchan/config build
+        run: pnpm build:docs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./config/.vitepress/dist
 
-  # 部署工作
   deploy:
     environment:
       name: github-pages

@@ -10,12 +10,14 @@
   },
   "scripts": {
     "dev:docs": "pnpm --filter @blog/config dev",
+    "build:docs": "pnpm --filter @blog/config build",
+    "preview:docs": "pnpm --filter @blog/config preview",
     "prepare": "husky"
   },
   "dependencies": {
     "@antv/g2plot": "^2.4.31",
-    "@jaylenchan/docs": "workspace:*",
-    "@jaylenchan/theme": "workspace:*",
+    "@blog/docs": "workspace:*",
+    "@blog/theme": "workspace:*",
     "blueimp-md5": "^2.19.0",
     "dayjs": "^1.11.11",
     "gitalk": "^1.8.0",

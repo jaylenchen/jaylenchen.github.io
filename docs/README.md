@@ -1,4 +1,4 @@
-# @jaylenchan/docs
+# @blog/docs
 
 markdown文章存放
 

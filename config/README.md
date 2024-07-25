@@ -1,1 +1,1 @@
-# @jaylenchan/config
+# @blog/config
