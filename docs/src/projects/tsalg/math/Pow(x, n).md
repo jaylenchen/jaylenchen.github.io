@@ -1,5 +1,5 @@
 ---
-publish: true
+publish: false
 date: 2024/07/24 22:30
 title: Pow(x, n)
 project: tsalg

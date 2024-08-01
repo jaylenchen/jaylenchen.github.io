@@ -7,7 +7,7 @@ showComment: false
 ---
 
 <script lang="ts" setup>
-import Archives from '@blog/theme/markdown/components/Archives.vue'
+import Archives from '@blog/theme/pages/Archives.vue'
 </script>
 
 <ClientOnly>

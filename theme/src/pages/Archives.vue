@@ -21,7 +21,7 @@ import PigSvg from '@blog/theme/assets/svgs/chinese-zodiac/pig.svg';
 import { goToArchivesPage } from '@blog/theme/utils/route';
 import { getQueryParam, getChineseZodiac } from '@blog/theme/utils/utils';
 // @ts-ignore
-import { data as articleData } from '../../../../config/article.data'
+import { data as articleData } from '../../../config/article.data'
 
 
 enum ArchiveType {

@@ -1,7 +1,7 @@
 import thinkto from './thinkto'
 import openwizard from './openwizard'
 import gepick from './gepick'
-import tsalg from './tsalg'
+// import tsalg from './tsalg'
 
 
 export const nav = {
@@ -10,7 +10,7 @@ export const nav = {
     gepick.nav,
     openwizard.nav,
     thinkto.nav,
-    tsalg.nav
+    // tsalg.nav
   ],
 }
 
@@ -18,7 +18,7 @@ export const sidebar = {
   ...gepick.sidebar,
   ...openwizard.sidebar,
   ...thinkto.sidebar,
-  ...tsalg.sidebar
+  // ...tsalg.sidebar
 }
 
 export default {

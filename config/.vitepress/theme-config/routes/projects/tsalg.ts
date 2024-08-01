@@ -18,40 +18,40 @@ enum LcArray {
 const array = (subPath: string) => tsalg('/array/' + subPath)
 const arraySidebar = {
   text: '数组',
-  items: [
-    {
-      text: LcArray.next_permutation,
-      link: array(LcArray.next_permutation)
-    },
-    {
-      text: LcArray.rotate_image,
-      link: array(LcArray.rotate_image)
-    },
-    {
-      text: LcArray.spiral_matrix,
-      link: array(LcArray.spiral_matrix)
-    },
-    {
-      text: LcArray.set_matrix_zeroes,
-      link: array(LcArray.set_matrix_zeroes)
-    },
-    {
-      text: LcArray.rotate_array,
-      link: array(LcArray.rotate_array)
-    },
-    {
-      text: LcArray.maximal_square,
-      link: array(LcArray.maximal_square)
-    },
-    {
-      text: LcArray.game_of_life,
-      link: array(LcArray.game_of_life)
-    },
-    {
-      text: LcArray.sort_an_array,
-      link: array(LcArray.sort_an_array)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcArray.next_permutation,
+  //     link: array(LcArray.next_permutation)
+  //   },
+  //   {
+  //     text: LcArray.rotate_image,
+  //     link: array(LcArray.rotate_image)
+  //   },
+  //   {
+  //     text: LcArray.spiral_matrix,
+  //     link: array(LcArray.spiral_matrix)
+  //   },
+  //   {
+  //     text: LcArray.set_matrix_zeroes,
+  //     link: array(LcArray.set_matrix_zeroes)
+  //   },
+  //   {
+  //     text: LcArray.rotate_array,
+  //     link: array(LcArray.rotate_array)
+  //   },
+  //   {
+  //     text: LcArray.maximal_square,
+  //     link: array(LcArray.maximal_square)
+  //   },
+  //   {
+  //     text: LcArray.game_of_life,
+  //     link: array(LcArray.game_of_life)
+  //   },
+  //   {
+  //     text: LcArray.sort_an_array,
+  //     link: array(LcArray.sort_an_array)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -78,76 +78,76 @@ enum LcLinkedList {
 const linkedList = (subPath: string) => tsalg('/linked-list/' + subPath)
 const linkedListSidebar = {
   text: '链表',
-  items: [
-    {
-      text: LcLinkedList.copy_list_with_random_pointer,
-      link: linkedList(LcLinkedList.copy_list_with_random_pointer)
-    },
-    {
-      text: LcLinkedList.delete_node_in_a_linked_list,
-      link: linkedList(LcLinkedList.delete_node_in_a_linked_list)
-    },
-    {
-      text: LcLinkedList.linked_list_cycle,
-      link: linkedList(LcLinkedList.linked_list_cycle)
-    },
-    {
-      text: LcLinkedList.linked_list_cycle_ii,
-      link: linkedList(LcLinkedList.linked_list_cycle_ii)
-    },
-    {
-      text: LcLinkedList.merge_two_sorted_lists,
-      link: linkedList(LcLinkedList.merge_two_sorted_lists)
-    },
-    {
-      text: LcLinkedList.middle_of_the_linked_list,
-      link: linkedList(LcLinkedList.middle_of_the_linked_list)
-    },
-    {
-      text: LcLinkedList.odd_even_linked_list,
-      link: linkedList(LcLinkedList.odd_even_linked_list)
-    },
-    {
-      text: LcLinkedList.partition_list,
-      link: linkedList(LcLinkedList.partition_list)
-    },
-    {
-      text: LcLinkedList.remove_duplicates_from_sorted_list,
-      link: linkedList(LcLinkedList.remove_duplicates_from_sorted_list)
-    },
-    {
-      text: LcLinkedList.remove_duplicates_from_sorted_list_ii,
-      link: linkedList(LcLinkedList.remove_duplicates_from_sorted_list_ii)
-    },
-    {
-      text: LcLinkedList.reorder_list,
-      link: linkedList(LcLinkedList.reorder_list)
-    },
-    {
-      text: LcLinkedList.reverse_linked_list,
-      link: linkedList(LcLinkedList.reverse_linked_list)
-    },
-    {
-      text: LcLinkedList.reverse_linked_list_ii,
-      link: linkedList(LcLinkedList.reverse_linked_list_ii)
-    },
-    {
-      text: LcLinkedList.reverse_nodes_in_k_group,
-      link: linkedList(LcLinkedList.reverse_nodes_in_k_group)
-    },
-    {
-      text: LcLinkedList.rotate_list,
-      link: linkedList(LcLinkedList.rotate_list)
-    },
-    {
-      text: LcLinkedList.sort_list,
-      link: linkedList(LcLinkedList.sort_list)
-    },
-    {
-      text: LcLinkedList.swap_nodes_in_pairs,
-      link: linkedList(LcLinkedList.swap_nodes_in_pairs)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcLinkedList.copy_list_with_random_pointer,
+  //     link: linkedList(LcLinkedList.copy_list_with_random_pointer)
+  //   },
+  //   {
+  //     text: LcLinkedList.delete_node_in_a_linked_list,
+  //     link: linkedList(LcLinkedList.delete_node_in_a_linked_list)
+  //   },
+  //   {
+  //     text: LcLinkedList.linked_list_cycle,
+  //     link: linkedList(LcLinkedList.linked_list_cycle)
+  //   },
+  //   {
+  //     text: LcLinkedList.linked_list_cycle_ii,
+  //     link: linkedList(LcLinkedList.linked_list_cycle_ii)
+  //   },
+  //   {
+  //     text: LcLinkedList.merge_two_sorted_lists,
+  //     link: linkedList(LcLinkedList.merge_two_sorted_lists)
+  //   },
+  //   {
+  //     text: LcLinkedList.middle_of_the_linked_list,
+  //     link: linkedList(LcLinkedList.middle_of_the_linked_list)
+  //   },
+  //   {
+  //     text: LcLinkedList.odd_even_linked_list,
+  //     link: linkedList(LcLinkedList.odd_even_linked_list)
+  //   },
+  //   {
+  //     text: LcLinkedList.partition_list,
+  //     link: linkedList(LcLinkedList.partition_list)
+  //   },
+  //   {
+  //     text: LcLinkedList.remove_duplicates_from_sorted_list,
+  //     link: linkedList(LcLinkedList.remove_duplicates_from_sorted_list)
+  //   },
+  //   {
+  //     text: LcLinkedList.remove_duplicates_from_sorted_list_ii,
+  //     link: linkedList(LcLinkedList.remove_duplicates_from_sorted_list_ii)
+  //   },
+  //   {
+  //     text: LcLinkedList.reorder_list,
+  //     link: linkedList(LcLinkedList.reorder_list)
+  //   },
+  //   {
+  //     text: LcLinkedList.reverse_linked_list,
+  //     link: linkedList(LcLinkedList.reverse_linked_list)
+  //   },
+  //   {
+  //     text: LcLinkedList.reverse_linked_list_ii,
+  //     link: linkedList(LcLinkedList.reverse_linked_list_ii)
+  //   },
+  //   {
+  //     text: LcLinkedList.reverse_nodes_in_k_group,
+  //     link: linkedList(LcLinkedList.reverse_nodes_in_k_group)
+  //   },
+  //   {
+  //     text: LcLinkedList.rotate_list,
+  //     link: linkedList(LcLinkedList.rotate_list)
+  //   },
+  //   {
+  //     text: LcLinkedList.sort_list,
+  //     link: linkedList(LcLinkedList.sort_list)
+  //   },
+  //   {
+  //     text: LcLinkedList.swap_nodes_in_pairs,
+  //     link: linkedList(LcLinkedList.swap_nodes_in_pairs)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -164,36 +164,36 @@ enum LcStack {
 const stack = (subPath: string) => tsalg('/stack/' + subPath)
 const stackSidebar = {
   text: '栈',
-  items: [
-    {
-      text: LcStack.basic_calculator_ii,
-      link: stack(LcStack.basic_calculator_ii)
-    },
-    {
-      text: LcStack.daily_temperatures,
-      link: stack(LcStack.daily_temperatures)
-    },
-    {
-      text: LcStack.decode_string,
-      link: stack(LcStack.decode_string)
-    },
-    {
-      text: LcStack.evaluate_reverse_polish_notation,
-      link: stack(LcStack.evaluate_reverse_polish_notation)
-    },
-    {
-      text: LcStack.palindrome_linked_list,
-      link: stack(LcStack.palindrome_linked_list)
-    },
-    {
-      text: LcStack.shortest_unsorted_continuous_subarray,
-      link: stack(LcStack.shortest_unsorted_continuous_subarray)
-    },
-    {
-      text: LcStack.valid_parentheses,
-      link: stack(LcStack.valid_parentheses)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcStack.basic_calculator_ii,
+  //     link: stack(LcStack.basic_calculator_ii)
+  //   },
+  //   {
+  //     text: LcStack.daily_temperatures,
+  //     link: stack(LcStack.daily_temperatures)
+  //   },
+  //   {
+  //     text: LcStack.decode_string,
+  //     link: stack(LcStack.decode_string)
+  //   },
+  //   {
+  //     text: LcStack.evaluate_reverse_polish_notation,
+  //     link: stack(LcStack.evaluate_reverse_polish_notation)
+  //   },
+  //   {
+  //     text: LcStack.palindrome_linked_list,
+  //     link: stack(LcStack.palindrome_linked_list)
+  //   },
+  //   {
+  //     text: LcStack.shortest_unsorted_continuous_subarray,
+  //     link: stack(LcStack.shortest_unsorted_continuous_subarray)
+  //   },
+  //   {
+  //     text: LcStack.valid_parentheses,
+  //     link: stack(LcStack.valid_parentheses)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -215,56 +215,56 @@ enum LcHashTable {
 const hashTable = (subPath: string) => tsalg('/hash-table/' + subPath)
 const hashTableSidebar = {
   text: '哈希表',
-  items: [
-    {
-      text: LcHashTable._4_sum_ii,
-      link: hashTable(LcHashTable._4_sum_ii)
-    },
-    {
-      text: LcHashTable.first_unique_character_in_a_string,
-      link: hashTable(LcHashTable.first_unique_character_in_a_string)
-    },
-    {
-      text: LcHashTable.group_anagrams,
-      link: hashTable(LcHashTable.group_anagrams)
-    },
-    {
-      text: LcHashTable.happy_number,
-      link: hashTable(LcHashTable.happy_number)
-    },
-    {
-      text: LcHashTable.intersection_of_two_arrays,
-      link: hashTable(LcHashTable.intersection_of_two_arrays)
-    },
-    {
-      text: LcHashTable.longest_substring_without_repeating_characters,
-      link: hashTable(LcHashTable.longest_substring_without_repeating_characters)
-    },
-    {
-      text: LcHashTable.missing_number,
-      link: hashTable(LcHashTable.missing_number)
-    },
-    {
-      text: LcHashTable.roman_to_integer,
-      link: hashTable(LcHashTable.roman_to_integer)
-    },
-    {
-      text: LcHashTable.top_k_frequency_elements,
-      link: hashTable(LcHashTable.top_k_frequency_elements)
-    },
-    {
-      text: LcHashTable.unique_morse_code_words,
-      link: hashTable(LcHashTable.unique_morse_code_words)
-    },
-    {
-      text: LcHashTable.valid_anagram,
-      link: hashTable(LcHashTable.valid_anagram)
-    },
-    {
-      text: LcHashTable.valid_sudoku,
-      link: hashTable(LcHashTable.valid_sudoku)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcHashTable._4_sum_ii,
+  //     link: hashTable(LcHashTable._4_sum_ii)
+  //   },
+  //   {
+  //     text: LcHashTable.first_unique_character_in_a_string,
+  //     link: hashTable(LcHashTable.first_unique_character_in_a_string)
+  //   },
+  //   {
+  //     text: LcHashTable.group_anagrams,
+  //     link: hashTable(LcHashTable.group_anagrams)
+  //   },
+  //   {
+  //     text: LcHashTable.happy_number,
+  //     link: hashTable(LcHashTable.happy_number)
+  //   },
+  //   {
+  //     text: LcHashTable.intersection_of_two_arrays,
+  //     link: hashTable(LcHashTable.intersection_of_two_arrays)
+  //   },
+  //   {
+  //     text: LcHashTable.longest_substring_without_repeating_characters,
+  //     link: hashTable(LcHashTable.longest_substring_without_repeating_characters)
+  //   },
+  //   {
+  //     text: LcHashTable.missing_number,
+  //     link: hashTable(LcHashTable.missing_number)
+  //   },
+  //   {
+  //     text: LcHashTable.roman_to_integer,
+  //     link: hashTable(LcHashTable.roman_to_integer)
+  //   },
+  //   {
+  //     text: LcHashTable.top_k_frequency_elements,
+  //     link: hashTable(LcHashTable.top_k_frequency_elements)
+  //   },
+  //   {
+  //     text: LcHashTable.unique_morse_code_words,
+  //     link: hashTable(LcHashTable.unique_morse_code_words)
+  //   },
+  //   {
+  //     text: LcHashTable.valid_anagram,
+  //     link: hashTable(LcHashTable.valid_anagram)
+  //   },
+  //   {
+  //     text: LcHashTable.valid_sudoku,
+  //     link: hashTable(LcHashTable.valid_sudoku)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -295,92 +295,92 @@ enum LcTree {
 const tree = (subPath: string) => tsalg('/tree/' + subPath)
 const treeSidebar = {
   text: '树',
-  items: [
-    {
-      text: LcTree.balanced_binary_tree,
-      link: tree(LcTree.balanced_binary_tree)
-    },
-    {
-      text: LcTree.binary_tree_inorder_traversal,
-      link: tree(LcTree.binary_tree_inorder_traversal)
-    },
-    {
-      text: LcTree.binary_tree_postorder_traversal,
-      link: tree(LcTree.binary_tree_postorder_traversal)
-    },
-    {
-      text: LcTree.binary_tree_preorder_traversal,
-      link: tree(LcTree.binary_tree_preorder_traversal)
-    },
-    {
-      text: LcTree.binary_tree_right_side_view,
-      link: tree(LcTree.binary_tree_right_side_view)
-    },
-    {
-      text: LcTree.binary_tree_zigzag_level_order_traversal,
-      link: tree(LcTree.binary_tree_zigzag_level_order_traversal)
-    },
-    {
-      text: LcTree.construct_binary_tree_from_preorder_and_inorder_traversal,
-      link: tree(LcTree.construct_binary_tree_from_preorder_and_inorder_traversal)
-    },
-    {
-      text: LcTree.convert_sorted_array_to_binary_search_tree,
-      link: tree(LcTree.convert_sorted_array_to_binary_search_tree)
-    },
-    {
-      text: LcTree.count_complete_tree_nodes,
-      link: tree(LcTree.count_complete_tree_nodes)
-    },
-    {
-      text: LcTree.diameter_of_binary_tree,
-      link: tree(LcTree.diameter_of_binary_tree)
-    },
-    {
-      text: LcTree.flatten_binary_tree_to_linked_list,
-      link: tree(LcTree.flatten_binary_tree_to_linked_list)
-    },
-    {
-      text: LcTree.invert_binary_tree,
-      link: tree(LcTree.invert_binary_tree)
-    },
-    {
-      text: LcTree.kth_smallest_element_in_a_bst,
-      link: tree(LcTree.kth_smallest_element_in_a_bst)
-    },
-    {
-      text: LcTree.maximum_width_of_binary_tree,
-      link: tree(LcTree.maximum_width_of_binary_tree)
-    },
-    {
-      text: LcTree.n_ary_tree_level_order_traversal,
-      link: tree(LcTree.n_ary_tree_level_order_traversal)
-    },
-    {
-      text: LcTree.path_sum,
-      link: tree(LcTree.path_sum)
-    },
-    {
-      text: LcTree.path_sum_iii,
-      link: tree(LcTree.path_sum_iii)
-    },
-    {
-      text: LcTree.same_tree,
-      link: tree(LcTree.same_tree)
-    },
-    {
-      text: LcTree.sum_root_to_leaf_numbers,
-      link: tree(LcTree.sum_root_to_leaf_numbers)
-    },
-    {
-      text: LcTree.symmetric_tree,
-      link: tree(LcTree.symmetric_tree)
-    },
-    {
-      text: LcTree.validate_binary_search_tree,
-      link: tree(LcTree.validate_binary_search_tree)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcTree.balanced_binary_tree,
+  //     link: tree(LcTree.balanced_binary_tree)
+  //   },
+  //   {
+  //     text: LcTree.binary_tree_inorder_traversal,
+  //     link: tree(LcTree.binary_tree_inorder_traversal)
+  //   },
+  //   {
+  //     text: LcTree.binary_tree_postorder_traversal,
+  //     link: tree(LcTree.binary_tree_postorder_traversal)
+  //   },
+  //   {
+  //     text: LcTree.binary_tree_preorder_traversal,
+  //     link: tree(LcTree.binary_tree_preorder_traversal)
+  //   },
+  //   {
+  //     text: LcTree.binary_tree_right_side_view,
+  //     link: tree(LcTree.binary_tree_right_side_view)
+  //   },
+  //   {
+  //     text: LcTree.binary_tree_zigzag_level_order_traversal,
+  //     link: tree(LcTree.binary_tree_zigzag_level_order_traversal)
+  //   },
+  //   {
+  //     text: LcTree.construct_binary_tree_from_preorder_and_inorder_traversal,
+  //     link: tree(LcTree.construct_binary_tree_from_preorder_and_inorder_traversal)
+  //   },
+  //   {
+  //     text: LcTree.convert_sorted_array_to_binary_search_tree,
+  //     link: tree(LcTree.convert_sorted_array_to_binary_search_tree)
+  //   },
+  //   {
+  //     text: LcTree.count_complete_tree_nodes,
+  //     link: tree(LcTree.count_complete_tree_nodes)
+  //   },
+  //   {
+  //     text: LcTree.diameter_of_binary_tree,
+  //     link: tree(LcTree.diameter_of_binary_tree)
+  //   },
+  //   {
+  //     text: LcTree.flatten_binary_tree_to_linked_list,
+  //     link: tree(LcTree.flatten_binary_tree_to_linked_list)
+  //   },
+  //   {
+  //     text: LcTree.invert_binary_tree,
+  //     link: tree(LcTree.invert_binary_tree)
+  //   },
+  //   {
+  //     text: LcTree.kth_smallest_element_in_a_bst,
+  //     link: tree(LcTree.kth_smallest_element_in_a_bst)
+  //   },
+  //   {
+  //     text: LcTree.maximum_width_of_binary_tree,
+  //     link: tree(LcTree.maximum_width_of_binary_tree)
+  //   },
+  //   {
+  //     text: LcTree.n_ary_tree_level_order_traversal,
+  //     link: tree(LcTree.n_ary_tree_level_order_traversal)
+  //   },
+  //   {
+  //     text: LcTree.path_sum,
+  //     link: tree(LcTree.path_sum)
+  //   },
+  //   {
+  //     text: LcTree.path_sum_iii,
+  //     link: tree(LcTree.path_sum_iii)
+  //   },
+  //   {
+  //     text: LcTree.same_tree,
+  //     link: tree(LcTree.same_tree)
+  //   },
+  //   {
+  //     text: LcTree.sum_root_to_leaf_numbers,
+  //     link: tree(LcTree.sum_root_to_leaf_numbers)
+  //   },
+  //   {
+  //     text: LcTree.symmetric_tree,
+  //     link: tree(LcTree.symmetric_tree)
+  //   },
+  //   {
+  //     text: LcTree.validate_binary_search_tree,
+  //     link: tree(LcTree.validate_binary_search_tree)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -395,28 +395,28 @@ enum LcHeap {
 const heap = (subPath: string) => tsalg('/heap/' + subPath)
 const heapSidebar = {
   text: '堆',
-  items: [
-    {
-      text: LcHeap.kth_largest_element_in_an_array,
-      link: heap(LcHeap.kth_largest_element_in_an_array)
-    },
-    {
-      text: LcHeap.kth_smallest_element_in_a_sorted_matrix,
-      link: heap(LcHeap.kth_smallest_element_in_a_sorted_matrix)
-    },
-    {
-      text: LcHeap.merge_k_sorted_lists,
-      link: heap(LcHeap.merge_k_sorted_lists)
-    },
-    {
-      text: LcHeap.sort_an_array,
-      link: heap(LcHeap.sort_an_array)
-    },
-    {
-      text: LcHeap.top_k_frequent_elements,
-      link: heap(LcHeap.top_k_frequent_elements)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcHeap.kth_largest_element_in_an_array,
+  //     link: heap(LcHeap.kth_largest_element_in_an_array)
+  //   },
+  //   {
+  //     text: LcHeap.kth_smallest_element_in_a_sorted_matrix,
+  //     link: heap(LcHeap.kth_smallest_element_in_a_sorted_matrix)
+  //   },
+  //   {
+  //     text: LcHeap.merge_k_sorted_lists,
+  //     link: heap(LcHeap.merge_k_sorted_lists)
+  //   },
+  //   {
+  //     text: LcHeap.sort_an_array,
+  //     link: heap(LcHeap.sort_an_array)
+  //   },
+  //   {
+  //     text: LcHeap.top_k_frequent_elements,
+  //     link: heap(LcHeap.top_k_frequent_elements)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -433,36 +433,36 @@ enum LcString {
 const string = (subPath: string) => tsalg('/string/' + subPath)
 const stringSidebar = {
   text: '字符串',
-  items: [
-    {
-      text: LcString.count_and_say,
-      link: string(LcString.count_and_say)
-    },
-    {
-      text: LcString.excel_sheet_column_number,
-      link: string(LcString.excel_sheet_column_number)
-    },
-    {
-      text: LcString.largest_number,
-      link: string(LcString.largest_number)
-    },
-    {
-      text: LcString.longest_common_prefix,
-      link: string(LcString.longest_common_prefix)
-    },
-    {
-      text: LcString.number_of_1_bits,
-      link: string(LcString.number_of_1_bits)
-    },
-    {
-      text: LcString.reverse_words_in_a_string,
-      link: string(LcString.reverse_words_in_a_string)
-    },
-    {
-      text: LcString.string_to_integer_atoi,
-      link: string(LcString.string_to_integer_atoi)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcString.count_and_say,
+  //     link: string(LcString.count_and_say)
+  //   },
+  //   {
+  //     text: LcString.excel_sheet_column_number,
+  //     link: string(LcString.excel_sheet_column_number)
+  //   },
+  //   {
+  //     text: LcString.largest_number,
+  //     link: string(LcString.largest_number)
+  //   },
+  //   {
+  //     text: LcString.longest_common_prefix,
+  //     link: string(LcString.longest_common_prefix)
+  //   },
+  //   {
+  //     text: LcString.number_of_1_bits,
+  //     link: string(LcString.number_of_1_bits)
+  //   },
+  //   {
+  //     text: LcString.reverse_words_in_a_string,
+  //     link: string(LcString.reverse_words_in_a_string)
+  //   },
+  //   {
+  //     text: LcString.string_to_integer_atoi,
+  //     link: string(LcString.string_to_integer_atoi)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -475,20 +475,20 @@ enum LcGraph {
 const graph = (subPath: string) => tsalg('/graph/' + subPath)
 const graphSidebar = {
   text: '图',
-  items: [
-    {
-      text: LcGraph.course_schedule,
-      link: graph(LcGraph.course_schedule)
-    },
-    {
-      text: LcGraph.course_schedule_ii,
-      link: graph(LcGraph.course_schedule_ii)
-    },
-    {
-      text: LcGraph.max_area_of_island,
-      link: graph(LcGraph.max_area_of_island)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcGraph.course_schedule,
+  //     link: graph(LcGraph.course_schedule)
+  //   },
+  //   {
+  //     text: LcGraph.course_schedule_ii,
+  //     link: graph(LcGraph.course_schedule_ii)
+  //   },
+  //   {
+  //     text: LcGraph.max_area_of_island,
+  //     link: graph(LcGraph.max_area_of_island)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -502,24 +502,24 @@ enum LcUnionFind {
 const unionFind = (subPath: string) => tsalg('/union-find/' + subPath)
 const unionFindSidebar = {
   text: '并查集',
-  items: [
-    {
-      text: LcUnionFind.longest_consecutive_sequence,
-      link: unionFind(LcUnionFind.longest_consecutive_sequence)
-    },
-    {
-      text: LcUnionFind.number_of_islands,
-      link: unionFind(LcUnionFind.number_of_islands)
-    },
-    {
-      text: LcUnionFind.number_of_provinces,
-      link: unionFind(LcUnionFind.number_of_provinces)
-    },
-    {
-      text: LcUnionFind.surrounded_regions,
-      link: unionFind(LcUnionFind.surrounded_regions)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcUnionFind.longest_consecutive_sequence,
+  //     link: unionFind(LcUnionFind.longest_consecutive_sequence)
+  //   },
+  //   {
+  //     text: LcUnionFind.number_of_islands,
+  //     link: unionFind(LcUnionFind.number_of_islands)
+  //   },
+  //   {
+  //     text: LcUnionFind.number_of_provinces,
+  //     link: unionFind(LcUnionFind.number_of_provinces)
+  //   },
+  //   {
+  //     text: LcUnionFind.surrounded_regions,
+  //     link: unionFind(LcUnionFind.surrounded_regions)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -537,32 +537,32 @@ enum LcBinarySearch {
 const binarySearch = (subPath: string) => tsalg('/binary-search/' + subPath)
 const binarySearchSidebar = {
   text: '二分搜索',
-  items: [
-    {
-      text: LcBinarySearch.search_in_rotated_sorted_array,
-      link: binarySearch(LcBinarySearch.search_in_rotated_sorted_array)
-    },
-    {
-      text: LcBinarySearch.find_first_and_last_position_of_element_in_sorted_array,
-      link: binarySearch(LcBinarySearch.find_first_and_last_position_of_element_in_sorted_array)
-    },
-    {
-      text: LcBinarySearch.sqrt_x,
-      link: binarySearch(LcBinarySearch.sqrt_x)
-    },
-    {
-      text: LcBinarySearch.find_peak_element,
-      link: binarySearch(LcBinarySearch.find_peak_element)
-    },
-    {
-      text: LcBinarySearch.search_a_2_d_matrix_ii,
-      link: binarySearch(LcBinarySearch.search_a_2_d_matrix_ii)
-    },
-    {
-      text: LcBinarySearch.binary_search,
-      link: binarySearch(LcBinarySearch.binary_search)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcBinarySearch.search_in_rotated_sorted_array,
+  //     link: binarySearch(LcBinarySearch.search_in_rotated_sorted_array)
+  //   },
+  //   {
+  //     text: LcBinarySearch.find_first_and_last_position_of_element_in_sorted_array,
+  //     link: binarySearch(LcBinarySearch.find_first_and_last_position_of_element_in_sorted_array)
+  //   },
+  //   {
+  //     text: LcBinarySearch.sqrt_x,
+  //     link: binarySearch(LcBinarySearch.sqrt_x)
+  //   },
+  //   {
+  //     text: LcBinarySearch.find_peak_element,
+  //     link: binarySearch(LcBinarySearch.find_peak_element)
+  //   },
+  //   {
+  //     text: LcBinarySearch.search_a_2_d_matrix_ii,
+  //     link: binarySearch(LcBinarySearch.search_a_2_d_matrix_ii)
+  //   },
+  //   {
+  //     text: LcBinarySearch.binary_search,
+  //     link: binarySearch(LcBinarySearch.binary_search)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -584,56 +584,56 @@ enum LcBacktracking {
 const backtracking = (subPath: string) => tsalg('/backtracking/' + subPath)
 const backtrackingSidebar = {
   text: '回溯算法',
-  items: [
-    {
-      text: LcBacktracking.letter_combinations_of_a_phone_number,
-      link: backtracking(LcBacktracking.letter_combinations_of_a_phone_number)
-    },
-    {
-      text: LcBacktracking.combination_sum,
-      link: backtracking(LcBacktracking.combination_sum)
-    },
-    {
-      text: LcBacktracking.combination_sum_ii,
-      link: backtracking(LcBacktracking.combination_sum_ii)
-    },
-    {
-      text: LcBacktracking.permutations,
-      link: backtracking(LcBacktracking.permutations)
-    },
-    {
-      text: LcBacktracking.permutations_ii,
-      link: backtracking(LcBacktracking.permutations_ii)
-    },
-    {
-      text: LcBacktracking.combinations,
-      link: backtracking(LcBacktracking.combinations)
-    },
-    {
-      text: LcBacktracking.subsets,
-      link: backtracking(LcBacktracking.subsets)
-    },
-    {
-      text: LcBacktracking.word_search,
-      link: backtracking(LcBacktracking.word_search)
-    },
-    {
-      text: LcBacktracking.subsets_ii,
-      link: backtracking(LcBacktracking.subsets_ii)
-    },
-    {
-      text: LcBacktracking.restore_ip_addresses,
-      link: backtracking(LcBacktracking.restore_ip_addresses)
-    },
-    {
-      text: LcBacktracking.palindrome_partitioning,
-      link: backtracking(LcBacktracking.palindrome_partitioning)
-    },
-    {
-      text: LcBacktracking.target_sum,
-      link: backtracking(LcBacktracking.target_sum)
-    }
-  ] ,
+  // items: [
+  //   {
+  //     text: LcBacktracking.letter_combinations_of_a_phone_number,
+  //     link: backtracking(LcBacktracking.letter_combinations_of_a_phone_number)
+  //   },
+  //   {
+  //     text: LcBacktracking.combination_sum,
+  //     link: backtracking(LcBacktracking.combination_sum)
+  //   },
+  //   {
+  //     text: LcBacktracking.combination_sum_ii,
+  //     link: backtracking(LcBacktracking.combination_sum_ii)
+  //   },
+  //   {
+  //     text: LcBacktracking.permutations,
+  //     link: backtracking(LcBacktracking.permutations)
+  //   },
+  //   {
+  //     text: LcBacktracking.permutations_ii,
+  //     link: backtracking(LcBacktracking.permutations_ii)
+  //   },
+  //   {
+  //     text: LcBacktracking.combinations,
+  //     link: backtracking(LcBacktracking.combinations)
+  //   },
+  //   {
+  //     text: LcBacktracking.subsets,
+  //     link: backtracking(LcBacktracking.subsets)
+  //   },
+  //   {
+  //     text: LcBacktracking.word_search,
+  //     link: backtracking(LcBacktracking.word_search)
+  //   },
+  //   {
+  //     text: LcBacktracking.subsets_ii,
+  //     link: backtracking(LcBacktracking.subsets_ii)
+  //   },
+  //   {
+  //     text: LcBacktracking.restore_ip_addresses,
+  //     link: backtracking(LcBacktracking.restore_ip_addresses)
+  //   },
+  //   {
+  //     text: LcBacktracking.palindrome_partitioning,
+  //     link: backtracking(LcBacktracking.palindrome_partitioning)
+  //   },
+  //   {
+  //     text: LcBacktracking.target_sum,
+  //     link: backtracking(LcBacktracking.target_sum)
+  //   }
+  // ] ,
   collapsed: true
 }
 
@@ -663,88 +663,88 @@ enum LcDynamicProgramming {
 const dynamicProgramming = (subPath: string) => tsalg('/dynamic-programming/' + subPath)
 const dynamicProgrammingSidebar = {
   text: '动态规划',
-  items: [
-    {
-      text: LcDynamicProgramming.best_time_to_buy_and_sell_stock,
-      link: dynamicProgramming(LcDynamicProgramming.best_time_to_buy_and_sell_stock)
-    },
-    {
-      text: LcDynamicProgramming.best_time_to_buy_and_sell_stock_ii,
-      link: dynamicProgramming(LcDynamicProgramming.best_time_to_buy_and_sell_stock_ii)
-    },
-    {
-      text: LcDynamicProgramming.climbing_stairs,
-      link: dynamicProgramming(LcDynamicProgramming.climbing_stairs)
-    },
-    {
-      text: LcDynamicProgramming.coin_change,
-      link: dynamicProgramming(LcDynamicProgramming.coin_change)
-    },
-    {
-      text: LcDynamicProgramming.counting_bits,
-      link: dynamicProgramming(LcDynamicProgramming.counting_bits)
-    },
-    {
-      text: LcDynamicProgramming.decode_ways,
-      link: dynamicProgramming(LcDynamicProgramming.decode_ways)
-    },
-    {
-      text: LcDynamicProgramming.jump_game,
-      link: dynamicProgramming(LcDynamicProgramming.jump_game)
-    },
-    {
-      text: LcDynamicProgramming.longest_common_subsequence,
-      link: dynamicProgramming(LcDynamicProgramming.longest_common_subsequence)
-    },
-    {
-      text: LcDynamicProgramming.longest_continuous_increasing_subsequence,
-      link: dynamicProgramming(LcDynamicProgramming.longest_continuous_increasing_subsequence)
-    },
-    {
-      text: LcDynamicProgramming.longest_increasing_subsequence,
-      link: dynamicProgramming(LcDynamicProgramming.longest_increasing_subsequence)
-    },
-    {
-      text: LcDynamicProgramming.longest_palindromic_substring,
-      link: dynamicProgramming(LcDynamicProgramming.longest_palindromic_substring)
-    },
-    {
-      text: LcDynamicProgramming.maximum_subarray,
-      link: dynamicProgramming(LcDynamicProgramming.maximum_subarray)
-    },
-    {
-      text: LcDynamicProgramming.minimum_path_sum,
-      link: dynamicProgramming(LcDynamicProgramming.minimum_path_sum)
-    },
-    {
-      text: LcDynamicProgramming.palindromic_substrings,
-      link: dynamicProgramming(LcDynamicProgramming.palindromic_substrings)
-    },
-    {
-      text: LcDynamicProgramming.partition_equal_subset_sum,
-      link: dynamicProgramming(LcDynamicProgramming.partition_equal_subset_sum)
-    },
-    {
-      text: LcDynamicProgramming.pascals_triangle,
-      link: dynamicProgramming(LcDynamicProgramming.pascals_triangle)
-    },
-    {
-      text: LcDynamicProgramming.unique_binary_search_trees,
-      link: dynamicProgramming(LcDynamicProgramming.unique_binary_search_trees)
-    },
-    {
-      text: LcDynamicProgramming.unique_paths,
-      link: dynamicProgramming(LcDynamicProgramming.unique_paths)
-    },
-    {
-      text: LcDynamicProgramming.unique_paths_ii,
-      link: dynamicProgramming(LcDynamicProgramming.unique_paths_ii)
-    },
-    {
-      text: LcDynamicProgramming.word_break,
-      link: dynamicProgramming(LcDynamicProgramming.word_break)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcDynamicProgramming.best_time_to_buy_and_sell_stock,
+  //     link: dynamicProgramming(LcDynamicProgramming.best_time_to_buy_and_sell_stock)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.best_time_to_buy_and_sell_stock_ii,
+  //     link: dynamicProgramming(LcDynamicProgramming.best_time_to_buy_and_sell_stock_ii)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.climbing_stairs,
+  //     link: dynamicProgramming(LcDynamicProgramming.climbing_stairs)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.coin_change,
+  //     link: dynamicProgramming(LcDynamicProgramming.coin_change)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.counting_bits,
+  //     link: dynamicProgramming(LcDynamicProgramming.counting_bits)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.decode_ways,
+  //     link: dynamicProgramming(LcDynamicProgramming.decode_ways)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.jump_game,
+  //     link: dynamicProgramming(LcDynamicProgramming.jump_game)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.longest_common_subsequence,
+  //     link: dynamicProgramming(LcDynamicProgramming.longest_common_subsequence)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.longest_continuous_increasing_subsequence,
+  //     link: dynamicProgramming(LcDynamicProgramming.longest_continuous_increasing_subsequence)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.longest_increasing_subsequence,
+  //     link: dynamicProgramming(LcDynamicProgramming.longest_increasing_subsequence)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.longest_palindromic_substring,
+  //     link: dynamicProgramming(LcDynamicProgramming.longest_palindromic_substring)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.maximum_subarray,
+  //     link: dynamicProgramming(LcDynamicProgramming.maximum_subarray)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.minimum_path_sum,
+  //     link: dynamicProgramming(LcDynamicProgramming.minimum_path_sum)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.palindromic_substrings,
+  //     link: dynamicProgramming(LcDynamicProgramming.palindromic_substrings)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.partition_equal_subset_sum,
+  //     link: dynamicProgramming(LcDynamicProgramming.partition_equal_subset_sum)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.pascals_triangle,
+  //     link: dynamicProgramming(LcDynamicProgramming.pascals_triangle)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.unique_binary_search_trees,
+  //     link: dynamicProgramming(LcDynamicProgramming.unique_binary_search_trees)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.unique_paths,
+  //     link: dynamicProgramming(LcDynamicProgramming.unique_paths)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.unique_paths_ii,
+  //     link: dynamicProgramming(LcDynamicProgramming.unique_paths_ii)
+  //   },
+  //   {
+  //     text: LcDynamicProgramming.word_break,
+  //     link: dynamicProgramming(LcDynamicProgramming.word_break)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -753,12 +753,12 @@ enum LcGreedy { }
 const greedy = (subPath: string) => tsalg('/greedy/' + subPath)
 const greedySidebar = {
   text: '贪心算法',
-  items: [
-    {
-      text: '聊聊插件化系统设计',
-      link: greedy('聊聊插件化系统设计')
-    },
-  ],
+  // items: [
+  //   {
+  //     text: '聊聊插件化系统设计',
+  //     link: greedy('聊聊插件化系统设计')
+  //   },
+  // ],
   collapsed: true
 }
 // ====================================技巧=====================================
@@ -779,48 +779,48 @@ enum LcTwoPointers {
 const twoPointers = (subPath: string) => tsalg('/two-pointers/' + subPath)
 const twoPointersSidebar = {
   text: '双指针',
-  items: [
-    {
-      text: LcTwoPointers._3_sum,
-      link: twoPointers(LcTwoPointers._3_sum)
-    },
-    {
-      text: LcTwoPointers._3_sum_closest,
-      link: twoPointers(LcTwoPointers._3_sum_closest)
-    },
-    {
-      text: LcTwoPointers._4_sum,
-      link: twoPointers(LcTwoPointers._4_sum)
-    },
-    {
-      text: LcTwoPointers.add_strings,
-      link: twoPointers(LcTwoPointers.add_strings)
-    },
-    {
-      text: LcTwoPointers.compare_version_numbers,
-      link: twoPointers(LcTwoPointers.compare_version_numbers)
-    },
-    {
-      text: LcTwoPointers.find_the_duplicate_number,
-      link: twoPointers(LcTwoPointers.find_the_duplicate_number)
-    },
-    {
-      text: LcTwoPointers.maximum_average_subarray_i,
-      link: twoPointers(LcTwoPointers.maximum_average_subarray_i)
-    },
-    {
-      text: LcTwoPointers.merge_sorted_array,
-      link: twoPointers(LcTwoPointers.merge_sorted_array)
-    },
-    {
-      text: LcTwoPointers.sort_colors,
-      link: twoPointers(LcTwoPointers.sort_colors)
-    },
-    {
-      text: LcTwoPointers.two_sum,
-      link: twoPointers(LcTwoPointers.two_sum)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcTwoPointers._3_sum,
+  //     link: twoPointers(LcTwoPointers._3_sum)
+  //   },
+  //   {
+  //     text: LcTwoPointers._3_sum_closest,
+  //     link: twoPointers(LcTwoPointers._3_sum_closest)
+  //   },
+  //   {
+  //     text: LcTwoPointers._4_sum,
+  //     link: twoPointers(LcTwoPointers._4_sum)
+  //   },
+  //   {
+  //     text: LcTwoPointers.add_strings,
+  //     link: twoPointers(LcTwoPointers.add_strings)
+  //   },
+  //   {
+  //     text: LcTwoPointers.compare_version_numbers,
+  //     link: twoPointers(LcTwoPointers.compare_version_numbers)
+  //   },
+  //   {
+  //     text: LcTwoPointers.find_the_duplicate_number,
+  //     link: twoPointers(LcTwoPointers.find_the_duplicate_number)
+  //   },
+  //   {
+  //     text: LcTwoPointers.maximum_average_subarray_i,
+  //     link: twoPointers(LcTwoPointers.maximum_average_subarray_i)
+  //   },
+  //   {
+  //     text: LcTwoPointers.merge_sorted_array,
+  //     link: twoPointers(LcTwoPointers.merge_sorted_array)
+  //   },
+  //   {
+  //     text: LcTwoPointers.sort_colors,
+  //     link: twoPointers(LcTwoPointers.sort_colors)
+  //   },
+  //   {
+  //     text: LcTwoPointers.two_sum,
+  //     link: twoPointers(LcTwoPointers.two_sum)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -835,28 +835,28 @@ enum LcSlidingWindow {
 const slidingWindow = (subPath: string) => tsalg('/sliding-window/' + subPath)
 const slidingWindowSidebar = {
   text: '滑动窗口',
-  items: [
-    {
-      text: LcSlidingWindow.find_all_anagrams_in_a_string,
-      link: slidingWindow(LcSlidingWindow.find_all_anagrams_in_a_string)
-    },
-    {
-      text: LcSlidingWindow.longest_substring_without_repeating_characters,
-      link: slidingWindow(LcSlidingWindow.longest_substring_without_repeating_characters)
-    },
-    {
-      text: LcSlidingWindow.minimum_size_subarray_sum,
-      link: slidingWindow(LcSlidingWindow.minimum_size_subarray_sum)
-    },
-    {
-      text: LcSlidingWindow.minimum_window_substring,
-      link: slidingWindow(LcSlidingWindow.minimum_window_substring)
-    },
-    {
-      text: LcSlidingWindow.sliding_window_maximum,
-      link: slidingWindow(LcSlidingWindow.sliding_window_maximum)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcSlidingWindow.find_all_anagrams_in_a_string,
+  //     link: slidingWindow(LcSlidingWindow.find_all_anagrams_in_a_string)
+  //   },
+  //   {
+  //     text: LcSlidingWindow.longest_substring_without_repeating_characters,
+  //     link: slidingWindow(LcSlidingWindow.longest_substring_without_repeating_characters)
+  //   },
+  //   {
+  //     text: LcSlidingWindow.minimum_size_subarray_sum,
+  //     link: slidingWindow(LcSlidingWindow.minimum_size_subarray_sum)
+  //   },
+  //   {
+  //     text: LcSlidingWindow.minimum_window_substring,
+  //     link: slidingWindow(LcSlidingWindow.minimum_window_substring)
+  //   },
+  //   {
+  //     text: LcSlidingWindow.sliding_window_maximum,
+  //     link: slidingWindow(LcSlidingWindow.sliding_window_maximum)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -871,28 +871,28 @@ enum LcPrefixuSum {
 const prefixSum = (subPath: string) => tsalg('/prefix-sum/' + subPath)
 const prefixSumSidebar = {
   text: '前缀和',
-  items: [
-    {
-      text: LcPrefixuSum.range_sum_query_immutable,
-      link: prefixSum(LcPrefixuSum.range_sum_query_immutable)
-    },
-    {
-      text: LcPrefixuSum.range_sum_query_2_d_immutable,
-      link: prefixSum(LcPrefixuSum.range_sum_query_2_d_immutable)
-    },
-    {
-      text: LcPrefixuSum.subarray_sum_equals_k,
-      link: prefixSum(LcPrefixuSum.subarray_sum_equals_k)
-    },
-    {
-      text: LcPrefixuSum.running_sum_of_1_d_array,
-      link: prefixSum(LcPrefixuSum.running_sum_of_1_d_array)
-    },
-    {
-      text: LcPrefixuSum.sum_of_all_odd_length_subarrays,
-      link: prefixSum(LcPrefixuSum.sum_of_all_odd_length_subarrays)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcPrefixuSum.range_sum_query_immutable,
+  //     link: prefixSum(LcPrefixuSum.range_sum_query_immutable)
+  //   },
+  //   {
+  //     text: LcPrefixuSum.range_sum_query_2_d_immutable,
+  //     link: prefixSum(LcPrefixuSum.range_sum_query_2_d_immutable)
+  //   },
+  //   {
+  //     text: LcPrefixuSum.subarray_sum_equals_k,
+  //     link: prefixSum(LcPrefixuSum.subarray_sum_equals_k)
+  //   },
+  //   {
+  //     text: LcPrefixuSum.running_sum_of_1_d_array,
+  //     link: prefixSum(LcPrefixuSum.running_sum_of_1_d_array)
+  //   },
+  //   {
+  //     text: LcPrefixuSum.sum_of_all_odd_length_subarrays,
+  //     link: prefixSum(LcPrefixuSum.sum_of_all_odd_length_subarrays)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -915,52 +915,52 @@ enum LcDesign {
 const design = (subPath: string) => tsalg('/design/' + subPath)
 const designSidebar = {
   text: '设计',
-  items: [
-    {
-      text: LcDesign.binary_search_tree_iterator,
-      link: design(LcDesign.binary_search_tree_iterator)
-    },
-    {
-      text: LcDesign.design_add_and_search_words_data_structure,
-      link: design(LcDesign.design_add_and_search_words_data_structure)
-    },
-    {
-      text: LcDesign.design_circular_queue,
-      link: design(LcDesign.design_circular_queue)
-    },
-    {
-      text: LcDesign.design_linked_list,
-      link: design(LcDesign.design_linked_list)
-    },
-    {
-      text: LcDesign.flatten_nested_list_iterator,
-      link: design(LcDesign.flatten_nested_list_iterator)
-    },
-    {
-      text: LcDesign.implement_trie_prefix_tree,
-      link: design(LcDesign.implement_trie_prefix_tree)
-    },
-    {
-      text: LcDesign.insert_delete_get_random_o_1,
-      link: design(LcDesign.insert_delete_get_random_o_1)
-    },
-    {
-      text: LcDesign.kth_largest_element_in_a_stream,
-      link: design(LcDesign.kth_largest_element_in_a_stream)
-    },
-    {
-      text: LcDesign.lru_cache,
-      link: design(LcDesign.lru_cache)
-    },
-    {
-      text: LcDesign.serialize_and_deserialize_binary_tree,
-      link: design(LcDesign.serialize_and_deserialize_binary_tree)
-    },
-    {
-      text: LcDesign.shuffle_an_array,
-      link: design(LcDesign.shuffle_an_array)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcDesign.binary_search_tree_iterator,
+  //     link: design(LcDesign.binary_search_tree_iterator)
+  //   },
+  //   {
+  //     text: LcDesign.design_add_and_search_words_data_structure,
+  //     link: design(LcDesign.design_add_and_search_words_data_structure)
+  //   },
+  //   {
+  //     text: LcDesign.design_circular_queue,
+  //     link: design(LcDesign.design_circular_queue)
+  //   },
+  //   {
+  //     text: LcDesign.design_linked_list,
+  //     link: design(LcDesign.design_linked_list)
+  //   },
+  //   {
+  //     text: LcDesign.flatten_nested_list_iterator,
+  //     link: design(LcDesign.flatten_nested_list_iterator)
+  //   },
+  //   {
+  //     text: LcDesign.implement_trie_prefix_tree,
+  //     link: design(LcDesign.implement_trie_prefix_tree)
+  //   },
+  //   {
+  //     text: LcDesign.insert_delete_get_random_o_1,
+  //     link: design(LcDesign.insert_delete_get_random_o_1)
+  //   },
+  //   {
+  //     text: LcDesign.kth_largest_element_in_a_stream,
+  //     link: design(LcDesign.kth_largest_element_in_a_stream)
+  //   },
+  //   {
+  //     text: LcDesign.lru_cache,
+  //     link: design(LcDesign.lru_cache)
+  //   },
+  //   {
+  //     text: LcDesign.serialize_and_deserialize_binary_tree,
+  //     link: design(LcDesign.serialize_and_deserialize_binary_tree)
+  //   },
+  //   {
+  //     text: LcDesign.shuffle_an_array,
+  //     link: design(LcDesign.shuffle_an_array)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -974,24 +974,24 @@ enum LcMath {
 const math = (subPath: string) => tsalg('/math/' + subPath)
 const mathSidebar = {
   text: '数学',
-  items: [
-    {
-      text: LcMath.pow_x_n,
-      link: math(LcMath.pow_x_n)
-    },
-    {
-      text: LcMath.factorial_trailing_zeroes,
-      link: math(LcMath.factorial_trailing_zeroes)
-    },
-    {
-      text: LcMath.power_of_three,
-      link: math(LcMath.power_of_three)
-    },
-    {
-      text: LcMath.fizz_buzz,
-      link: math(LcMath.fizz_buzz)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcMath.pow_x_n,
+  //     link: math(LcMath.pow_x_n)
+  //   },
+  //   {
+  //     text: LcMath.factorial_trailing_zeroes,
+  //     link: math(LcMath.factorial_trailing_zeroes)
+  //   },
+  //   {
+  //     text: LcMath.power_of_three,
+  //     link: math(LcMath.power_of_three)
+  //   },
+  //   {
+  //     text: LcMath.fizz_buzz,
+  //     link: math(LcMath.fizz_buzz)
+  //   }
+  // ],
   collapsed: true
 }
 
@@ -1005,24 +1005,24 @@ enum LcBitManipulation {
 const bitManipulation = (subPath: string) => tsalg('/bit-manipulation/' + subPath)
 const bitManipulationSidebar = {
   text: '位操作',
-  items: [
-    {
-      text: LcBitManipulation.divide_two_integers,
-      link: bitManipulation(LcBitManipulation.divide_two_integers)
-    },
-    {
-      text: LcBitManipulation.reverse_bits,
-      link: bitManipulation(LcBitManipulation.reverse_bits)
-    },
-    {
-      text: LcBitManipulation.single_number_iii,
-      link: bitManipulation(LcBitManipulation.single_number_iii)
-    },
-    {
-      text: LcBitManipulation.sum_of_two_integers,
-      link: bitManipulation(LcBitManipulation.sum_of_two_integers)
-    }
-  ],
+  // items: [
+  //   {
+  //     text: LcBitManipulation.divide_two_integers,
+  //     link: bitManipulation(LcBitManipulation.divide_two_integers)
+  //   },
+  //   {
+  //     text: LcBitManipulation.reverse_bits,
+  //     link: bitManipulation(LcBitManipulation.reverse_bits)
+  //   },
+  //   {
+  //     text: LcBitManipulation.single_number_iii,
+  //     link: bitManipulation(LcBitManipulation.single_number_iii)
+  //   },
+  //   {
+  //     text: LcBitManipulation.sum_of_two_integers,
+  //     link: bitManipulation(LcBitManipulation.sum_of_two_integers)
+  //   }
+  // ],
   collapsed: true
 }
 

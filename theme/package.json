@@ -5,6 +5,6 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
-    "./markdown/*": "./src/markdown/*"
+    "./pages/*": "./src/pages/*"
   }
 }

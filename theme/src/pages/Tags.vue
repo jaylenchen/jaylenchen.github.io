@@ -9,7 +9,7 @@ import ArticleSvg from '@blog/theme/assets/svgs/article.svg';
 import EmptySvg from '@blog/theme/assets/svgs/empty.svg';
 
 // @ts-ignore
-import { data as articleData } from '../../../../config/article.data'
+import { data as articleData } from '../../../config/article.data'
 
 
 const tags = computed(() => initTags(articleData));
