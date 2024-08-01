@@ -21,8 +21,12 @@ hero:
 #     details: 记录我的学习过程和心得，包括编程语言、框架和工具的使用。
 
 ---
----
-<h1>✨最近在做什么？</h1>
+
+<h2>🪧我经历了什么？</h2>
+<br />
+<img src="/develop.png" alt="Develop"/>
+
+<h2>✨最近在做什么？</h2>
 <br/>
 <div id="gepick-logo" align="center">
     <br />
