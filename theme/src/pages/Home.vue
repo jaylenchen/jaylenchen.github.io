@@ -4,7 +4,7 @@
     <br />
     <img src="/skill.png" alt="Skill" />
 
-    <h2>✨个人项目</h2>
+    <h2>✨个人项目(开发中...)</h2>
     <br />
     <img src="/projects/gepick/design-page.png" />
 
