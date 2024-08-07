@@ -31,7 +31,7 @@ if (type.value && type.value == 'gitalk') {
     admin: ['jaylenchan'],
     id: md5(page.value.relativePath),
     language: 'zh-CN',
-    distractionFreeMode: false,
+    distractionFreeMode: true,
   });
 }
 
@@ -45,7 +45,7 @@ onMounted(() => {
     $gc.on('click', '.gt-comment-like', function () {
       if (!window.localStorage.getItem('GT_ACCESS_TOKEN')) {
         message.warning({
-          content: '点赞前，请您先进行登录',
+          content: '点赞前请先使用Github进行登录~',
         })
 
         return false
