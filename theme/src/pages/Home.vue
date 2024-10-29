@@ -8,7 +8,7 @@
     <br />
     <img src="/projects/gepick/design-page.png" />
 
-    <h2>📮联系方式</h2>
+    <h2>📮合作联系</h2>
     <ul>
       <li>📧邮箱：jaylen.work@hotmail.com</li>
       <li>💬微信：let-coding</li>
