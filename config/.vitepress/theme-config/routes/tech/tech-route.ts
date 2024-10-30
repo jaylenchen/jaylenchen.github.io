@@ -7,7 +7,7 @@ const nav = {
 const sidebar = {
   "/tech": [
     {
-      text: 'Docker',
+      text: 'Docker系列',
       items: [
         {
           text: "Docker基本介绍",
