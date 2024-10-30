@@ -6,7 +6,7 @@
   "packageManager": "pnpm@9.4.0+sha1.9217c800d4ab947a7aee520242a7b70d64fc7638",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jaylenchan/jaylenchan.github.io.git"
+    "url": "git+https://github.com/jaylenchen/jaylenchen.github.io.git"
   },
   "scripts": {
     "dev:docs": "pnpm --filter @blog/config dev",

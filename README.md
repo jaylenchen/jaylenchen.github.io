@@ -1,4 +1,4 @@
-# jaylenchan的随手记
+# jaylenchen的生涯随笔
 
 ## 源码组织
 

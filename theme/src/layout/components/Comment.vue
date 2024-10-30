@@ -26,9 +26,9 @@ if (type.value && type.value == 'gitalk') {
   gitalk = new Gitalk({
     clientID: 'Ov23ctNqkutw4PpaBPRA',
     clientSecret: 'ad3ee60be331e7aef649191ee9ba212f0d9eda2c',
-    repo: 'jaylenchan.github.io',
-    owner: 'jaylenchan',
-    admin: ['jaylenchan'],
+    repo: 'jaylenchen.github.io',
+    owner: 'jaylenchen',
+    admin: ['jaylenchen'],
     id: md5(page.value.relativePath),
     language: 'zh-CN',
     distractionFreeMode: true,

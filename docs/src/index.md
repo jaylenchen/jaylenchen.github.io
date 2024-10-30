@@ -1,16 +1,15 @@
 ---
-title: jaylenchan的随手记
+title: jaylenchen的生涯随笔
 titleTemplate: 首页
 
 layout: home
 
 hero:
-  name: jaylenchan
-  text: 随手记
-  tagline: 也许只是随笔的简单idea，就能在某个时刻迸发出新的思维火花，至于未来的哪个时刻，或许很快吧......
+  name: jaylenchen的生涯随笔
+  tagline: 一段段简单idea随笔，就能在某个时刻迸发出新的思维火花，至于未来的哪个时刻，或许很快吧......
   image:
     src: /svgs/avatar.svg
-    alt: jaylenchan
+    alt: jaylenchen
 
 ---
 <script lang="ts" setup>
