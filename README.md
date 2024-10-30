@@ -1,4 +1,4 @@
-# jaylenchen的生涯随笔
+# jaylenchen的思维随笔
 
 ## 源码组织
 
