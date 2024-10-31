@@ -38,11 +38,18 @@ const wizardTranspilerSidebar = {
   collapsed: true
 }
 
+const mobile = (subPath: string) => openwizard('/mobile/' + subPath)
+const mobileSidebar = {
+  text: "移动应用微信登录功能接入",
+  link: mobile("移动应用微信登录功能接入")
+}
+
 const nav = { text: 'openwizard', link: wizardTranspiler(WizardTranspiler.wizard缩进语法实现) }
 
 const sidebar: DefaultTheme.Config['sidebar'] = {
   [openwizard('/')]: [
-    wizardTranspilerSidebar
+    wizardTranspilerSidebar,
+    mobileSidebar
   ]
 }
 
