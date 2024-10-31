@@ -2,9 +2,9 @@
 publish: true
 date: 2021/09/23 18:00
 title: Docker网络
-project: docker
+project: 通用技术
 tags:
-- 技术
+- docker
 ---
 
 # Docker网络

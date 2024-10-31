@@ -2,9 +2,9 @@
 publish: true
 date: 2021/09/24 09:00
 title: Docker运行原理
-project: docker
+project: 通用技术
 tags:
-- 技术
+- docker
 ---
 
 # Docker运行原理

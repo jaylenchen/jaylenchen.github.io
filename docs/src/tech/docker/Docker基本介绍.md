@@ -2,9 +2,9 @@
 publish: true
 date: 2021/09/20 17:00
 title: Docker基本介绍
-project: docker
+project: 通用技术
 tags:
-- 技术
+- docker
 ---
 
 # Docker基本介绍

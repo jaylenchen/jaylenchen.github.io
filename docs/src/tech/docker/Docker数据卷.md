@@ -2,9 +2,9 @@
 publish: true
 date: 2021/09/22 16:00
 title: Docker数据卷
-project: docker
+project: 通用技术
 tags:
-- 技术
+- docker
 ---
 
 # Docker数据卷
