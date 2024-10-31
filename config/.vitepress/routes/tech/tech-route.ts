@@ -48,6 +48,17 @@ const sidebar = {
         },
       ],
       collapsed: true
+    },
+    // ==========Rust系列==========
+    {
+      text: 'Rust系列',
+      items: [
+        {
+          text: "如何快速学习一个crate",
+          link: "/tech/rust/如何快速学习一个crate"
+        },
+      ],
+      collapsed: true
     }
   ],
 }
