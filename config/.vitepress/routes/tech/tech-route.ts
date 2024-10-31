@@ -59,7 +59,18 @@ const sidebar = {
         },
       ],
       collapsed: true
-    }
+    },
+    // ==========Github系列==========
+    {
+      text: 'Github系列',
+      items: [
+        {
+          text: "探探Github Actions",
+          link: "/tech/github/探探Github Actions"
+        },
+      ],
+      collapsed: true
+    },
   ],
 }
 
