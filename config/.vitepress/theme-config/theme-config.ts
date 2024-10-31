@@ -2,7 +2,7 @@ import { DefaultTheme, LocaleSpecificConfig } from 'vitepress';
 import { footer } from './footer';
 import { search } from './search';
 import { CustomConfig, customConfig } from './custom'
-import {nav, sidebar} from './routes/routes'
+import {nav, sidebar} from '../routes/routes'
 
 export const themeConfig = {
   // 配置首页左上角的icon+title
