@@ -28,7 +28,7 @@ GTD全称Getting Things Done，翻译成中文应该是“把事情做好”更�
 
 ## GTD的工作流程
 
-![img](/life/gtd-process2.png)
+![img](/life/gtd-process4.webp)
 GTD的工作流程分为以下几个部份：
 
 - **收集**：把所有的想要做/需要记忆的事物，收集起来，放到收件箱中
@@ -51,6 +51,12 @@ GTD的工作流程分为以下几个部份：
   总体来说就是聚焦在可行动的事物上，具体行动起来。根据当前的情境、时间和精力，从清单中选择合适的任务进行执行。具体评判一件事的执行与否可以使用四个标准来选择任务：情境、时间、精力和优先级。
 
 ## 使用Ominifocus将GTD时间管理落地
+
+我们根据GTD可以整理出在使用GTD的时候，各步骤所对应的步骤产物：
+
+![img](/life/gtd-step-result.png)
+
+基于此，我推荐一个使用了多年的任务管理软件：Omnifocus。Omnifocus 是一款由 The Omni Group 开发的任务管理应用程序，专为 macOS 和 iOS 设备设计。它基于 David Allen 的 GTD（Getting Things Done）方法，旨在帮助用户更高效地组织和管理任务和项目，帮助用户更好地实践 GTD 理论，提高工作效率。对于Omnifocus感兴趣的小伙伴可以自行搜索该软件学习使用，这里只是抛砖引玉告诉大家可以利用Omnifocus践行GTD。
 
 ![img](/life/omnifocus-use.png)
 
