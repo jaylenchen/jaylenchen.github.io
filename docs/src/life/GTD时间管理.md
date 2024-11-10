@@ -59,6 +59,7 @@ GTD的工作流程分为以下几个部份：
 基于此，我推荐一个使用了多年的任务管理软件：Omnifocus。Omnifocus 是一款由 The Omni Group 开发的任务管理应用程序，专为 macOS 和 iOS 设备设计。它基于 David Allen 的 GTD（Getting Things Done）方法，旨在帮助用户更高效地组织和管理任务和项目，帮助用户更好地实践 GTD 理论，提高工作效率。对于Omnifocus感兴趣的小伙伴可以自行搜索该软件学习使用，这里只是抛砖引玉告诉大家可以利用Omnifocus践行GTD。
 
 ![img](/life/omnifocus-use.png)
+![img](/life/omnifocus-use1.png)
 
 ## 总结
 
