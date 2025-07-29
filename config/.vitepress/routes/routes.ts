@@ -6,9 +6,9 @@ import tag from './tag/tag-route'
 import archives from './archives/archives-route'
 
 export const nav: DefaultTheme.Config['nav'] = [
+  projects.nav,
   life.nav,
   tech.nav,
-  projects.nav,
   tag.nav,
   archives.nav
 ];

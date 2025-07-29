@@ -3,15 +3,19 @@
   "type": "module",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@9.4.0+sha1.9217c800d4ab947a7aee520242a7b70d64fc7638",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jaylenchen/jaylenchen.github.io.git"
   },
+  "workspaces": [
+    "config",
+    "docs",
+    "theme"
+  ],
   "scripts": {
-    "dev:docs": "pnpm --filter @blog/config dev",
-    "build:docs": "pnpm --filter @blog/config build",
-    "preview:docs": "pnpm --filter @blog/config preview",
+    "dev:docs": "yarn workspace @blog/config dev",
+    "build:docs": "yarn workspace @blog/config build",
+    "preview:docs": "yarn workspace @blog/config preview",
     "prepare": "husky"
   },
   "dependencies": {
@@ -48,5 +52,6 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
-  }
+  },
+  "packageManager": "yarn@4.3.1"
 }

@@ -1,5 +1,0 @@
-packages:
-  - 'packages/**'
-  - config
-  - docs
-  - theme

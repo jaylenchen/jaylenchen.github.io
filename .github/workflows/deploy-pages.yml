@@ -28,23 +28,25 @@ jobs:
         with:
           fetch-depth: 0 # 如果未启用 lastUpdated，则不需要
 
-      - name: "Install pnpm"
-        uses: pnpm/action-setup@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Yarn
+        run: corepack prepare yarn@stable --activate
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Install dependencies
-        run: pnpm i
+        run: yarn install --immutable
 
       - name: Build with VitePress
-        run: pnpm build:docs
+        run: yarn build:docs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
