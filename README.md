@@ -1,4 +1,4 @@
-# jaylenchen的思维随笔
+# jaylenchen的个人思厨
 
 ## 源码组织
 

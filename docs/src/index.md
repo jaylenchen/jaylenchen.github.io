@@ -1,12 +1,12 @@
 ---
-title: jaylenchen的思维随笔
+title: jaylenchen的个人思厨
 titleTemplate: 首页
 
 layout: home
 
 hero:
-  name: jaylenchen的思维随笔
-  tagline: 一段段简单idea随笔，就能在某个时刻迸发出新的思维火花，至于未来的哪个时刻，或许很快吧......
+  name: jaylenchen的个人思厨
+  tagline: 用文字的灶台燃起思维的火花，用心在这思维的厨房里烹饪，就能够做出一道又道美味的佳肴，至于能有多美味，交给时间吧...
   image:
     src: /svgs/avatar.svg
     alt: jaylenchen

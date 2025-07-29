@@ -1,17 +1,11 @@
 <template>
   <div class="home">
-    <h2>🪧项目经历</h2>
-    <br />
-    <img src="/skill.png" alt="Skill" />
-
-    <h2>✨个人项目(开发中...)</h2>
-    <br />
-    <img src="/projects/gepick/design-page.png" />
-
-    <h2>📮合作联系</h2>
+    <h2>📮 Contact Me</h2>
     <ul>
-      <li>📧邮箱：jaylen.work@hotmail.com</li>
-      <li>💬微信：let-coding</li>
+      <li>📧 Email：jaylen-work@outlook.com</li>
+      <li>💬 WeChat：code-mvp</li>
     </ul>
+    <h2>Getting Things Done ...</h2>
+    <img src="/life/gtd-process2.png" alt="process-life"  width="80%"/>
   </div>
 </template>
