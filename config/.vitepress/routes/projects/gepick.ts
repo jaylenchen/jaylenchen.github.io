@@ -12,7 +12,7 @@ const organizationSidebar = {
       link: core("di-framework")
     },
     {
-      text: "CLI系统设计",
+      text: "设计一个可扩展的CLI系统",
       link: core("cli-system")
     },
   ],

@@ -1,13 +1,13 @@
 ---
 publish: true
 date: 2025/1/04 11:00
-title: CLI系统设计
+title: 设计一个可扩展的CLI系统
 project: gepick
 tags:
  - design
 ---
 
-# CLI System Design
+# 设计一个可扩展的CLI系统
 
 ![img](/projects/gepick/core/cli-system.png)
 
