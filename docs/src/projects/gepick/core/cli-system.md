@@ -1,7 +1,7 @@
 ---
 publish: true
 date: 2025/1/04 11:00
-title: CLI System Design
+title: CLI系统设计
 project: gepick
 tags:
  - design

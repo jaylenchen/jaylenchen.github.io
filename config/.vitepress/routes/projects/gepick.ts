@@ -8,7 +8,11 @@ const organizationSidebar = {
   text: '@gepick/core',
   items: [
     {
-      text: "CLI System Design",
+      text: "服务基础框架",
+      link: core("di-framework")
+    },
+    {
+      text: "CLI系统设计",
       link: core("cli-system")
     },
   ],
@@ -17,7 +21,9 @@ const organizationSidebar = {
 
 
 
-const nav = { text: 'gepick', link: core("cli-system") }
+const nav = { 
+  text: 'gepick', link: core("cli-system") ,
+}
 
 const sidebar: DefaultTheme.Config['sidebar'] = {
   [gepick('/')]: [
