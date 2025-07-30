@@ -1,13 +1,13 @@
 ---
 publish: true
 date: 2025/7/30 13:00
-title: 服务基础框架
+title: 基于InversifyJS的服务基础框架
 project: gepick
 tags:
  - design
 ---
 
-# 服务基础框架
+# 基于InversifyJS的服务基础框架
 
 ## 引言
 

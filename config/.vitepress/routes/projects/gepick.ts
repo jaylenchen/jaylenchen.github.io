@@ -8,7 +8,7 @@ const organizationSidebar = {
   text: '@gepick/core',
   items: [
     {
-      text: "服务基础框架",
+      text: "基于InversifyJS的服务基础框架",
       link: core("di-framework")
     },
     {

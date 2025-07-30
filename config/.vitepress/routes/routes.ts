@@ -7,8 +7,8 @@ import archives from './archives/archives-route'
 
 export const nav: DefaultTheme.Config['nav'] = [
   projects.nav,
-  life.nav,
   tech.nav,
+  life.nav,
   tag.nav,
   archives.nav
 ];
