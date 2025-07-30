@@ -22,7 +22,7 @@ const organizationSidebar = {
 
 
 const nav = { 
-  text: 'gepick', link: core("cli-system") ,
+  text: 'gepick', link: core("di-framework") ,
 }
 
 const sidebar: DefaultTheme.Config['sidebar'] = {
