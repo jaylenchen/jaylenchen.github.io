@@ -1158,3 +1158,7 @@ classDiagram
 ## 总结
 
 UML类图是项目代码结构梳理的重要工具，通过使用Mermaid，可以快速绘制出类图，放到markdown中。在如今的AI时代，你完全可以将各节点交给AI去分析，你只需要将分析结果整合到类图中，并进行人工校验即可。如果你在探索一个类似vscode的超大型复杂项目，那么UML类图可以代替你的大脑记忆项目各模块的关系和结构，让你能够腾出大脑去专门分析项目代码，理解项目结构，并进行系统复刻。
+
+## 参考
+
+- [Mermaid 官方文档 - Class diagrams](https://mermaid.js.org/syntax/classDiagram.html)
