@@ -6,6 +6,17 @@ const nav = {
 
 const sidebar = {
   "/tech": [
+    // ==========Mermaid系列==========
+    {
+      text: 'Mermaid系列',
+      items: [
+        {
+          text: "使用Mermaid绘制UML类图",
+          link: "/tech/mermaid/class-diagrams"
+        },
+      ],
+      collapsed: true
+    },
     // ==========Docker系列==========
     {
       text: 'Docker系列',
