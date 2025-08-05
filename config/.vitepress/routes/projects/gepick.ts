@@ -15,6 +15,10 @@ const organizationSidebar = {
       text: "设计一个可扩展的CLI系统",
       link: core("cli-system")
     },
+    {
+      text: "RPC协议的设计与实现概述",
+      link: core("rpc-protocol")
+    }
   ],
   collapsed: true
 }
