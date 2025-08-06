@@ -18,6 +18,10 @@ const organizationSidebar = {
     {
       text: "RPC协议的设计与实现概述",
       link: core("rpc-protocol")
+    },
+    {
+      text: "IPCChannel的设计与实现",
+      link: core("ipc-channel")
     }
   ],
   collapsed: true
