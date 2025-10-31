@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import { onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { Tag } from 'ant-design-vue'
 import ArticleMetadata from '@blog/theme/global/components/ArticleMetadata.vue'
 
 import ArchiveSvg from '@blog/theme/assets/svgs/archive.svg';
-import ArticleSvg from '@blog/theme/assets/svgs/article.svg';
 import RatSvg from '@blog/theme/assets/svgs/chinese-zodiac/rat.svg';
 import OxSvg from '@blog/theme/assets/svgs/chinese-zodiac/ox.svg';
 import TigerSvg from '@blog/theme/assets/svgs/chinese-zodiac/tiger.svg';
@@ -24,6 +23,23 @@ import { getQueryParam, getChineseZodiac } from '@blog/theme/utils/utils';
 import { data as articleData } from '../../../config/article.data'
 
 
+const yearSvgMap = {
+  rat: RatSvg,
+  ox: OxSvg,
+  tiger: TigerSvg,
+  rabbit: Rabbit,
+  dragon: DragonSvg,
+  snake: SnakeSvg,
+  horse: HorseSvg,
+  goat: GoatSvg,
+  monkey: MonkeySvg,
+  rooster: RoosterSvg,
+  dog: DogSvg,
+  pig: PigSvg
+} as const;
+
+const defaultYearIcon = yearSvgMap.rat;
+
 enum ArchiveType {
   Project,
   Tag,
@@ -42,32 +58,95 @@ const condition = reactive({
 const project = ref(getQueryParam('project')?.trim());
 const tag = ref(getQueryParam('tag')?.trim());
 const year = ref(getQueryParam('year')?.trim());
+const activeYear = ref<string | null>(null);
+const contentEl = ref<HTMLElement | null>(null);
+let sectionObserver: IntersectionObserver | null = null;
 
-function yearIcon(year: string) {
-  const yearSvgs = {
-    rat: RatSvg,
-    ox: OxSvg,
-    tiger: TigerSvg,
-    rabbit: Rabbit,
-    dragon: DragonSvg,
-    snake: SnakeSvg,
-    horse: HorseSvg,
-    goat: GoatSvg,
-    monkey: MonkeySvg,
-    rooster: RoosterSvg,
-    dog: DogSvg,
-    pig: PigSvg
+function normalizeYear(value: string | number | undefined | null) {
+  if (value === undefined || value === null) {
+    return undefined;
   }
 
-  return yearSvgs[getChineseZodiac(+year.replace("年", "")) as keyof typeof yearSvgs]
+  const numericYear = Number(String(value).replace(/[^\d]/g, ''));
+  return Number.isFinite(numericYear) && numericYear > 0 ? numericYear : undefined;
 }
 
-function handleYearIconClick(newYear: string) {
-  goToArchivesPage('year', newYear.replace('年', ''))
+function yearIcon(year: string | number) {
+  const normalizedYear = normalizeYear(year);
+  if (!normalizedYear) {
+    return defaultYearIcon;
+  }
+
+  const zodiac = getChineseZodiac(normalizedYear) as keyof typeof yearSvgMap;
+  return yearSvgMap[zodiac] ?? defaultYearIcon;
+}
+
+function handleYearIconClick(newYear: string | number) {
+  const normalizedYear = normalizeYear(newYear);
+  if (!normalizedYear) {
+    goToArchivesPage();
+    return;
+  }
+
+  goToArchivesPage('year', String(normalizedYear))
 }
 
 function resetCurrentPage() {
   goToArchivesPage()
+}
+
+function selectYear(yearValue: string) {
+  activeYear.value = yearValue;
+}
+
+const currentYearEntry = computed(() => {
+  if (!archiveEntries.value.length) {
+    return null;
+  }
+
+  return (
+    archiveEntries.value.find((entry) => entry.year === activeYear.value) ??
+    archiveEntries.value[0]
+  );
+});
+
+function scrollToYear(yearValue: string) {
+  activeYear.value = yearValue;
+  const targetId = yearValue; // No longer need to normalize year for ID
+  const target = contentEl.value?.querySelector<HTMLElement>(`#${targetId}`);
+  if (target && contentEl.value) {
+    const top = target.offsetTop - 12;
+    contentEl.value.scrollTo({ top, behavior: 'smooth' });
+  }
+}
+
+function setupSectionObserver() {
+  sectionObserver?.disconnect();
+  if (!contentEl.value) {
+    return;
+  }
+
+  sectionObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+      if (visible.length > 0) {
+        const yearValue = visible[0].target.getAttribute('data-archive-year');
+        if (yearValue) {
+          activeYear.value = yearValue;
+        }
+      }
+    },
+    {
+      root: contentEl.value,
+      threshold: [0.3, 0.5, 0.7]
+    }
+  );
+
+  const sections = contentEl.value.querySelectorAll<HTMLElement>('[data-archive-year]');
+  sections.forEach((section) => sectionObserver?.observe(section));
 }
 
 
@@ -75,229 +154,421 @@ function resetCurrentPage() {
  * 初始化时间轴
  */
 function initTimeLine() {
-  // 根据条件过滤文章数据
+  archiveData.value = {};
+
+  let filteredArticles = [...articleData];
+
   if (condition.project) {
     archiveType.value = ArchiveType.Project;
-    articles.value = articles.value.filter((article) => project.value && article.project && article.project.includes(project.value))
+    filteredArticles = filteredArticles.filter((article) => project.value && article.project && article.project.includes(project.value));
   }
   else if (condition.tag) {
     archiveType.value = ArchiveType.Tag;
-    articles.value = articles.value.filter((article) => tag.value && article.tags && article.tags.includes(tag.value))
+    filteredArticles = filteredArticles.filter((article) => tag.value && article.tags && article.tags.includes(tag.value));
   }
   else if (condition.year) {
     archiveType.value = ArchiveType.Year;
-    articles.value = articles.value.filter((article) => year.value && article.date && (new Date(article.date).getFullYear()) === +year.value)
+    filteredArticles = filteredArticles.filter((article) => year.value && article.date && (new Date(article.date).getFullYear()) === +year.value);
   } else {
     archiveType.value = ArchiveType.All;
-    articles.value = articleData;
   }
 
-  // 文章数据归档处理
-  // 1.对文章数据进行降序排序
-  articles.value.length > 0 && articles.value.sort((a, b) => b.date.localeCompare(a.date));
-  // 2.按年、月进行归档
+  articles.value = filteredArticles;
+
+  if (!articles.value.length) {
+    return;
+  }
+
+  articles.value.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
   for (let i = 0; i < articles.value.length; i++) {
     const article = articles.value?.[i];
-    const date = new Date(article.date)
-    const year = date.getFullYear() + '年';
-    const month = (date.getMonth() + 1) + '月';
-
-    if (!archiveData.value[year]) {
-      archiveData.value[year] = {};
+    const date = new Date(article.date);
+    if (Number.isNaN(date.getTime())) {
+      continue;
     }
 
-    if (!(archiveData.value[year][month])) {
-      archiveData.value[year][month] = [];
+    const yearKey = `${date.getFullYear()}年`;
+    const monthKey = `${date.getMonth() + 1}月`;
+
+    if (!archiveData.value[yearKey]) {
+      archiveData.value[yearKey] = {};
     }
 
-    archiveData.value[year][month].push(article);
+    if (!archiveData.value[yearKey][monthKey]) {
+      archiveData.value[yearKey][monthKey] = [];
+    }
+
+    archiveData.value[yearKey][monthKey].push(article);
   }
 }
 
-onMounted(() => {
-  initTimeLine()
-})
+const archiveEntries = computed(() => {
+  return Object.keys(archiveData.value)
+    .sort((a, b) => {
+      const yearA = normalizeYear(a) ?? 0;
+      const yearB = normalizeYear(b) ?? 0;
+      return yearB - yearA;
+    })
+    .map((yearKey) => {
+      const months = archiveData.value[yearKey];
+      const monthEntries = Object.keys(months)
+        .sort((a, b) => {
+          const monthA = Number(String(a).replace(/[^\d]/g, '')) || 0;
+          const monthB = Number(String(b).replace(/[^\d]/g, '')) || 0;
+          return monthB - monthA;
+        })
+        .map((monthKey) => ({ month: monthKey, articles: months[monthKey] }));
 
-watch([year], () => {
-  initTimeLine()
-})
+      const articleCount = monthEntries.reduce((total, monthEntry) => total + monthEntry.articles.length, 0);
+
+      return { year: yearKey, months: monthEntries, count: articleCount };
+    });
+});
+
+onMounted(() => {
+  initTimeLine();
+});
+
+watch(
+  () => archiveEntries.value,
+  (entries) => {
+    if (!entries.length) {
+      activeYear.value = null;
+      return;
+    }
+
+    if (!activeYear.value || !entries.some((item) => item.year === activeYear.value)) {
+      activeYear.value = entries[0].year;
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
-  <div class="timeline-wrap">
-    <!-- 时间轴头部 -->
-    <div class="timeline-header">
-      <!-- 如果是用户点击文章的分类按钮进入的归档页面，将会显示当前分类的文章列表 -->
-      <Tag v-if="archiveType === ArchiveType.Project" class="content" closable @close="resetCurrentPage">
-        <template #icon>
-          <ArchiveSvg></ArchiveSvg>
-        </template>
-        {{ project }}项目 （共 {{ articles.length }} 篇）文章
-      </Tag>
+  <div class="archives">
+    <div class="archives__inner">
+      <header class="archives__header">
+        <p class="archives__kicker">archives</p>
+        <div class="archives__filter">
+          <Tag v-if="archiveType === ArchiveType.Project" class="filter-tag" closable @close="resetCurrentPage">
+            <template #icon>
+              <ArchiveSvg></ArchiveSvg>
+            </template>
+            {{ project }}项目 （共 {{ articles.length }} 篇）文章
+          </Tag>
 
-      <!-- 如果是用户点击文章的标签按钮进入的归档页面，将会显示当前标签的文章列表 -->
-      <Tag v-else-if="archiveType === ArchiveType.Tag" class="content" closable @close="resetCurrentPage">
-        <template #icon>
-          <ArchiveSvg></ArchiveSvg>
-        </template>
-        {{ tag }}标签 （共 {{ articles.length }} 篇）文章
-      </Tag>
+          <Tag v-else-if="archiveType === ArchiveType.Tag" class="filter-tag" closable @close="resetCurrentPage">
+            <template #icon>
+              <ArchiveSvg></ArchiveSvg>
+            </template>
+            {{ tag }}标签 （共 {{ articles.length }} 篇）文章
+          </Tag>
 
-      <!-- 如果是用户点击文章的年份按钮进入的归档页面，将会显示当前年份的文章列表 -->
-      <Tag v-else-if="archiveType === ArchiveType.Year" class="content" closable @close="resetCurrentPage">
-        <ArchiveSvg></ArchiveSvg>
-        {{ year }}年 （共 {{ articles.length }} 篇）文章
-      </Tag>
+          <Tag v-else-if="archiveType === ArchiveType.Year" class="filter-tag" closable @close="resetCurrentPage">
+            <ArchiveSvg></ArchiveSvg>
+            {{ year }}年 （共 {{ articles.length }} 篇）文章
+          </Tag>
 
-      <!-- 如果是用户直接进入归档页面，将会显示所有文章 -->
-      <Tag v-else class="content">
-        <ArchiveSvg></ArchiveSvg>
-        全部（共 {{ articles.length }} 篇）文章
-      </Tag>
-    </div>
-
-    <!-- 时间轴主体 -->
-    <div class="timeline-item" v-for="(item, year) in archiveData">
-      <div class="year">
-        <!-- 展示当年对应的生肖Icon -->
-        <component :is="yearIcon(String(year))" @click="handleYearIconClick(String(year))" class="chinese-zodiac">
-        </component>
-        <span>{{ year }}</span>
-      </div>
-
-      <div class="timeline-item-content">
-        <div v-for="(articles, month) in item">
-          <span class="month">
-            {{ month }}
-          </span>
-          <div class="articles">
-            <span v-for="article in articles" class="article">
-              <ArticleSvg></ArticleSvg>
-              <a :href="article.path" class="title" target="_self">{{ article.title }}</a>
-              <ArticleMetadata :article="article" />
-            </span>
-          </div>
+          <Tag v-else class="filter-tag">
+            <ArchiveSvg></ArchiveSvg>
+            全部文章（共 {{ articles.length }} 篇）
+          </Tag>
         </div>
+      </header>
+
+      <div class="archives__layout" v-if="archiveEntries.length">
+        <aside class="archives__aside" aria-label="年份导航">
+          <p class="archives__aside-title">年份</p>
+          <button
+            v-for="yearEntry in archiveEntries"
+            :key="yearEntry.year"
+            type="button"
+            class="archives__year-button"
+            :class="{ 'is-active': (currentYearEntry && currentYearEntry.year === yearEntry.year) }"
+            @click="selectYear(yearEntry.year)"
+          >
+            <span class="archives__year-label">{{ yearEntry.year }}</span>
+            <span class="archives__year-count">{{ yearEntry.count }}</span>
+          </button>
+        </aside>
+
+        <section class="archives__content" v-if="currentYearEntry">
+          <header class="archives__content-header">
+            <component
+              :is="yearIcon(currentYearEntry.year)"
+              @click="handleYearIconClick(currentYearEntry.year)"
+              class="archives__year-icon"
+            />
+            <div class="archives__block-meta">
+              <h2>{{ currentYearEntry.year }}</h2>
+              <p>{{ currentYearEntry.count }} 篇文章</p>
+            </div>
+          </header>
+
+          <div class="archives__month-list">
+            <div class="archives__month" v-for="monthEntry in currentYearEntry.months" :key="monthEntry.month">
+              <div class="archives__month-header">
+                <span class="archives__month-name">{{ monthEntry.month }}</span>
+                <span class="archives__month-total">{{ monthEntry.articles.length }} 篇</span>
+              </div>
+
+              <ul class="archives__article-list">
+                <li v-for="article in monthEntry.articles" :key="article.path" class="archives__article-item">
+                  <a :href="article.path" target="_self" class="archives__article-link">{{ article.title }}</a>
+                  <ArticleMetadata :article="article" />
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
       </div>
+
+      <p v-else class="archives__empty">暂无文章记录。</p>
     </div>
   </div>
 </template>
 
 <style scoped>
-:deep(.arco-tag) {
-  background-color: var(--vp-c-bg);
+.archives {
+  max-width: 920px;
+  margin: 0 auto;
   color: var(--vp-c-text-1);
+  width: 100%;
+  padding: 2.4rem 1.5rem 2rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
 }
 
-:deep(.arco-icon) {
-  width: 1em;
-  height: 1em;
+.archives__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
 }
 
-.timeline-wrap {
-  margin-top: 18px;
-  word-break: break-all;
+.archives__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
 }
 
-.timeline-wrap .timeline-header {
-  padding-bottom: 20px;
+.archives__kicker {
+  margin: 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
 }
 
-.timeline-wrap .timeline-header .icon {
-  fill: var(--vp-c-text-2);
-  height: 22px;
-  width: 22px;
+.archives__filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
 }
 
-.timeline-wrap .timeline-header .content {
-  position: relative;
-  left: -20px;
-  font-size: 16px;
-  font-weight: bold;
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg);
+  color: inherit;
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 0.45rem 0.9rem;
+}
+
+.filter-tag svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.archives__layout {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.archives__aside {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.archives__aside-title {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+
+.archives__year-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: 0.85rem;
+  border: 1px solid transparent;
+  background: var(--vp-c-bg);
+  color: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.archives__year-button.is-active {
+  border-color: var(--vp-c-brand-1, #3e63dd);
+  background: rgba(62, 99, 221, 0.12);
+}
+
+.archives__year-label {
+  font-weight: 500;
+}
+
+.archives__year-count {
+  font-size: 0.78rem;
+  color: var(--vp-c-text-3);
+}
+
+.archives__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.archives__content-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  border:none;
-  background:none;
-
-  .icon {
-    width: 35px;
-    height: 35px;
-  }
+  gap: 1rem;
 }
 
-.timeline-wrap .timeline-item {
-  padding: 0 0 0 20px;
-  border-left: 1px solid #5D9DF0;
-  line-height: 1;
-  position: relative;
+.archives__year-icon {
+  width: 46px;
+  height: 46px;
+  cursor: pointer;
 }
 
-.timeline-wrap .timeline-item:not(:last-child) {
-  padding-bottom: 20px;
+.archives__block-meta h2 {
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.1rem);
 }
 
-.timeline-wrap .timeline-item .year {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 0.6em;
+.archives__block-meta p {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--vp-c-text-3);
 }
 
-.timeline-wrap .timeline-item .timeline-item-time {
-  margin-bottom: 12px;
-  width: 200px;
+.archives__month-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.archives__month {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 0.95rem 1.1rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 1rem;
+  background: var(--vp-c-bg);
+}
+
+.archives__month-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.timeline-wrap .timeline-item .month {
-  padding: 8px 0 8px 0;
-  display: block;
-  color: var(--vp-c-text-1);
-  font-size: 16px;
-  font-weight: bold;
-  position: relative;
+.archives__month-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--vp-c-text-2);
+  letter-spacing: 0.08em;
 }
 
-.timeline-wrap .timeline-item .timeline-item-content {
-  font-size: 14px;
+.archives__month-total {
+  font-size: 0.78rem;
+  color: var(--vp-c-text-3);
 }
 
-.timeline-wrap .timeline-item .articles {
-  line-height: 1;
-  padding-top: 7px;
+.archives__article-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.timeline-wrap .timeline-item .articles .article {
-  display: block;
-  position: relative;
-  margin-bottom: 20px;
+.archives__article-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.archives__article-link {
+  color: inherit;
+  text-decoration: none;
+  font-size: 0.95rem;
   line-height: 1.5;
 }
 
-.timeline-wrap .timeline-item .articles svg {
-  position: absolute;
-  left: -27.5px;
-  top: 3.5px;
-  background: #fff;
-  border: 1px solid #84b9e5;
-  border-radius: 50%;
-  cursor: pointer;
+.archives__article-link:hover {
+  color: var(--vp-c-brand-1, #3e63dd);
 }
 
-.timeline-wrap .timeline-item .articles .article span {
-  color: var(--vp-c-text-2);
+.archives__article-item :deep(.article-meta) {
+  color: var(--vp-c-text-3);
+  font-size: 0.78rem;
 }
 
-.vp-doc a {
-  font-weight: 400;
-  color: var(--vp-c-text-1);
-  text-decoration: none;
+.archives__empty {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--vp-c-text-3);
+  text-align: center;
 }
 
-.vp-doc a:hover {
-  color: var(--vp-c-brand-1);
-  text-decoration: underline;
+@media (max-width: 860px) {
+  .archives {
+    padding: 3.5rem 1.25rem 2.5rem;
+  }
+
+  .archives__layout {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .archives__aside {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .archives__aside-title {
+    width: 100%;
+  }
+
+  .archives__content {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .archives {
+    padding: 3rem 1.1rem 2.2rem;
+  }
+
+  .archives__month {
+    padding: 0.85rem 0.95rem;
+  }
 }
 </style>

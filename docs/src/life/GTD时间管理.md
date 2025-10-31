@@ -7,7 +7,6 @@ tags:
  - 时间管理
 
 ---
-
 # GTD时间管理
 
 ![img](/life/gtd-process1.png)
@@ -77,3 +76,4 @@ GTD的工作流程分为以下几个部份：
   - [GTD学习资料](https://www.cnblogs.com/gshang/p/16464093.html)
 - 视频
   - [GTD 自我管理、时间管理教程](https://www.bilibili.com/video/BV1wE411176Q/?spm_id_from=333.337.search-card.all.click&vd_source=c899446e6f6ea3d984a4622ddf9c14a1)
+

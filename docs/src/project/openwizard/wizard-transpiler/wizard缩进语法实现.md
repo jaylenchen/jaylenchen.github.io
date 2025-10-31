@@ -12,10 +12,10 @@ tags:
 wizard是我们内部自定义的一套平台DSL，用来约束GPT表达的颗粒度，尽量不让它一本正经地胡说八道。而wizard转译器是用于将wizard语法转译程js语法的一个核心工具，第一版是我基于pegjs去实现的，但是随着需求变动，我们不再满足于转译器的定位，需要支持类似函数或者宏展开的机制，于是我开始了基于Rust开发的第二版wizard转译器。其中类Python缩进风格语法的处理是wizard转译器的核心，下面分享下相关处理流程。
 
 - 处理之前
-![img](/projects/openwizard/wizard-transpiler/不合适1.png)
+![img](/project/openwizard/wizard-transpiler/不合适1.png)
 
 - 处理之后
-![img](/projects/openwizard/wizard-transpiler/处理-不合适1.png)
+![img](/project/openwizard/wizard-transpiler/处理-不合适1.png)
 
 ## 算法执行流程
 

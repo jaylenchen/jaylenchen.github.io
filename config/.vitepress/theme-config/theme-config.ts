@@ -7,7 +7,7 @@ import {nav, sidebar} from '../routes/routes'
 export const themeConfig = {
   // 配置首页左上角的icon+title
   logo: '/svgs/avatar.svg', // 首页左上角的icon
-  siteTitle: '文思塾', // 首页左上角的title
+  siteTitle: 'jaylenchen', // 首页左上角的title
   outline: {
     level: 'deep',
     label: '目录',

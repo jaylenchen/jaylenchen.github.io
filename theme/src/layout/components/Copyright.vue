@@ -16,16 +16,21 @@ const licenseText = ref(theme.value.customConfig.copyrightConfig?.license)
     <div class="content">
       <!-- 版权属于 -->
       <div class="item">
-        <svg class="icon" width="20" height="20" viewBox="0 0 1024 1024">
-          <title>原创作者</title>
-          <path
-            d="M614.72 554.538c-49.086-6.399-100.27-2.1-149.256-2.1-119.465 0-209.04 95.972-206.84 215.437 0 17.095 8.498 31.99 23.493 40.488 14.896 10.697 34.09 14.896 53.285 17.095 61.882 6.398 123.664 6.398 198.342 6.398 40.488 0 93.872-2.1 142.858-4.298 27.692 0 53.284-4.3 78.877-14.896 19.194-8.498 29.89-19.194 31.99-40.488 8.498-104.57-72.478-204.84-172.75-217.636zM680.8 375.39c0-87.474-74.678-162.053-164.251-162.053-89.574 0-162.053 74.679-162.053 162.053-2.1 87.474 74.678 164.252 162.053 164.252 89.673 0 164.252-74.678 164.252-164.252z"
-            fill="#FFF" />
-          <path
-            d="M512.35 0C228.733 0 .5 228.233.5 511.85s228.233 511.85 511.85 511.85 511.85-228.233 511.85-511.85S795.967 0 512.35 0zm275.12 772.074c-2.1 21.294-12.797 31.99-31.991 40.488-25.593 10.697-51.185 14.896-78.877 14.896-49.086 2.099-102.37 4.298-142.858 4.298-74.678 0-136.46 0-198.342-6.398-19.195-2.1-38.389-6.398-53.285-17.095-14.895-8.497-23.493-23.493-23.493-40.488-2.1-119.465 87.475-215.437 206.84-215.437 49.085 0 100.27-4.299 149.256 2.1 100.27 12.896 181.247 113.166 172.75 217.636zM354.495 375.39c0-87.474 72.479-162.053 162.053-162.053S680.8 288.016 680.8 375.39c0 89.574-74.679 164.252-164.252 164.252-87.375 0-164.152-76.778-162.053-164.252z"
-            fill="#249FF8" />
-        </svg>
-        <span>作者：</span>
+        <div class="icon-wrapper">
+          <svg class="icon" width="22" height="22" viewBox="0 0 1024 1024">
+            <title>原创作者</title>
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64"
+              fill="#EBF2FF" />
+            <path
+              d="M542.7 352c0-86-69.7-155.7-155.7-155.7S231.3 266 231.3 352c0 86 69.7 155.7 155.7 155.7S542.7 438 542.7 352"
+              fill="#8CAAF4" />
+            <path
+              d="M701.3 668.2c-67.2-8.7-98.7-4.3-176-4.3-141.3 0-232.5 113.8-229.5 255 0 12.8 6.4 23.5 17.9 30.7 13.6 9 31.5 12.3 49.6 14 57.5 5.9 115 5.9 182.5 5.9 37.3 0 86.1-2 123.5-3.9 23.1 0 43-3.9 63.1-13.1 15.4-6.9 24-15.7 26-30.7 7-123-81.6-239.2-157.6-253.6z"
+              fill="#5C8EF3" />
+          </svg>
+        </div>
+        <span class="label">作者：</span>
         <span>
           <a v-if="isOriginal" :href="authorLink" title="进入作者主页" target="_blank">{{ author }}</a>
           <span v-else :title="author">{{ author }}</span>
@@ -33,16 +38,18 @@ const licenseText = ref(theme.value.customConfig.copyrightConfig?.license)
       </div>
       <!-- 作品协议 -->
       <div class="item">
-        <svg class="icon" viewBox="0 0 1024 1024">
-          <title>作品协议</title>
-          <path d="M0 512a512 512 0 1 0 1024 0A512 512 0 1 0 0 512z" fill="#F3B243" />
-          <path
-            d="M540.672 323.584a90.112 90.112 0 1 0 180.224 0 90.112 90.112 0 1 0-180.224 0zM540.672 688.128a90.112 90.112 0 1 0 180.224 0 90.112 90.112 0 1 0-180.224 0zM229.376 512a90.112 90.112 0 1 0 180.224 0 90.112 90.112 0 1 0-180.224 0z"
-            fill="#FFF" />
-          <path d="M341.037 480.37l257.344-175.718 27.713 40.592-257.34 175.718z" fill="#FFF" />
-          <path d="M349.053 488.452L601.907 670.56l-28.725 39.887L320.307 528.34z" fill="#FFF" />
-        </svg>
-        <span>版权：</span>
+        <div class="icon-wrapper">
+          <svg class="icon" viewBox="0 0 1024 1024">
+            <title>作品协议</title>
+            <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64" fill="#FFF4DC" />
+            <path
+              d="M342.4 512a90.1 90.1 0 1 0 180.2 0 90.1 90.1 0 1 0-180.2 0zM598.9 323.6a90.1 90.1 0 1 0 180.2 0 90.1 90.1 0 1 0-180.2 0zM598.9 688.1a90.1 90.1 0 1 0 180.2 0 90.1 90.1 0 1 0-180.2 0z"
+              fill="#F5B956" />
+            <path d="M359.4 480.4l257.3-175.7 27.7 40.6-257.3 175.7z" fill="#F5B956" />
+            <path d="M367.4 488.5 620.3 670.6l-28.7 39.9L338.6 528.3z" fill="#F5B956" />
+          </svg>
+        </div>
+        <span class="label">版权：</span>
         <span><a :href="licenseLink" target="_self">{{ licenseText }}</a> 许可协议授权</span>
       </div>
     </div>
@@ -51,41 +58,65 @@ const licenseText = ref(theme.value.customConfig.copyrightConfig?.license)
 
 <style scoped>
 .copyright {
-  border-color: var(--vp-custom-block-tip-border);
-  background-color: var(--vp-custom-block-tip-bg);
-  border-radius: 6px;
+  margin: 3rem auto 0;
+  padding: 1.4rem 1.6rem;
+  max-width: 760px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(120, 150, 220, 0.25);
+  border-radius: 18px;
   color: var(--vp-c-text-2);
-  font-size: 15px;
-  margin-top: 50px;
+  font-size: 0.98rem;
+  backdrop-filter: blur(6px);
 }
 
-.copyright .content {
-
-  padding: 13px 16px;
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
 }
 
-.copyright .content .item {
-  margin-bottom: 5px;
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   word-break: break-word;
-  line-height: 22px;
 }
 
-.copyright .content .item .icon {
-  display: inline-block;
-  height: 16px;
-  width: 16px;
-  margin-right: .375rem;
-  vertical-align: -2.5px;
+.icon-wrapper {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 100%;
+  height: 100%;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--vp-c-text-1);
 }
 
 a {
-  font-weight: 400;
-  color: var(--vp-c-text-2);
+  font-weight: 500;
+  color: var(--vp-c-brand-1);
   text-decoration: none;
+  border-bottom: 1px solid rgba(120, 150, 220, 0.4);
+  padding-bottom: 1px;
 }
 
 a:hover {
-  color: var(--vp-c-brand-1);
-  text-decoration: underline;
+  color: var(--vp-c-brand-2);
+  border-color: var(--vp-c-brand-2);
+}
+
+@media (max-width: 640px) {
+  .copyright {
+    padding: 1.2rem 1.3rem;
+    border-radius: 16px;
+  }
 }
 </style>

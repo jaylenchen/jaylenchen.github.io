@@ -1,5 +1,5 @@
 import { DefaultTheme } from 'vitepress';
 
 export const footer: DefaultTheme.Config['footer'] = {
-  copyright: '基于MIT许可发布版权所有 © 2024-present jaylenchen',
+  // copyright: 'Powered by jaylenchen | Copyright © 2020-2025 | MIT License',
 }

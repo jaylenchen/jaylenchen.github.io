@@ -18,7 +18,7 @@ tags:
 
 ## 迈出接入CI第一步
 
-![img](/projects/thinkto/coding-ci-panel.png)
+![img](/project/thinkto/coding-ci-panel.png)
 
 由于团队将代码托管到了[Coding](https://coding.net/)平台，既然要接入CI，按照以往的经验我们先要有CI相关的环境工具，这几年你用过Jenkins、Gitlab CI、Github Actions，用的最多的还是Jenkins。于是你凭着经验的直觉，列下了相关的准备环境和工具：
 
@@ -63,7 +63,7 @@ tags:
 
 Dockerfile的书写只需要稍稍上手特别简单，大概如下：
 
-![simple-dockerfile](/projects/thinkto/simple-dockerfile.png)
+![simple-dockerfile](/project/thinkto/simple-dockerfile.png)
 
 为了节省Docker镜像体积，我们按照业界基操也搞成了Docker多阶段构建，第一个阶段构建App，第二个阶段部署App。
 
@@ -93,7 +93,7 @@ Dockerfile的书写只需要稍稍上手特别简单，大概如下：
 - 我希望访问`/`的时候能够读取到我的首页
 - 我希望访问`/assets`的时候能够访问到相关媒体文件
 
-列下我们想要Nginx服务器做的事情，那我们给Nginx提供一份配置告诉他我们希望它做什么。我们把nginx配置补充上：![simple-nginx](/projects/thinkto/simple-nginx.png)
+列下我们想要Nginx服务器做的事情，那我们给Nginx提供一份配置告诉他我们希望它做什么。我们把nginx配置补充上：![simple-nginx](/project/thinkto/simple-nginx.png)
 
 ### 小结
 
@@ -118,7 +118,7 @@ Nginx配置看起来特别熟悉，在web开发中，我们似乎见过类似的
 为了解决这个问题，我们回到研发流程中去找答案：现在处于构建发布阶段，同时还应用了CI，接着CI帮我们按照Dockerfile的要求调用docker构建镜像，然后用了我们配置的nginx配置，最后打出来镜像送到制品库去等待部署。诶？等等！如果CI平台有配置环境变量的功能，我们将环境变量不再放在配置文件中，而是改成通过平台的CI板块动态地注入对应环境的环境变量，让CI机器人在构建的时候读取这些环境变量，最后再利用这些环境变量去做我们之前的事情，问题不就迎刃而解了？至少至少我们不再需要担心敏感数据放在源代码中泄漏，它是放在平台的CI板块构建计划中做的事情，而且未来我们如果真的泄漏了需要改一下相关的环境配置，比如服务地址、OSS地址等，我们可以直接修改了重新构建就好了，不再需要去动前端项目的源代码，岂不美哉？
 
 按照我们的新设想到Coding上寻找，果然找到了对应的CI功能块，大概长这样：
-![coding-ci-env](/projects/thinkto/coding-ci-env.png)
+![coding-ci-env](/project/thinkto/coding-ci-env.png)
 
 通过Coding的CI环境变量配置，允许我们在CI进行中动态注入环境变量，让我们能够在CI阶段利用这些环境变量做些事情。回顾我们刚刚的问题：
 

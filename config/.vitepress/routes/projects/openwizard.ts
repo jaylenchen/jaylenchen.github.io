@@ -1,6 +1,6 @@
 import { DefaultTheme } from 'vitepress';
 
-const openwizard = (subPath: string) => '/projects/openwizard' + subPath
+const openwizard = (subPath: string) => '/project/openwizard' + subPath
 
 // =====Wizard转译器=====
 enum WizardTranspiler {
@@ -11,45 +11,43 @@ enum WizardTranspiler {
   使用nom_branch = '使用nom_branch'
 }
 const wizardTranspiler = (subPath: string) => openwizard('/wizard-transpiler/' + subPath)
-const wizardTranspilerSidebar = {
-  text: 'wizard转译器',
-  items: [
-    {
-      text: WizardTranspiler.wizard缩进语法实现,
-      link: wizardTranspiler(WizardTranspiler.wizard缩进语法实现)
-    },
-    {
-      text: WizardTranspiler.使用nom_combinator,
-      link: wizardTranspiler(WizardTranspiler.使用nom_combinator)
-    },
-    {
-      text: WizardTranspiler.使用nom_multi,
-      link: wizardTranspiler(WizardTranspiler.使用nom_multi)
-    },
-    {
-      text: WizardTranspiler.使用nom_sequence,
-      link: wizardTranspiler(WizardTranspiler.使用nom_sequence)
-    },
-    {
-      text: WizardTranspiler.使用nom_branch,
-      link: wizardTranspiler(WizardTranspiler.使用nom_branch)
-    }
-  ],
-  collapsed: true
-}
+const wizardTranspilerSidebar = [
+  {
+    text: WizardTranspiler.wizard缩进语法实现,
+    link: wizardTranspiler(WizardTranspiler.wizard缩进语法实现)
+  },
+  {
+    text: WizardTranspiler.使用nom_combinator,
+    link: wizardTranspiler(WizardTranspiler.使用nom_combinator)
+  },
+  {
+    text: WizardTranspiler.使用nom_multi,
+    link: wizardTranspiler(WizardTranspiler.使用nom_multi)
+  },
+  {
+    text: WizardTranspiler.使用nom_sequence,
+    link: wizardTranspiler(WizardTranspiler.使用nom_sequence)
+  },
+  {
+    text: WizardTranspiler.使用nom_branch,
+    link: wizardTranspiler(WizardTranspiler.使用nom_branch)
+  }
+]
 
 const mobile = (subPath: string) => openwizard('/mobile/' + subPath)
-const mobileSidebar = {
-  text: "移动应用微信登录功能接入",
-  link: mobile("移动应用微信登录功能接入")
-}
+const mobileSidebar = [
+  {
+    text: '移动应用微信登录功能接入',
+    link: mobile('移动应用微信登录功能接入')
+  }
+]
 
 const nav = { text: 'openwizard', link: wizardTranspiler(WizardTranspiler.wizard缩进语法实现) }
 
 const sidebar: DefaultTheme.Config['sidebar'] = {
   [openwizard('/')]: [
-    wizardTranspilerSidebar,
-    mobileSidebar
+    ...wizardTranspilerSidebar,
+    ...mobileSidebar
   ]
 }
 

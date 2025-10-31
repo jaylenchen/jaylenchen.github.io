@@ -9,7 +9,7 @@ tags:
 
 # 设计一个可扩展的CLI系统
 
-![img](/projects/gepick/core/cli-system.png)
+![img](/project/gepick/core/cli-system.png)
 
 我们希望设计这样一个CLI系统，CLI只有一条命令，就是启动App。但是CLI可以有多种option配置，通过CLI Contribution，我们可以向CLI贡献其他模块希望提供的options，CLI能够收集这些Contritbution，以此来扩展CLI的options。在CLI运行期间，各Contribution能够处理自己的arguments，根据这些arguments来提供具体的功能。
 

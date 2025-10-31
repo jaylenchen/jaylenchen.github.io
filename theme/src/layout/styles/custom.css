@@ -8,12 +8,77 @@
   filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=.95);
 }*/
 
+html,
+body {
+  height: 100%;
+  background: none;
+  overscroll-behavior: none;
+}
+
 body {
   font-size: 16px;
+  color: var(--vp-c-text-1);
+  margin: 0;
+  position: relative;
+}
 
-  * {
-    user-select: none !important;
-  }
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, #f6f9ff 0%, #eef4ff 45%, #ffffff 100%);
+  pointer-events: none;
+}
+
+body * {
+  user-select: none !important;
+}
+
+#app,
+.VPContent,
+.VPDoc,
+.VPDoc .container,
+.VPDoc .content,
+.VPDoc .content-container,
+.VPDoc .main,
+.VPSidebar,
+.VPSidebar .curtain,
+.VPSidebar .items {
+  background: transparent;
+}
+
+.VPNav,
+.VPNavBar,
+.VPNavBar .container,
+.VPNavBar .content,
+.VPNavBarMenu,
+.VPNavBarMenu .menu,
+.VPNavBarMenuGroup,
+.VPNavBarSearch,
+.VPSocialLinks,
+.VPNav .content-body,
+.VPNavScreen,
+.VPNavScreen .container,
+.VPNavScreen .menu,
+.VPNavScreen .items,
+.VPNavBarExtra,
+.VPNavBarExtra .menu {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.VPNavBar {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+.VPNavBar::after,
+.VPNavBar::before,
+.VPNav .divider {
+  display: none !important;
+  border: none !important;
 }
 
 pre,
@@ -23,19 +88,133 @@ samp {
   font-family: var(--vp-font-family-mono);
 }
 
+.vp-doc {
+  font-size: 1rem;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+  color: var(--vp-c-text-2);
+}
+
+.vp-doc p {
+  margin: 0 0 1.15rem;
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--vp-c-text-2);
+}
+
+.vp-doc p + p {
+  margin-top: -0.3rem;
+}
+
+.vp-doc ul,
+.vp-doc ol {
+  margin: 0 0 1.25rem;
+  padding-left: 1.4rem;
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--vp-c-text-2);
+}
+
+.vp-doc li + li {
+  margin-top: 0.4rem;
+}
+
+.vp-doc strong {
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+
+.vp-doc a {
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+  border-bottom: 1px solid var(--vp-c-divider);
+  padding-bottom: 2px;
+}
+
+.vp-doc a:hover {
+  color: var(--vp-c-brand-2);
+  border-color: currentColor;
+}
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.vp-doc h4,
+.vp-doc h5,
+.vp-doc h6 {
+  font-family: var(--vp-font-family-base);
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+  margin: 2.4rem 0 1.2rem;
+  line-height: 1.35;
+}
+
+.vp-doc h1 {
+  font-size: clamp(2.2rem, 4vw, 3rem);
+}
+
 .vp-doc h2 {
-  margin: 15px 0 0;
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
   border-top: none;
 }
 
-.vp-doc h3,
-h4,
-h5 {
-  margin: 10px 0 0;
+.vp-doc h3 {
+  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
 }
 
 .vp-doc h4 {
-  font-size: 18px;
+  font-size: 1.2rem;
+}
+
+.vp-doc blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.2rem;
+  border-left: 4px solid rgba(120, 150, 220, 0.45);
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  color: var(--vp-c-text-2);
+}
+
+.vp-doc pre {
+  margin: 1.4rem 0;
+  border-radius: 14px;
+  box-shadow: none;
+  background: rgba(14, 23, 38, 0.92);
+}
+
+.vp-doc code {
+  font-size: 0.95rem;
+}
+
+.vp-doc table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  margin: 1.5rem 0;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(120, 150, 220, 0.25);
+}
+
+.vp-doc th,
+.vp-doc td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(120, 150, 220, 0.2);
+  font-size: 0.95rem;
+}
+
+.vp-doc th {
+  background: rgba(120, 150, 220, 0.15);
+  font-weight: 600;
+}
+
+.vp-doc figcaption,
+.vp-doc .image-caption {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--vp-c-text-3);
+  text-align: center;
 }
 
 .VPDoc .content-container img {
@@ -118,4 +297,152 @@ mjx-container>svg {
 
 .mr-\[6px\] {
   margin-right: 6px;
+}
+
+.VPDocFooter {
+  border-top: none;
+  padding-top: 0;
+}
+
+.VPFooter,
+.VPFooter .container,
+.VPDocFooter,
+.VPDocFooter .container {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+:root {
+  --vp-sidebar-bg: transparent;
+}
+
+.VPSidebar,
+.VPSidebar .curtain,
+.VPSidebar .items {
+  background: transparent !important;
+}
+
+.DocSearch-Button {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(120, 150, 220, 0.25) !important;
+  color: var(--vp-c-text-1) !important;
+  backdrop-filter: blur(8px);
+  box-shadow: none !important;
+}
+
+.DocSearch-Button:hover {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(120, 150, 220, 0.4) !important;
+  box-shadow: 0 10px 24px rgba(120, 150, 220, 0.16);
+}
+
+.DocSearch-Modal,
+.DocSearch-Container {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(120, 150, 220, 0.25) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: none !important;
+}
+
+.DocSearch-Form,
+.DocSearch-Input {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(120, 150, 220, 0.25) !important;
+  border-radius: 16px !important;
+}
+
+.DocSearch-Dropdown,
+.DocSearch-Hits,
+.DocSearch-Hit a,
+.DocSearch-Hit-source,
+.DocSearch-Footer {
+  background: transparent !important;
+  color: var(--vp-c-text-1) !important;
+}
+
+.DocSearch-Hit[aria-selected='true'] a {
+  background: rgba(120, 150, 220, 0.18) !important;
+  border-radius: 16px !important;
+}
+
+.DocSearch-Button-Keys,
+.DocSearch-Commands-Key {
+  background: rgba(120, 150, 220, 0.14) !important;
+  color: var(--vp-c-text-2) !important;
+  border: 1px solid rgba(120, 150, 220, 0.24) !important;
+}
+
+.DocSearch-MagnifierLabel,
+.DocSearch-Label,
+.DocSearch-Footer span,
+.DocSearch-Hit-path {
+  color: var(--vp-c-text-2) !important;
+}
+
+.VPNavBar .content {
+  display: var(--vp-nav-container-display);
+}
+
+.VPNavBarSearch.search {
+  margin-left: 0 !important;
+  order: unset;
+  flex-shrink: unset;
+}
+
+.VPSocialLinks,
+.VPNavBarExtra,
+.VPNavBarHamburger {
+  order: unset;
+  margin-left: 0;
+  flex-shrink: unset;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-shell__content {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.global-footer {
+  flex-shrink: 0;
+  margin: 3rem auto 2.2rem;
+  padding: 1rem 1.25rem;
+  max-width: 720px;
+  width: calc(100% - 2.5rem);
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--vp-c-text-3);
+  background: rgba(255, 255, 255, 0.78);
+  border-radius: 1.1rem;
+  border: 1px solid rgba(120, 150, 220, 0.25);
+}
+
+.global-footer a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(120, 150, 220, 0.4);
+  padding-bottom: 1px;
+}
+
+.global-footer a:hover {
+  color: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+}
+
+.VPDocFooter .pager,
+.VPDocFooter .prev,
+.VPDocFooter .next,
+.VPDocFooter .edit-link,
+.VPDoc .edit-info,
+.VPDoc .VPDocAsideOutline .edit-link {
+  display: none !important;
 }

@@ -1,6 +1,6 @@
 import { DefaultTheme } from 'vitepress';
 
-const tsalg = (subPath: string) => '/projects/tsalg' + subPath
+const tsalg = (subPath: string) => '/project/tsalg' + subPath
 
 // ====================================数据结构=====================================
 
