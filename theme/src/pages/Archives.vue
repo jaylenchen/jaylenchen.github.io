@@ -391,6 +391,7 @@ watch(
   display: flex;
   gap: 2rem;
   align-items: flex-start;
+  flex-direction: row-reverse;
 }
 
 .archives__aside {
@@ -476,10 +477,17 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  padding: 0.95rem 1.1rem;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 1rem;
-  background: var(--vp-c-bg);
+  padding: 1.05rem 1.2rem;
+  border-radius: 1.1rem;
+  background: linear-gradient(
+    180deg,
+    rgba(250, 252, 255, 0.92) 0%,
+    rgba(238, 245, 255, 0.88) 45%,
+    rgba(232, 242, 255, 0.85) 100%
+  );
+  border: 1px solid rgba(120, 150, 220, 0.2);
+  box-shadow: 0 16px 34px rgba(120, 150, 220, 0.12);
+  backdrop-filter: blur(8px);
 }
 
 .archives__month-header {
@@ -512,7 +520,18 @@ watch(
 .archives__article-item {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.45rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(120, 150, 220, 0.18);
+  box-shadow: 0 12px 26px rgba(120, 150, 220, 0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.archives__article-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 32px rgba(120, 150, 220, 0.16);
 }
 
 .archives__article-link {

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, computed, useAttrs } from 'vue'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -20,6 +20,7 @@ interface Props {
 
 // 定义文章属性
 const props = defineProps<Props>()
+const attrs = useAttrs()
 dayjs.extend(relativeTime)
 dayjs.locale('zh-cn')
 
@@ -27,6 +28,11 @@ dayjs.locale('zh-cn')
 const date = ref(props.article?.date ? new Date(props.article?.date) : new Date())
 const project = ref(props.article?.project ?? '')
 const tags = ref(props.article?.tags ?? [])
+const isTagsContext = computed(() => {
+  const cls = attrs.class
+  return typeof cls === 'string' && cls.split(' ').includes('tags-meta')
+})
+const displayTags = computed(() => (isTagsContext.value ? [] : tags.value))
 
 // 处理项目点击
 function handleProjectClick(project: string) {
@@ -42,27 +48,8 @@ function handleTagClick(tag: string) {
 
 <template>
   <div class="meta-wrapper">
-    <!-- 时间 -->
-    <div class="meta-item">
-      <span class="meta-icon date">
-        <TimeSvg></TimeSvg>
-      </span>
-      <time class="meta-content" :datetime="date.toISOString()" :title="dayjs().to(dayjs(date))">
-        {{
-          date.toLocaleString('zh', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute:
-              'numeric'
-          })
-        }}
-      </time>
-    </div>
-
     <!-- 项目 -->
-    <div class="meta-item">
+    <div v-if="project" class="meta-item">
       <span class="meta-icon project">
         <ProjectSvg></ProjectSvg>
       </span>
@@ -76,18 +63,34 @@ function handleTagClick(tag: string) {
     </div>
 
     <!-- 标签 -->
-    <div class="meta-item">
+    <div v-if="displayTags.length" class="meta-item">
       <span class="meta-icon tag">
         <TagSvg></TagSvg>
       </span>
       <span class="meta-content">
-        <span v-for="(tag, index) in tags" :key="index">
+        <span v-for="(tag, index) in displayTags" :key="index">
           <a href="#" target="_self" :title="tag" @click="handleTagClick(tag)">{{
             tag
             }}</a>
-          <span v-if="index !== tags.length - 1">｜</span>
+          <span v-if="index !== displayTags.length - 1">｜</span>
         </span>
       </span>
+    </div>
+
+    <!-- 时间 -->
+    <div class="meta-item">
+      <span class="meta-icon date">
+        <TimeSvg></TimeSvg>
+      </span>
+      <time class="meta-content" :datetime="date.toISOString()" :title="dayjs().to(dayjs(date))">
+        {{
+          date.toLocaleString('zh', {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+          })
+        }}
+      </time>
     </div>
   </div>
 </template>

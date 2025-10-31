@@ -30,7 +30,7 @@ const { page, theme, frontmatter } = useData()
     </div>
     <footer class="global-footer">
       Powered by <a href="https://github.com/jaylenchen" target="_blank" rel="noopener">jaylenchen</a>
-      | Copyright © 2020-2025 | MIT License
+      | Copyright © 2020-2025
     </footer>
   </div>
 </template>

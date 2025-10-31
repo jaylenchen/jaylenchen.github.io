@@ -8,8 +8,8 @@ export const search: DefaultTheme.Config['search'] = {
       root: {
         translations: {
           button: {
-            buttonText: '搜索文档',
-            buttonAriaLabel: '搜索文档'
+            buttonText: '搜一搜',
+            buttonAriaLabel: '搜一搜'
           },
           modal: {
             noResultsText: '无法找到相关结果',

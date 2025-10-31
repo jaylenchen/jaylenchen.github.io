@@ -90,24 +90,6 @@ const selectedTagEntry = computed(() => {
   );
 });
 
-const leftArticles = computed(() => {
-  const entry = selectedTagEntry.value;
-  if (!entry || entry.articles.length <= 1) {
-    return entry?.articles ?? [];
-  }
-  const mid = Math.ceil(entry.articles.length / 2);
-  return entry.articles.slice(0, mid);
-});
-
-const rightArticles = computed(() => {
-  const entry = selectedTagEntry.value;
-  if (!entry || entry.articles.length <= 1) {
-    return [];
-  }
-  const mid = Math.ceil(entry.articles.length / 2);
-  return entry.articles.slice(mid);
-});
-
 // 如果URL路径有tag参数, 默认选中指定Tag, 例如: /tags?tag=Git
 const initialTag = getQueryParam('tag')?.trim();
 if (initialTag && initialTag !== '') {
@@ -123,7 +105,7 @@ if (initialTag && initialTag !== '') {
         <aside class="tags__aside" aria-label="标签导航">
           <p class="tags__kicker">tags</p>
           <p class="tags__lede">共 {{ totalTagCount }} 个标签 · {{ totalArticleCount }} 篇文章</p>
-          <p class="tags__body">选择一个标签，在右侧查看对应文章列表。</p>
+          <p class="tags__body">选择一个标签，在左侧查看对应文章列表。</p>
 
           <div class="tags__list" aria-label="标签列表">
             <button
@@ -150,17 +132,18 @@ if (initialTag && initialTag !== '') {
           </header>
 
           <div v-if="selectedTagEntry.articles.length" class="tags__list-wrapper">
-            <div class="tags__split">
-              <ul class="tags__article-list">
-                <li v-for="article in leftArticles" :key="article.path" class="tags__article-item">
-                  <a :href="article.path" target="_self" class="tags__article-link">{{ article.title }}</a>
-                  <ArticleMetadata :article="article" />
-                </li>
-              </ul>
-              <ul class="tags__article-list">
-                <li v-for="article in rightArticles" :key="article.path" class="tags__article-item">
-                  <a :href="article.path" target="_self" class="tags__article-link">{{ article.title }}</a>
-                  <ArticleMetadata :article="article" />
+            <div class="tags__timeline">
+              <ul class="tags__timeline-list">
+                <li
+                  v-for="article in selectedTagEntry.articles"
+                  :key="article.path"
+                  class="tags__timeline-item"
+                >
+                  <span class="tags__timeline-dot"></span>
+                  <div class="tags__article-item tags__timeline-card">
+                    <a :href="article.path" target="_self" class="tags__article-link">{{ article.title }}</a>
+                    <ArticleMetadata :article="article" class="tags-meta" />
+                  </div>
                 </li>
               </ul>
             </div>
@@ -219,6 +202,7 @@ if (initialTag && initialTag !== '') {
   display: flex;
   gap: 2rem;
   align-items: flex-start;
+  flex-direction: row-reverse;
 }
 
 .tags__aside {
@@ -444,44 +428,75 @@ if (initialTag && initialTag !== '') {
   flex-direction: column;
 }
 
-.tags__split {
-  display: grid;
-  gap: 0.9rem;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+.tags__timeline {
+  position: relative;
+  padding: 1.1rem 0 1.1rem 1.4rem;
 }
 
-.tags__article-list {
+.tags__timeline-list {
+  list-style: none;
   margin: 0;
   padding: 0;
-  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 1.1rem;
+  position: relative;
 }
 
-.tags__article-list::-webkit-scrollbar {
-  width: 6px;
+.tags__timeline-list::before {
+  content: '';
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  left: 0.35rem;
+  width: 2px;
+  background: rgba(120, 150, 220, 0.18);
 }
 
-.tags__article-list::-webkit-scrollbar-thumb {
-  background: rgba(62, 99, 221, 0.18);
-  border-radius: 999px;
+.tags__timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 0.7rem 1fr;
+  column-gap: 1rem;
+}
+
+.tags__timeline-dot {
+  justify-self: center;
+  align-self: center;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--vp-c-brand-1);
+  box-shadow: 0 0 0 4px rgba(120, 150, 220, 0.18);
 }
 
 .tags__article-item {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  padding: 0.75rem 0.85rem;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 0.75rem;
-  background: var(--vp-c-bg);
+  gap: 0.4rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  background: linear-gradient(
+    180deg,
+    rgba(250, 252, 255, 0.92) 0%,
+    rgba(238, 245, 255, 0.88) 45%,
+    rgba(232, 242, 255, 0.85) 100%
+  );
+  border: 1px solid rgba(120, 150, 220, 0.2);
+  box-shadow: 0 16px 32px rgba(120, 150, 220, 0.12);
+  backdrop-filter: blur(6px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.tags__article-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 36px rgba(120, 150, 220, 0.16);
 }
 
 .tags__article-link {
   color: inherit;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   line-height: 1.45;
 }
 
@@ -491,7 +506,7 @@ if (initialTag && initialTag !== '') {
 
 .tags__article-item :deep(.article-meta) {
   color: var(--vp-c-text-3);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
 }
 
 @media (max-width: 860px) {
