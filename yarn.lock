@@ -635,12 +635,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blog/config@workspace:config":
-  version: 0.0.0-use.local
-  resolution: "@blog/config@workspace:config"
-  languageName: unknown
-  linkType: soft
-
 "@blog/docs@workspace:*, @blog/docs@workspace:docs":
   version: 0.0.0-use.local
   resolution: "@blog/docs@workspace:docs"

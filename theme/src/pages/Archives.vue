@@ -1,26 +1,26 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { Tag } from 'ant-design-vue'
-import ArticleMetadata from '@blog/theme/global/components/ArticleMetadata.vue'
+import ArticleMetadata from '../components/ArticleMetadata.vue'
 
-import ArchiveSvg from '@blog/theme/assets/svgs/archive.svg';
-import RatSvg from '@blog/theme/assets/svgs/chinese-zodiac/rat.svg';
-import OxSvg from '@blog/theme/assets/svgs/chinese-zodiac/ox.svg';
-import TigerSvg from '@blog/theme/assets/svgs/chinese-zodiac/tiger.svg';
-import Rabbit from '@blog/theme/assets/svgs/chinese-zodiac/rabbit.svg';
-import DragonSvg from '@blog/theme/assets/svgs/chinese-zodiac/dragon.svg';
-import SnakeSvg from '@blog/theme/assets/svgs/chinese-zodiac/snake.svg';
-import HorseSvg from '@blog/theme/assets/svgs/chinese-zodiac/horse.svg';
-import GoatSvg from '@blog/theme/assets/svgs/chinese-zodiac/goat.svg';
-import MonkeySvg from '@blog/theme/assets/svgs/chinese-zodiac/monkey.svg';
-import RoosterSvg from '@blog/theme/assets/svgs/chinese-zodiac/rooster.svg';
-import DogSvg from '@blog/theme/assets/svgs/chinese-zodiac/dog.svg';
-import PigSvg from '@blog/theme/assets/svgs/chinese-zodiac/pig.svg';
+import ArchiveSvg from '../assets/svgs/archive.svg';
+import RatSvg from '../assets/svgs/chinese-zodiac/rat.svg';
+import OxSvg from '../assets/svgs/chinese-zodiac/ox.svg';
+import TigerSvg from '../assets/svgs/chinese-zodiac/tiger.svg';
+import Rabbit from '../assets/svgs/chinese-zodiac/rabbit.svg';
+import DragonSvg from '../assets/svgs/chinese-zodiac/dragon.svg';
+import SnakeSvg from '../assets/svgs/chinese-zodiac/snake.svg';
+import HorseSvg from '../assets/svgs/chinese-zodiac/horse.svg';
+import GoatSvg from '../assets/svgs/chinese-zodiac/goat.svg';
+import MonkeySvg from '../assets/svgs/chinese-zodiac/monkey.svg';
+import RoosterSvg from '../assets/svgs/chinese-zodiac/rooster.svg';
+import DogSvg from '../assets/svgs/chinese-zodiac/dog.svg';
+import PigSvg from '../assets/svgs/chinese-zodiac/pig.svg';
 
-import { goToArchivesPage } from '@blog/theme/utils/route';
-import { getQueryParam, getChineseZodiac } from '@blog/theme/utils/utils';
+import { goToArchivesPage } from '../utils/route';
+import { getQueryParam, getChineseZodiac } from '../utils/utils';
 // @ts-ignore
-import { data as articleData } from '../../../config/article.data'
+import { data as articleData } from '@blog/docs/article.data'
 
 
 const yearSvgMap = {

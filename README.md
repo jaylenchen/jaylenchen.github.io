@@ -1,10 +1,9 @@
-# 文思塾
+# jaylenchen
 
 ## 源码组织
 
-- config：vitepress配置
-- docs： markdown文章
-- theme：vitepress主题
+- docs：VitePress 配置与全部 Markdown 内容（`.vitepress/` + `src/`）
+- theme：自定义 VitePress 主题源码
 
 ## 使用变量配置（frontMatter）
 

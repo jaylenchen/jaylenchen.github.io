@@ -8,14 +8,13 @@
     "url": "git+https://github.com/jaylenchen/jaylenchen.github.io.git"
   },
   "workspaces": [
-    "config",
     "docs",
     "theme"
   ],
   "scripts": {
-    "dev:docs": "yarn workspace @blog/config dev",
-    "build:docs": "yarn workspace @blog/config build",
-    "preview:docs": "yarn workspace @blog/config preview",
+    "dev:docs": "yarn workspace @blog/docs dev",
+    "build:docs": "yarn workspace @blog/docs build",
+    "preview:docs": "yarn workspace @blog/docs preview",
     "prepare": "husky"
   },
   "dependencies": {

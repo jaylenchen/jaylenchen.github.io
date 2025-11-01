@@ -2,11 +2,11 @@
 import { computed, ref } from 'vue';
 
 import { getQueryParam } from '@blog/theme/utils/utils';
-import ArticleMetadata from '@blog/theme/global/components/ArticleMetadata.vue'
+import ArticleMetadata from '@blog/theme/components/ArticleMetadata.vue'
 import EmptySvg from '@blog/theme/assets/svgs/empty.svg';
 
 // @ts-ignore
-import { data as articleData } from '../../../config/article.data'
+import { data as articleData } from '@blog/docs/article.data'
 
 
 const tagsMap = computed(() => initTags(articleData));

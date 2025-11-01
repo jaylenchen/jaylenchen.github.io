@@ -1,12 +1,12 @@
 import DefaultTheme from 'vitepress/theme'
-import Layout from './layout/components/Layout.vue';
-import ArticleMetadata from './global/components/ArticleMetadata.vue'
+import Layout from './components/Layout.vue';
+import ArticleMetadata from './components/ArticleMetadata.vue'
 
 import theme from 'vitepress/theme'
 
 import "ant-design-vue/dist/reset.css";
-import './layout/styles/vars.css';
-import './layout/styles/custom.css';
+import './styles/vars.css';
+import './styles/custom.css';
 
 import type { EnhanceAppContext } from 'vitepress';
 import type { DefineComponent } from 'vue';
