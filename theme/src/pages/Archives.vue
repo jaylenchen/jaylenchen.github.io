@@ -3,7 +3,6 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { Tag } from 'ant-design-vue'
 import ArticleMetadata from '../components/ArticleMetadata.vue'
 
-import ArchiveSvg from '../assets/svgs/archive.svg';
 import RatSvg from '../assets/svgs/chinese-zodiac/rat.svg';
 import OxSvg from '../assets/svgs/chinese-zodiac/ox.svg';
 import TigerSvg from '../assets/svgs/chinese-zodiac/tiger.svg';
@@ -98,6 +97,23 @@ function resetCurrentPage() {
 function selectYear(yearValue: string) {
   activeYear.value = yearValue;
 }
+
+const latestUpdated = computed(() => {
+  if (!articles.value.length) {
+    return null;
+  }
+
+  const parsed = new Date(articles.value[0].date);
+  if (Number.isNaN(parsed.getTime())) {
+    return null;
+  }
+
+  return parsed.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+  });
+});
 
 const currentYearEntry = computed(() => {
   if (!archiveEntries.value.length) {
@@ -249,37 +265,33 @@ watch(
 <template>
   <div class="archives">
     <div class="archives__inner">
-      <header class="archives__header">
-        <p class="archives__kicker">blog</p>
+      <header class="archives__hero">
+        <div class="archives__hero-card">
+          <a
+            class="archives__hero-heading"
+            href="https://github.com/jaylenchen"
+            target="_blank"
+            rel="noopener"
+          >
+            <img
+              class="archives__hero-avatar"
+              src="/svgs/avatar.svg"
+              alt="jaylenchen avatar"
+            />
+            <span class="archives__hero-name">jaylenchen</span>
+          </a>
+          <p>
+            用文字的灶台燃起思维的火花，用心在这思维的厨房里烹饪，就能够做出一道又道美味的佳肴，至于能有多美味，交给时间吧...
+          </p>
+          <div class="archives__hero-meta">
+            <span class="meta-pill">累计 {{ articles.length }} 篇文章</span>
+            <span v-if="latestUpdated" class="meta-pill">最近更新 {{ latestUpdated }}</span>
+          </div>
+        </div>
       </header>
 
       <div class="archives__layout" v-if="archiveEntries.length">
         <aside class="archives__aside" aria-label="年份导航">
-          <div class="archives__filter">
-            <Tag v-if="archiveType === ArchiveType.Project" class="filter-tag" closable @close="resetCurrentPage">
-              <template #icon>
-                <ArchiveSvg></ArchiveSvg>
-              </template>
-              {{ project }}项目 （共 {{ articles.length }} 篇）文章
-            </Tag>
-
-            <Tag v-else-if="archiveType === ArchiveType.Tag" class="filter-tag" closable @close="resetCurrentPage">
-              <template #icon>
-                <ArchiveSvg></ArchiveSvg>
-              </template>
-              {{ tag }}标签 （共 {{ articles.length }} 篇）文章
-            </Tag>
-
-            <Tag v-else-if="archiveType === ArchiveType.Year" class="filter-tag" closable @close="resetCurrentPage">
-              <ArchiveSvg></ArchiveSvg>
-              {{ year }}年 （共 {{ articles.length }} 篇）文章
-            </Tag>
-
-            <Tag v-else class="filter-tag">
-              <ArchiveSvg></ArchiveSvg>
-              全部文章（共 {{ articles.length }} 篇）
-            </Tag>
-          </div>
           <p class="archives__aside-title">年份</p>
           <button
             v-for="yearEntry in archiveEntries"
@@ -349,18 +361,133 @@ watch(
   gap: 2.5rem;
 }
 
-.archives__header {
+.archives__hero {
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 1.2rem;
 }
 
-.archives__kicker {
-  margin: 0;
-  font-size: 0.82rem;
-  letter-spacing: 0.12em;
+.archives__hero-kicker {
+  align-self: flex-start;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--vp-c-text-3);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(96, 135, 220, 0.14);
+  color: rgba(60, 90, 170, 0.82);
+}
+
+.archives__hero-card {
+  position: relative;
+  padding: 2.4rem 2.1rem 2.6rem;
+  border-radius: 12px;
+  border: 1px solid rgba(120, 150, 220, 0.22);
+  background: rgba(236, 242, 255, 0.92);
+  box-shadow: 0 26px 46px rgba(110, 138, 220, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  overflow: hidden;
+}
+
+.archives__hero-card::before {
+  display: none;
+}
+
+
+.archives__hero-heading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.95rem;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: none !important;
+}
+
+.archives__hero-heading:hover,
+.archives__hero-heading:focus-visible {
+  text-decoration: none;
+  color: inherit;
+  border-bottom: none !important;
+}
+
+.archives__hero-avatar {
+  display: block;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.archives__hero-name {
+  font-size: clamp(1.45rem, 3vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: rgba(48, 64, 110, 0.9);
+}
+
+.archives__hero-card p {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.85;
+  color: rgba(55, 74, 122, 0.86);
+}
+
+.archives__hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.2rem;
+}
+
+.meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  color: rgba(55, 78, 135, 0.9);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(120, 150, 220, 0.24);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 640px) {
+  .archives {
+    padding: 1.9rem 1.1rem 2.2rem;
+  }
+
+  .archives__hero-card {
+    padding: 2rem 1.65rem 2.2rem;
+    border-radius: 22px;
+    gap: 1rem;
+  }
+
+  .archives__hero-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .archives__hero-name {
+    font-size: 1.4rem;
+  }
+
+  .archives__hero-card p {
+    font-size: 0.98rem;
+    line-height: 1.75;
+  }
+
+  .meta-pill {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
+  }
 }
 
 .archives__filter {

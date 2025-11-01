@@ -99,6 +99,7 @@ function handleTagClick(tag: string) {
 <style scoped>
 .meta-wrapper {
   margin-top: 10px;
+  margin-bottom: 16px;
 }
 
 .meta-item {

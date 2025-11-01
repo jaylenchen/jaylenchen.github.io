@@ -1,6 +1,9 @@
 import { DefaultTheme } from 'vitepress';
 
-const openwizard = (subPath: string) => '/technology/project/openwizard' + subPath
+const OPENWIZARD_BASE_PATH = '/technology/project/openwizard'
+
+const openwizard = (subPath = '') =>
+  subPath ? `${OPENWIZARD_BASE_PATH}/${subPath.replace(/^\/+/, '')}` : OPENWIZARD_BASE_PATH
 
 // =====Wizard转译器=====
 enum WizardTranspiler {
@@ -10,7 +13,7 @@ enum WizardTranspiler {
   使用nom_sequence = '使用nom_sequence',
   使用nom_branch = '使用nom_branch'
 }
-const wizardTranspiler = (subPath: string) => openwizard('/wizard-transpiler/' + subPath)
+const wizardTranspiler = (subPath: string) => openwizard(`wizard-transpiler/${subPath}`)
 const wizardTranspilerSidebar = [
   {
     text: WizardTranspiler.wizard缩进语法实现,
@@ -34,7 +37,7 @@ const wizardTranspilerSidebar = [
   }
 ]
 
-const mobile = (subPath: string) => openwizard('/mobile/' + subPath)
+const mobile = (subPath: string) => openwizard(`mobile/${subPath}`)
 const mobileSidebar = [
   {
     text: '移动应用微信登录功能接入',
@@ -42,10 +45,14 @@ const mobileSidebar = [
   }
 ]
 
-const nav = { text: 'openwizard', link: wizardTranspiler(WizardTranspiler.wizard缩进语法实现) }
+const nav = {
+  text: 'Openwizard',
+  link: openwizard(),
+  activeMatch: '^/technology/project/openwizard'
+}
 
 const sidebar: DefaultTheme.Config['sidebar'] = {
-  [openwizard('/')]: [
+  [OPENWIZARD_BASE_PATH]: [
     ...wizardTranspilerSidebar,
     ...mobileSidebar
   ]

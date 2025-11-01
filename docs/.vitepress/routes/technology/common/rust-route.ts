@@ -11,11 +11,12 @@ const items: DefaultTheme.SidebarItem[] = [
 
 export const nav = {
   text: 'Rust',
-  link: items[0]?.link ?? `${rustBase}/`
+  link: rustBase,
+  activeMatch: '^/technology/common/rust'
 }
 
 export const sidebar: DefaultTheme.Config['sidebar'] = {
-  [`${rustBase}/`]: [...items]
+  [rustBase]: [...items]
 }
 
 export default {

@@ -20,6 +20,17 @@ const docsConfig: UserConfig<DefaultTheme.Config> = {
 const buildConfig: UserConfig<DefaultTheme.Config> = {
   base: '/',
   srcDir: resolve(__dirname, '../../src'),
+  rewrites: {
+    'technology/project/gepick/index.md': 'technology/project/gepick.md',
+    'technology/project/openwizard/index.md': 'technology/project/openwizard.md',
+    'technology/project/thinkto/index.md': 'technology/project/thinkto.md',
+    'technology/project/tsalg/index.md': 'technology/project/tsalg.md',
+    'technology/common/docker/index.md': 'technology/common/docker.md',
+    'technology/common/rust/index.md': 'technology/common/rust.md',
+    'technology/common/mermaid/index.md': 'technology/common/mermaid.md',
+    'technology/common/github/index.md': 'technology/common/github.md',
+    'life/index.md': 'life.md'
+  },
   markdown,
   vue: {
     template: {

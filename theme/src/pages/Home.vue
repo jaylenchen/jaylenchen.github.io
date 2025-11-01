@@ -2,9 +2,7 @@
   <div class="home">
     <header class="intro">
       <p class="intro__kicker">jaylenchen</p>
-      <p>
-        用文字的灶台燃起思维的火花，用心在这思维的厨房里烹饪，就能够做出一道又道美味的佳肴，至于能有多美味，交给时间吧...
-      </p>
+      <p>一个软件工程爱好者，喜欢钻研、学习程序设计，热爱生活。</p>
     </header>
 
     <nav class="quick-links" aria-label="Site shortcuts">

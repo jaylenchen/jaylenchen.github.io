@@ -1,13 +1,17 @@
 import { DefaultTheme } from 'vitepress';
 
-const gepick = (subPath: string) => '/technology/project/gepick' + subPath
+const GEPICK_BASE_PATH = '/technology/project/gepick'
+
+const gepick = (subPath = '') =>
+  subPath ? `${GEPICK_BASE_PATH}/${subPath.replace(/^\/+/, '')}` : GEPICK_BASE_PATH
+
+const basic = (subPath: string) => gepick(`basic/${subPath}`)
 
 
-const basic = (subPath: string) => gepick('/basic/' + subPath)
-
-
-const nav = { 
-  text: 'gepick', link: basic("di-framework") ,
+const nav = {
+  text: 'Gepick',
+  link: gepick(),
+  activeMatch: '^/technology/project/gepick',
 }
 
 const basicItems: DefaultTheme.SidebarItem[] = [
@@ -55,7 +59,18 @@ const aiItems: DefaultTheme.SidebarItem[] = [
 ]
 
 const sidebar: DefaultTheme.Config['sidebar'] = {
-  [gepick('/')]: [...basicItems, ...aiItems]
+  [GEPICK_BASE_PATH]: [
+    {
+      text: '基础能力',
+      collapsed: false,
+      items: basicItems
+    },
+    {
+      text: 'AI 能力',
+      collapsed: false,
+      items: aiItems
+    }
+  ]
 }
 
 export default {

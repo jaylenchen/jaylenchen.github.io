@@ -11,11 +11,12 @@ const items: DefaultTheme.SidebarItem[] = [
 
 export const nav = {
   text: 'GitHub',
-  link: items[0]?.link ?? `${githubBase}/`
+  link: githubBase,
+  activeMatch: '^/technology/common/github'
 }
 
 export const sidebar: DefaultTheme.Config['sidebar'] = {
-  [`${githubBase}/`]: [...items]
+  [githubBase]: [...items]
 }
 
 export default {

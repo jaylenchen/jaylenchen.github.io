@@ -43,11 +43,12 @@ const items: DefaultTheme.SidebarItem[] = [
 
 export const nav = {
   text: 'Docker',
-  link: items[0]?.link ?? `${dockerBase}/`
+  link: dockerBase,
+  activeMatch: '^/technology/common/docker'
 }
 
 export const sidebar: DefaultTheme.Config['sidebar'] = {
-  [`${dockerBase}/`]: [...items]
+  [dockerBase]: [...items]
 }
 
 export default {

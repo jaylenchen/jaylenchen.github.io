@@ -11,11 +11,12 @@ const items: DefaultTheme.SidebarItem[] = [
 
 export const nav = {
   text: 'Mermaid',
-  link: items[0]?.link ?? `${mermaidBase}/`
+  link: mermaidBase,
+  activeMatch: '^/technology/common/mermaid'
 }
 
 export const sidebar: DefaultTheme.Config['sidebar'] = {
-  [`${mermaidBase}/`]: [...items]
+  [mermaidBase]: [...items]
 }
 
 export default {

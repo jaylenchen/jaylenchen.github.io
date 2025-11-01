@@ -1,14 +1,12 @@
 import thinkto from './thinkto-route'
 import openwizard from './openwizard-route'
 import gepick from './gepick-route'
-// import tsalg from './tsalg-route'
 
 
 export const projectNavItems = [
   gepick.nav,
   openwizard.nav,
   thinkto.nav,
-  // tsalg.nav
 ]
 
 export const nav = {
@@ -20,7 +18,6 @@ export const sidebar = {
   ...gepick.sidebar,
   ...openwizard.sidebar,
   ...thinkto.sidebar,
-  // ...tsalg.sidebar
 }
 
 export default {
