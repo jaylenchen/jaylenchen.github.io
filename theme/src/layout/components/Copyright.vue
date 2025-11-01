@@ -7,8 +7,9 @@ const { theme, frontmatter } = useData()
 const isOriginal = ref(frontmatter.value?.isOriginal ?? true)
 const author = ref(frontmatter.value?.author ?? theme.value.customConfig.articleMetadataConfig.author)
 const authorLink = ref(frontmatter.value?.authorLink ?? theme.value.customConfig.articleMetadataConfig.authorLink)
-const licenseLink = ref(theme.value.customConfig.copyrightConfig?.licenseLink)
+const licenseLink = ref('https://creativecommons.org/licenses/by-nc-nd/3.0/deed.en')
 const licenseText = ref(theme.value.customConfig.copyrightConfig?.license)
+const licenseDisplay = '自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）'
 </script>
 
 <template>
@@ -16,41 +17,55 @@ const licenseText = ref(theme.value.customConfig.copyrightConfig?.license)
     <div class="content">
       <!-- 版权属于 -->
       <div class="item">
-        <div class="icon-wrapper">
-          <svg class="icon" width="22" height="22" viewBox="0 0 1024 1024">
-            <title>原创作者</title>
-            <path
-              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64"
-              fill="#EBF2FF" />
-            <path
-              d="M542.7 352c0-86-69.7-155.7-155.7-155.7S231.3 266 231.3 352c0 86 69.7 155.7 155.7 155.7S542.7 438 542.7 352"
-              fill="#8CAAF4" />
-            <path
-              d="M701.3 668.2c-67.2-8.7-98.7-4.3-176-4.3-141.3 0-232.5 113.8-229.5 255 0 12.8 6.4 23.5 17.9 30.7 13.6 9 31.5 12.3 49.6 14 57.5 5.9 115 5.9 182.5 5.9 37.3 0 86.1-2 123.5-3.9 23.1 0 43-3.9 63.1-13.1 15.4-6.9 24-15.7 26-30.7 7-123-81.6-239.2-157.6-253.6z"
-              fill="#5C8EF3" />
-          </svg>
+        <div class="item-heading">
+          <div class="icon-wrapper">
+            <svg class="icon" viewBox="0 0 64 64" aria-hidden="true">
+              <title>原创作者</title>
+              <circle cx="32" cy="32" r="30" fill="#E6F1FF" />
+              <circle cx="32" cy="24" r="9.5" fill="#7FA2F7" />
+              <path
+                d="M18 48c0-8.6 6.9-15.5 15.5-15.5h1c8.6 0 15.5 6.9 15.5 15.5v5H18v-5Z"
+                fill="#4B79F7" />
+              <path
+                d="M43.6 52.2H20.4c-1.2 0-2.2-.9-2.2-2.1s1-2.1 2.2-2.1h23.2c1.2 0 2.2.9 2.2 2.1s-1 2.1-2.2 2.1Z"
+                fill="#D8E4FF" />
+            </svg>
+          </div>
+          <span class="label">作者：</span>
         </div>
-        <span class="label">作者：</span>
-        <span>
-          <a v-if="isOriginal" :href="authorLink" title="进入作者主页" target="_blank">{{ author }}</a>
-          <span v-else :title="author">{{ author }}</span>
-        </span>
+        <div class="item-body">
+          <span class="value">
+            <a v-if="isOriginal" :href="authorLink" title="进入作者主页" target="_blank">{{ author }}</a>
+            <span v-else :title="author">{{ author }}</span>
+          </span>
+        </div>
       </div>
       <!-- 作品协议 -->
       <div class="item">
-        <div class="icon-wrapper">
-          <svg class="icon" viewBox="0 0 1024 1024">
-            <title>作品协议</title>
-            <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64" fill="#FFF4DC" />
-            <path
-              d="M342.4 512a90.1 90.1 0 1 0 180.2 0 90.1 90.1 0 1 0-180.2 0zM598.9 323.6a90.1 90.1 0 1 0 180.2 0 90.1 90.1 0 1 0-180.2 0zM598.9 688.1a90.1 90.1 0 1 0 180.2 0 90.1 90.1 0 1 0-180.2 0z"
-              fill="#F5B956" />
-            <path d="M359.4 480.4l257.3-175.7 27.7 40.6-257.3 175.7z" fill="#F5B956" />
-            <path d="M367.4 488.5 620.3 670.6l-28.7 39.9L338.6 528.3z" fill="#F5B956" />
-          </svg>
+        <div class="item-heading">
+          <div class="icon-wrapper">
+            <svg class="icon" viewBox="0 0 64 64" aria-hidden="true">
+              <title>作品协议</title>
+              <circle cx="32" cy="32" r="30" fill="#FFF4E3" />
+              <path
+                d="M45 18H19a2 2 0 0 0-2 2v22.4c0 1 .4 2 1.1 2.7l7.8 7.9a3 3 0 0 0 4.3 0l2.4-2.4a2.4 2.4 0 0 1 3.4 0l2.4 2.4a3 3 0 0 0 4.3 0l7.8-7.9c.7-.7 1.1-1.7 1.1-2.7V20a2 2 0 0 0-2-2Z"
+                fill="#F4B455" />
+              <path
+                d="M32 38.5a1.6 1.6 0 0 1-1.5-.9l-2.2-4.4-4.9-.7a1.6 1.6 0 0 1-.9-2.7l3.6-3.5-.9-4.9a1.6 1.6 0 0 1 2.3-1.7L32 21l4.4-2.3a1.6 1.6 0 0 1 2.3 1.7l-.9 4.9 3.6 3.5a1.6 1.6 0 0 1-.9 2.7l-4.9.7-2.2 4.4a1.6 1.6 0 0 1-1.4.9Z"
+                fill="#FFF7E8" />
+            </svg>
+          </div>
+          <span class="label">版权：</span>
         </div>
-        <span class="label">版权：</span>
-        <span><a :href="licenseLink" target="_self">{{ licenseText }}</a> 许可协议授权</span>
+        <div class="item-body">
+          <span class="value">
+            自由转载-非商用-非衍生-保持署名（<a
+              :href="licenseLink"
+              target="_blank"
+              rel="noopener"
+            >创意共享3.0许可证</a>）
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -78,8 +93,29 @@ const licenseText = ref(theme.value.customConfig.copyrightConfig?.license)
 .item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.65rem;
   word-break: break-word;
+}
+
+.item-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+
+.item-body {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.value {
+  display: inline;
+  white-space: normal;
 }
 
 .icon-wrapper {
@@ -115,8 +151,21 @@ a:hover {
 
 @media (max-width: 640px) {
   .copyright {
-    padding: 1.2rem 1.3rem;
+    padding: 1rem 1.1rem;
     border-radius: 16px;
+  }
+
+  .item {
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .item-heading {
+    gap: 0.3rem;
+  }
+
+  .item-body {
+    font-size: 0.92rem;
   }
 }
 </style>
