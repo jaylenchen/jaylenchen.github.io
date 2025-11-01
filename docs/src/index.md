@@ -9,6 +9,4 @@ layout: home
 import Home from '@blog/theme/pages/Home.vue'
 </script>
 
-<ClientOnly>
-	<Home />
-</ClientOnly>
+<Home />
