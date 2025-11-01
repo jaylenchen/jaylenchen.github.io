@@ -250,36 +250,36 @@ watch(
   <div class="archives">
     <div class="archives__inner">
       <header class="archives__header">
-        <p class="archives__kicker">archives</p>
-        <div class="archives__filter">
-          <Tag v-if="archiveType === ArchiveType.Project" class="filter-tag" closable @close="resetCurrentPage">
-            <template #icon>
-              <ArchiveSvg></ArchiveSvg>
-            </template>
-            {{ project }}项目 （共 {{ articles.length }} 篇）文章
-          </Tag>
-
-          <Tag v-else-if="archiveType === ArchiveType.Tag" class="filter-tag" closable @close="resetCurrentPage">
-            <template #icon>
-              <ArchiveSvg></ArchiveSvg>
-            </template>
-            {{ tag }}标签 （共 {{ articles.length }} 篇）文章
-          </Tag>
-
-          <Tag v-else-if="archiveType === ArchiveType.Year" class="filter-tag" closable @close="resetCurrentPage">
-            <ArchiveSvg></ArchiveSvg>
-            {{ year }}年 （共 {{ articles.length }} 篇）文章
-          </Tag>
-
-          <Tag v-else class="filter-tag">
-            <ArchiveSvg></ArchiveSvg>
-            全部文章（共 {{ articles.length }} 篇）
-          </Tag>
-        </div>
+        <p class="archives__kicker">blog</p>
       </header>
 
       <div class="archives__layout" v-if="archiveEntries.length">
         <aside class="archives__aside" aria-label="年份导航">
+          <div class="archives__filter">
+            <Tag v-if="archiveType === ArchiveType.Project" class="filter-tag" closable @close="resetCurrentPage">
+              <template #icon>
+                <ArchiveSvg></ArchiveSvg>
+              </template>
+              {{ project }}项目 （共 {{ articles.length }} 篇）文章
+            </Tag>
+
+            <Tag v-else-if="archiveType === ArchiveType.Tag" class="filter-tag" closable @close="resetCurrentPage">
+              <template #icon>
+                <ArchiveSvg></ArchiveSvg>
+              </template>
+              {{ tag }}标签 （共 {{ articles.length }} 篇）文章
+            </Tag>
+
+            <Tag v-else-if="archiveType === ArchiveType.Year" class="filter-tag" closable @close="resetCurrentPage">
+              <ArchiveSvg></ArchiveSvg>
+              {{ year }}年 （共 {{ articles.length }} 篇）文章
+            </Tag>
+
+            <Tag v-else class="filter-tag">
+              <ArchiveSvg></ArchiveSvg>
+              全部文章（共 {{ articles.length }} 篇）
+            </Tag>
+          </div>
           <p class="archives__aside-title">年份</p>
           <button
             v-for="yearEntry in archiveEntries"
