@@ -140,7 +140,7 @@ if (initialTag && initialTag !== '') {
                   class="tags__timeline-item"
                 >
                   <span class="tags__timeline-dot"></span>
-                  <div class="tags__article-item tags__timeline-card">
+                  <div class="tags__article-item">
                     <a :href="article.path" target="_self" class="tags__article-link">{{ article.title }}</a>
                     <ArticleMetadata :article="article" class="tags-meta" />
                   </div>
@@ -181,11 +181,11 @@ if (initialTag && initialTag !== '') {
 }
 
 .tags {
-  max-width: 920px;
+  max-width: 1200px;
   margin: 0 auto;
   color: var(--vp-c-text-1);
   width: 100%;
-  padding: 2.4rem 1.5rem 2.2rem;
+  padding: 1.5rem 1.5rem 2.2rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -206,7 +206,7 @@ if (initialTag && initialTag !== '') {
 }
 
 .tags__aside {
-  flex: 0 0 260px;
+  flex: 0 0 220px;
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
@@ -239,10 +239,10 @@ if (initialTag && initialTag !== '') {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 0.6rem;
-  padding: 1.1rem;
+  gap: 0.5rem;
+  padding: 0.9rem;
   border: 1px solid rgba(120, 150, 220, 0.25);
-  border-radius: 1.1rem;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.75);
   max-height: 320px;
   overflow-y: auto;
@@ -260,13 +260,13 @@ if (initialTag && initialTag !== '') {
 .tags__item {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.45rem 0.85rem;
+  gap: 0.5rem;
+  padding: 0.35rem 0.7rem;
   border-radius: 999px;
   border: 1px solid var(--vp-c-divider);
   background: var(--vp-c-bg);
   color: inherit;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -430,7 +430,7 @@ if (initialTag && initialTag !== '') {
 
 .tags__timeline {
   position: relative;
-  padding: 1.1rem 0 1.1rem 1.4rem;
+  padding: 0.6rem 0 0.6rem 1.4rem;
 }
 
 .tags__timeline-list {
@@ -439,15 +439,15 @@ if (initialTag && initialTag !== '') {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 0;
   position: relative;
 }
 
 .tags__timeline-list::before {
   content: '';
   position: absolute;
-  top: 1rem;
-  bottom: 1rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
   left: 0.35rem;
   width: 2px;
   background: rgba(120, 150, 220, 0.18);
@@ -471,33 +471,32 @@ if (initialTag && initialTag !== '') {
 }
 
 .tags__article-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding: 0.85rem 1rem;
-  border-radius: 0.9rem;
-  background: linear-gradient(
-    180deg,
-    rgba(250, 252, 255, 0.92) 0%,
-    rgba(238, 245, 255, 0.88) 45%,
-    rgba(232, 242, 255, 0.85) 100%
-  );
-  border: 1px solid rgba(120, 150, 220, 0.2);
-  box-shadow: 0 16px 32px rgba(120, 150, 220, 0.12);
-  backdrop-filter: blur(6px);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.4rem 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  transition: none;
 }
 
 .tags__article-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 36px rgba(120, 150, 220, 0.16);
+  transform: none;
+  box-shadow: none;
 }
 
 .tags__article-link {
   color: inherit;
   text-decoration: none;
-  font-size: 0.92rem;
-  line-height: 1.45;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  word-break: break-word;
 }
 
 .tags__article-link:hover {
@@ -506,7 +505,7 @@ if (initialTag && initialTag !== '') {
 
 .tags__article-item :deep(.article-meta) {
   color: var(--vp-c-text-3);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
 }
 
 @media (max-width: 860px) {
@@ -521,7 +520,12 @@ if (initialTag && initialTag !== '') {
   }
 
   .tags {
-    padding: 3.5rem 1.25rem 2.5rem;
+    padding: 1.5rem 1.25rem 2.5rem;
+  }
+
+  .tags__article-item {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
   }
 
   .tags__inner {
@@ -560,11 +564,15 @@ if (initialTag && initialTag !== '') {
 @media (max-width: 640px) {
   .tags {
     margin: 0 auto;
-    padding: 4rem 1.25rem 3rem;
+    padding: 1.5rem 1.25rem 3rem;
   }
 
-  .tags__article {
-    padding: 1rem 1.05rem;
+  .tags__article-link {
+    font-size: 0.9rem;
+  }
+
+  .tags__article-item :deep(.article-meta) {
+    font-size: 0.8rem;
   }
 }
 </style>

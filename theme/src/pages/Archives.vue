@@ -290,9 +290,9 @@ watch(
         </div>
       </header>
 
-      <div class="archives__layout" v-if="archiveEntries.length">
-        <aside class="archives__aside" aria-label="年份导航">
-          <p class="archives__aside-title">年份</p>
+      <aside class="archives__aside" aria-label="年份导航" v-if="archiveEntries.length">
+        <p class="archives__aside-title">年份导航</p>
+        <div class="archives__aside-buttons">
           <button
             v-for="yearEntry in archiveEntries"
             :key="yearEntry.year"
@@ -304,8 +304,10 @@ watch(
             <span class="archives__year-label">{{ yearEntry.year }}</span>
             <span class="archives__year-count">{{ yearEntry.count }}</span>
           </button>
-        </aside>
+        </div>
+      </aside>
 
+      <div class="archives__layout" v-if="archiveEntries.length">
         <section class="archives__content" v-if="currentYearEntry">
           <header class="archives__content-header">
             <component
@@ -328,8 +330,9 @@ watch(
 
               <ul class="archives__article-list">
                 <li v-for="article in monthEntry.articles" :key="article.path" class="archives__article-item">
-                  <a :href="article.path" target="_self" class="archives__article-link">{{ article.title }}</a>
                   <ArticleMetadata :article="article" />
+                  <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
+                  <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
                 </li>
               </ul>
             </div>
@@ -344,11 +347,11 @@ watch(
 
 <style scoped>
 .archives {
-  max-width: 920px;
+  max-width: 1200px;
   margin: 0 auto;
   color: var(--vp-c-text-1);
   width: 100%;
-  padding: 2.4rem 1.5rem 2rem;
+  padding: 1.5rem 1.5rem 2rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -381,7 +384,7 @@ watch(
 .archives__hero-card {
   position: relative;
   padding: 2.4rem 2.1rem 2.6rem;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid rgba(120, 150, 220, 0.22);
   background: rgba(236, 242, 255, 0.92);
   box-shadow: 0 26px 46px rgba(110, 138, 220, 0.2);
@@ -466,7 +469,7 @@ watch(
 
   .archives__hero-card {
     padding: 2rem 1.65rem 2.2rem;
-    border-radius: 22px;
+    border-radius: 8px;
     gap: 1rem;
   }
 
@@ -516,43 +519,57 @@ watch(
 
 .archives__layout {
   display: flex;
-  gap: 2rem;
-  align-items: flex-start;
-  flex-direction: row-reverse;
+  flex-direction: column;
+  gap: 2.5rem;
 }
 
 .archives__aside {
-  flex: 0 0 200px;
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 1.2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(120, 150, 220, 0.15);
 }
 
 .archives__aside-title {
-  margin: 0;
-  font-size: 0.8rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--vp-c-text-3);
+  font-weight: 600;
+}
+
+.archives__aside-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .archives__year-button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  padding: 0.55rem 0.8rem;
-  border-radius: 0.85rem;
+  gap: 0.5rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
   border: 1px solid transparent;
-  background: var(--vp-c-bg);
+  background: rgba(255, 255, 255, 0.7);
   color: inherit;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.archives__year-button:hover {
+  border-color: rgba(120, 150, 220, 0.3);
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .archives__year-button.is-active {
   border-color: var(--vp-c-brand-1, #3e63dd);
   background: rgba(62, 99, 221, 0.12);
+  color: var(--vp-c-brand-1);
 }
 
 .archives__year-label {
@@ -560,7 +577,7 @@ watch(
 }
 
 .archives__year-count {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   color: var(--vp-c-text-3);
 }
 
@@ -605,7 +622,7 @@ watch(
   flex-direction: column;
   gap: 0.8rem;
   padding: 1.05rem 1.2rem;
-  border-radius: 1.1rem;
+  border-radius: 8px;
   background: linear-gradient(
     180deg,
     rgba(250, 252, 255, 0.92) 0%,
@@ -641,19 +658,20 @@ watch(
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0;
 }
 
 .archives__article-item {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  padding: 0.75rem 0.85rem;
-  border-radius: 0.85rem;
+  gap: 0.75rem;
+  padding: 1.35rem 1.3rem;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.88);
   border: 1px solid rgba(120, 150, 220, 0.18);
   box-shadow: 0 12px 26px rgba(120, 150, 220, 0.12);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  margin-bottom: 1.2rem;
 }
 
 .archives__article-item:hover {
@@ -661,20 +679,131 @@ watch(
   box-shadow: 0 18px 32px rgba(120, 150, 220, 0.16);
 }
 
-.archives__article-link {
-  color: inherit;
-  text-decoration: none;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.archives__article-link:hover {
-  color: var(--vp-c-brand-1, #3e63dd);
-}
-
 .archives__article-item :deep(.article-meta) {
   color: var(--vp-c-text-3);
-  font-size: 0.78rem;
+  font-size: 0.85rem;
+  margin: 0 0 0.25rem;
+}
+
+.archives__article-excerpt {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--vp-c-text-2);
+  overflow: hidden;
+}
+
+.archives__article-excerpt :deep(p) {
+  margin: 0 0 0.9rem;
+  color: var(--vp-c-text-2);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.archives__article-excerpt :deep(p:last-child) {
+  margin-bottom: 0;
+}
+
+.archives__article-excerpt :deep(h1) {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+}
+
+.archives__article-excerpt :deep(h2) {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+}
+
+.archives__article-excerpt :deep(h3) {
+  font-size: 0.95rem;
+  font-weight: 650;
+  margin: 0 0 0.45rem;
+  line-height: 1.4;
+}
+
+.archives__article-excerpt :deep(h4),
+.archives__article-excerpt :deep(h5),
+.archives__article-excerpt :deep(h6) {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 0.4rem;
+  line-height: 1.4;
+}
+
+.archives__article-excerpt :deep(strong) {
+  color: var(--vp-c-text-1);
+  font-weight: 600;
+}
+
+.archives__article-excerpt :deep(a) {
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+}
+
+.archives__article-excerpt :deep(a:hover) {
+  text-decoration: underline;
+}
+
+.archives__article-excerpt :deep(code) {
+  background: rgba(120, 150, 220, 0.1);
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.8em;
+  color: var(--vp-c-brand-1);
+}
+
+.archives__article-excerpt :deep(ul),
+.archives__article-excerpt :deep(ol) {
+  margin: 0 0 0.9rem;
+  padding-left: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.archives__article-excerpt :deep(li) {
+  margin: 0.3rem 0;
+}
+
+.archives__article-excerpt :deep(img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 0.6rem 0;
+}
+
+.archives__article-excerpt :deep(pre) {
+  margin: 0.6rem 0;
+  padding: 0.65rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.75rem;
+}
+
+.archives__article-excerpt :deep(blockquote) {
+  margin: 0.6rem 0;
+  padding: 0.5rem 0.65rem;
+  border-left: 3px solid rgba(120, 150, 220, 0.3);
+  background: rgba(120, 150, 220, 0.05);
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.archives__article-read-more {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.archives__article-read-more:hover {
+  color: var(--vp-c-brand-2);
+  text-decoration: underline;
 }
 
 .archives__empty {
@@ -686,31 +815,32 @@ watch(
 
 @media (max-width: 860px) {
   .archives {
-    padding: 3.5rem 1.25rem 2.5rem;
+    max-width: 100%;
+    padding: 1.5rem 1.25rem 2.5rem;
   }
 
   .archives__layout {
-    flex-direction: column;
     gap: 2rem;
-  }
-
-  .archives__aside {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .archives__aside-title {
-    width: 100%;
   }
 
   .archives__content {
     gap: 2rem;
   }
+
+  .archives__aside-buttons {
+    gap: 0.5rem;
+  }
+
+  .archives__year-button {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.7rem;
+  }
 }
 
 @media (max-width: 600px) {
   .archives {
-    padding: 3rem 1.1rem 2.2rem;
+    max-width: 100%;
+    padding: 1.5rem 1.1rem 2.2rem;
   }
 
   .archives__month {

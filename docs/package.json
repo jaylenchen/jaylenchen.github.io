@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vitepress dev",
+    "dev": "vitepress dev --port 80 --host",
     "build": "vitepress build",
     "preview": "vitepress preview"
   },

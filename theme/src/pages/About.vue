@@ -38,7 +38,7 @@
  <style scoped>
 .home {
   max-width: 720px;
-  margin: 6rem auto 8rem;
+  margin: 1.5rem auto 8rem;
   padding: 0 1.75rem;
   display: flex;
   flex-direction: column;
@@ -166,7 +166,7 @@
 
 @media (max-width: 600px) {
   .home {
-    margin: 4rem auto 6rem;
+    margin: 1.5rem auto 6rem;
     padding: 0 1.25rem;
     gap: 3rem;
   }

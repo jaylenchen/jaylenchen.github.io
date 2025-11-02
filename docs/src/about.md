@@ -9,8 +9,8 @@ showComment: false
 ---
 
 <script lang="ts" setup>
-import Home from '@blog/theme/pages/Home.vue'
+import About from '@blog/theme/pages/About.vue'
 </script>
 
-<Home />
+<About />
 
