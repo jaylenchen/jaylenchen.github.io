@@ -98,7 +98,29 @@ function selectYear(yearValue: string) {
   activeYear.value = yearValue;
 }
 
+const allArticles = computed(() => {
+  const sorted = [...articleData].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  return sorted
+})
+
 const latestUpdated = computed(() => {
+  if (!allArticles.value.length) {
+    return null;
+  }
+
+  const parsed = new Date(allArticles.value[0].date);
+  if (Number.isNaN(parsed.getTime())) {
+    return null;
+  }
+
+  return parsed.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+  });
+});
+
+const filteredLatestUpdated = computed(() => {
   if (!articles.value.length) {
     return null;
   }
@@ -284,14 +306,34 @@ watch(
             用文字的灶台燃起思维的火花，用心在这思维的厨房里烹饪，就能够做出一道又道美味的佳肴，至于能有多美味，交给时间吧...
           </p>
           <div class="archives__hero-meta">
-            <span class="meta-pill">累计 {{ articles.length }} 篇文章</span>
+            <span class="meta-pill">累计 {{ allArticles.length }} 篇文章</span>
             <span v-if="latestUpdated" class="meta-pill">最近更新 {{ latestUpdated }}</span>
           </div>
         </div>
       </header>
 
       <aside class="archives__aside" aria-label="年份导航" v-if="archiveEntries.length">
-        <p class="archives__aside-title">年份导航</p>
+        <div class="archives__aside-header">
+          <p class="archives__aside-title">
+            <template v-if="archiveType === ArchiveType.All">年份导航</template>
+            <template v-else-if="archiveType === ArchiveType.Project">{{ condition.project }}</template>
+            <template v-else-if="archiveType === ArchiveType.Tag">#{{ condition.tag }}</template>
+            <template v-else-if="archiveType === ArchiveType.Year">{{ condition.year }}年</template>
+          </p>
+          <button 
+            v-if="archiveType !== ArchiveType.All" 
+            type="button"
+            class="archives__clear-button"
+            @click="resetCurrentPage()"
+            aria-label="清除筛选"
+          >
+            ✕
+          </button>
+        </div>
+        <div v-if="archiveType !== ArchiveType.All" class="archives__filter-stats">
+          <span class="meta-pill">累计 {{ articles.length }} 篇文章</span>
+          <span v-if="filteredLatestUpdated" class="meta-pill">最近更新 {{ filteredLatestUpdated }}</span>
+        </div>
         <div class="archives__aside-buttons">
           <button
             v-for="yearEntry in archiveEntries"
@@ -302,6 +344,10 @@ watch(
             @click="selectYear(yearEntry.year)"
           >
             <span class="archives__year-label">{{ yearEntry.year }}</span>
+            <span v-if="archiveType !== ArchiveType.All" class="archives__year-filter">
+              <template v-if="archiveType === ArchiveType.Project">· {{ condition.project }}</template>
+              <template v-else-if="archiveType === ArchiveType.Tag">· #{{ condition.tag }}</template>
+            </span>
             <span class="archives__year-count">{{ yearEntry.count }}</span>
           </button>
         </div>
@@ -531,13 +577,50 @@ watch(
   border-bottom: 1px solid rgba(120, 150, 220, 0.15);
 }
 
+.archives__aside-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
 .archives__aside-title {
-  margin: 0 0 0.5rem;
+  margin: 0;
   font-size: 0.85rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--vp-c-text-3);
   font-weight: 600;
+}
+
+.archives__clear-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+  border: 1px solid rgba(120, 150, 220, 0.25);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--vp-c-text-2);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.archives__clear-button:hover {
+  border-color: var(--vp-c-brand-1);
+  background: rgba(62, 99, 221, 0.12);
+  color: var(--vp-c-brand-1);
+}
+
+.archives__filter-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
 }
 
 .archives__aside-buttons {
@@ -548,9 +631,8 @@ watch(
 
 .archives__year-button {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0;
   padding: 0.35rem 0.7rem;
   border-radius: 999px;
   border: 1px solid transparent;
@@ -559,6 +641,7 @@ watch(
   font-size: 0.8rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .archives__year-button:hover {
@@ -576,9 +659,25 @@ watch(
   font-weight: 500;
 }
 
-.archives__year-count {
+.archives__year-filter {
   font-size: 0.75rem;
   color: var(--vp-c-text-3);
+  margin-left: 0.25rem;
+  margin-right: 0;
+}
+
+.archives__year-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+  background: rgba(120, 150, 220, 0.12);
+  border-radius: 50%;
+  margin-left: 0.5rem;
 }
 
 .archives__content {
