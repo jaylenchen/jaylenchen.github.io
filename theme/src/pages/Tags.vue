@@ -182,10 +182,10 @@ if (initialTag && initialTag !== '') {
 
 .tags {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 1.5rem auto 2.2rem;
   color: var(--vp-c-text-1);
   width: 100%;
-  padding: 1.5rem 1.5rem 2.2rem;
+  padding: 0 1.5rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
