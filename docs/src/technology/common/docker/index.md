@@ -5,4 +5,4 @@ lastUpdated: false
 sidebar: true
 ---
 
-!!!include(articles/technology/common/docker/index.md)!!!
+!!!include(.articles/technology/common/docker/index.md)!!!

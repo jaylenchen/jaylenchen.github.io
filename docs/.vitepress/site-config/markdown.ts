@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 
 /**
  * Markdown-it 插件：转换图片路径
- * 将 articles 目录中 markdown 的相对路径（../assets/... 或 ./assets/...）转换为绝对路径（/...）
+ * 将 .articles 目录中 markdown 的相对路径（../assets/... 或 ./assets/...）转换为绝对路径（/...）
  * 例如：../assets/life/gtd-process1.png -> /life/gtd-process1.png
  */
 function markdownItConvertAssetsPaths(md: any) {

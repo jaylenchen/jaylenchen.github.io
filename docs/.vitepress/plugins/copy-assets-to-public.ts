@@ -5,11 +5,11 @@ import fs from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 /**
- * Vite 插件：将 articles/assets 目录中的静态资源复制到 src/public
+ * Vite 插件：将 .articles/assets 目录中的静态资源复制到 src/public
  * 规则：
  * 1. 复制前先清除 public 中对应的目录结构
- * 2. articles/assets/life/xxx.png -> src/public/life/xxx.png
- * 3. articles/assets/technology/xxx.png -> src/public/technology/xxx.png
+ * 2. .articles/assets/life/xxx.png -> src/public/life/xxx.png
+ * 3. .articles/assets/technology/xxx.png -> src/public/technology/xxx.png
  */
 export function copyAssetsToPublic(): Plugin {
   // 使用与 site-config.ts 相同的方式解析路径
@@ -28,12 +28,12 @@ export function copyAssetsToPublic(): Plugin {
     // 所以 ../.. 到达 docs/ 目录
     const docsDir = resolve(__dirname, '../..')
     
-    articlesAssetsDir = resolve(docsDir, 'articles/assets')
+    articlesAssetsDir = resolve(docsDir, '.articles/assets')
     publicDir = resolve(docsDir, 'src/public')
   } catch (e) {
     // 回退方案：使用 process.cwd()，假设在 docs 目录运行
     const cwd = process.cwd()
-    articlesAssetsDir = resolve(cwd, 'articles/assets')
+    articlesAssetsDir = resolve(cwd, '.articles/assets')
     publicDir = resolve(cwd, 'src/public')
   }
   
@@ -76,7 +76,7 @@ export function copyAssetsToPublic(): Plugin {
     } else if (stats.isFile()) {
       // 只复制图片和静态资源文件
       if (/\.(png|jpg|jpeg|gif|webp|svg|ico|pdf)$/i.test(src)) {
-        // 计算相对于 baseSrc (articles/assets) 的路径
+        // 计算相对于 baseSrc (.articles/assets) 的路径
         const relativePath = path.relative(baseSrc, src)
         const destPath = resolve(publicDir, relativePath)
         const destDir = path.dirname(destPath)
@@ -93,33 +93,33 @@ export function copyAssetsToPublic(): Plugin {
   // 执行资源复制的通用函数
   function syncAssets() {
     if (!fs.existsSync(articlesAssetsDir)) {
-      console.warn(`⚠️  articles/assets 目录不存在: ${articlesAssetsDir}`)
+      console.warn(`⚠️  .articles/assets 目录不存在: ${articlesAssetsDir}`)
       return
     }
     
     console.log(`📦 开始同步资源: ${articlesAssetsDir} -> ${publicDir}`)
 
-    // 先清除 public 中对应的目录（保留 public 本身）
-    if (fs.existsSync(publicDir)) {
-      const items = fs.readdirSync(publicDir)
-      for (const item of items) {
-        // 只删除 assets 对应的目录，保留其他（如 svgs、tech 等）
-        const itemPath = resolve(publicDir, item)
-        const stats = fs.statSync(itemPath)
-        
-        // 检查 articles/assets 中是否有对应目录
-        const assetItemPath = resolve(articlesAssetsDir, item)
-        if (stats.isDirectory() && fs.existsSync(assetItemPath)) {
-          removeDir(itemPath)
-          console.log(`🗑️  已清除: public/${item}`)
+      // 先清除 public 中对应的目录（保留 public 本身）
+      if (fs.existsSync(publicDir)) {
+        const items = fs.readdirSync(publicDir)
+        for (const item of items) {
+          // 只删除 assets 对应的目录，保留其他（如 svgs、tech 等）
+          const itemPath = resolve(publicDir, item)
+          const stats = fs.statSync(itemPath)
+          
+          // 检查 .articles/assets 中是否有对应目录
+          const assetItemPath = resolve(articlesAssetsDir, item)
+          if (stats.isDirectory() && fs.existsSync(assetItemPath)) {
+            removeDir(itemPath)
+            console.log(`🗑️  已清除: public/${item}`)
+          }
         }
       }
-    }
 
-    // 复制资源（去掉 assets 这一层）
-    copyRecursive(articlesAssetsDir, articlesAssetsDir)
-    
-    console.log('✅ 已复制 articles/assets 到 src/public')
+      // 复制资源（去掉 assets 这一层）
+      copyRecursive(articlesAssetsDir, articlesAssetsDir)
+      
+      console.log('✅ 已复制 .articles/assets 到 src/public')
   }
 
   return {
@@ -132,7 +132,7 @@ export function copyAssetsToPublic(): Plugin {
       // 开发服务器启动时也执行一次复制
       syncAssets()
       
-      // 开发服务器：监听 articles/assets 的变化
+      // 开发服务器：监听 .articles/assets 的变化
       const watchFiles: string[] = []
       
       function watchAssetsDir(dir: string) {

@@ -7,4 +7,4 @@ tags:
  - 时间管理
 ---
 
-!!!include(articles/life/GTD时间管理.md)!!!
+!!!include(.articles/life/GTD时间管理.md)!!!

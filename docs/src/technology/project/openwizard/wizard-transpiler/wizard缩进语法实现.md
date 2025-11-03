@@ -7,4 +7,4 @@ tags:
  - 设计
 ---
 
-!!!include(articles/technology/project/openwizard/wizard-transpiler/wizard缩进语法实现.md)!!!
+!!!include(.articles/technology/project/openwizard/wizard-transpiler/wizard缩进语法实现.md)!!!

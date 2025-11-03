@@ -7,33 +7,13 @@ const openwizard = (subPath = '') =>
 
 // =====Wizard转译器=====
 enum WizardTranspiler {
-  wizard缩进语法实现 = 'wizard缩进语法实现',
-  使用nom_combinator = '使用nom_combinator',
-  使用nom_multi = '使用nom_multi',
-  使用nom_sequence = '使用nom_sequence',
-  使用nom_branch = '使用nom_branch'
+  wizard缩进语法实现 = 'wizard缩进语法实现'
 }
 const wizardTranspiler = (subPath: string) => openwizard(`wizard-transpiler/${subPath}`)
 const wizardTranspilerSidebar = [
   {
     text: WizardTranspiler.wizard缩进语法实现,
     link: wizardTranspiler(WizardTranspiler.wizard缩进语法实现)
-  },
-  {
-    text: WizardTranspiler.使用nom_combinator,
-    link: wizardTranspiler(WizardTranspiler.使用nom_combinator)
-  },
-  {
-    text: WizardTranspiler.使用nom_multi,
-    link: wizardTranspiler(WizardTranspiler.使用nom_multi)
-  },
-  {
-    text: WizardTranspiler.使用nom_sequence,
-    link: wizardTranspiler(WizardTranspiler.使用nom_sequence)
-  },
-  {
-    text: WizardTranspiler.使用nom_branch,
-    link: wizardTranspiler(WizardTranspiler.使用nom_branch)
   }
 ]
 

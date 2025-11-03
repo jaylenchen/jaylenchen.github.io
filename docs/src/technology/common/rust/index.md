@@ -5,5 +5,5 @@ lastUpdated: false
 sidebar: true
 ---
 
-!!!include(articles/technology/common/rust/index.md)!!!
+!!!include(.articles/technology/common/rust/index.md)!!!
 

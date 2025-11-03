@@ -6,6 +6,22 @@ const items: DefaultTheme.SidebarItem[] = [
   {
     text: '如何快速学习一个crate',
     link: `${rustBase}/如何快速学习一个crate`
+  },
+  {
+    text: '使用nom_combinator',
+    link: `${rustBase}/使用nom_combinator`
+  },
+  {
+    text: '使用nom_multi',
+    link: `${rustBase}/使用nom_multi`
+  },
+  {
+    text: '使用nom_sequence',
+    link: `${rustBase}/使用nom_sequence`
+  },
+  {
+    text: '使用nom_branch',
+    link: `${rustBase}/使用nom_branch`
   }
 ]
 

@@ -31,3 +31,7 @@ cache/
 
 **/.vitepress/cache
 *.mjs
+
+src/public
+!src/CNAME
+!src/svgs

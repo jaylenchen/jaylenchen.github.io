@@ -5,4 +5,4 @@ lastUpdated: false
 sidebar: true
 ---
 
-!!!include(articles/technology/project/thinkto/index.md)!!!
+!!!include(.articles/technology/project/thinkto/index.md)!!!

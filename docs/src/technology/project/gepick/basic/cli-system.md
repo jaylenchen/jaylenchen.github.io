@@ -7,4 +7,4 @@ tags:
  - design
 ---
 
-!!!include(articles/technology/project/gepick/basic/cli-system.md)!!!
+!!!include(.articles/technology/project/gepick/basic/cli-system.md)!!!

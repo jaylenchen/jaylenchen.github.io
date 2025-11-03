@@ -7,4 +7,4 @@ tags:
  - design
 ---
 
-!!!include(articles/technology/project/gepick/basic/design-pattern-review-and-think.md)!!!
+!!!include(.articles/technology/project/gepick/basic/design-pattern-review-and-think.md)!!!

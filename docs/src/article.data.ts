@@ -178,18 +178,20 @@ export default {
           // 检查内容中是否有 include 语句
           const includeMatch = content.match(/!!!include\(([^)]+)\)!!!/)
           if (includeMatch) {
-            // 如果有 include，从被引用的文件（articles 目录中的文件）提取摘要
+            // 如果有 include，从被引用的文件（.articles 目录中的文件）提取摘要
             const includePath = includeMatch[1]
-            // includePath 可能是 articles/xxx 或直接是相对于 docs 的路径
-            // 从 src/ 目录向上找到 docs 目录，然后找到 articles 目录
+            // includePath 可能是 .articles/xxx 或 articles/xxx，需要统一处理
+            // 从 src/ 目录向上找到 docs 目录，然后找到 .articles 目录
             const srcDir = resolve(baseDir)
             const docsDir = resolve(srcDir, '..')
-            const articlesFilePath = resolve(docsDir, includePath)
+            // 处理路径：如果包含 articles，替换为 .articles；如果已经是 .articles，保持不变
+            const normalizedPath = includePath.replace(/^articles\//, '.articles/')
+            const articlesFilePath = resolve(docsDir, normalizedPath)
             
             try {
               if (fs.existsSync(articlesFilePath)) {
                 const articlesContent = fs.readFileSync(articlesFilePath, 'utf-8')
-                // 从 articles 文件内容中提取摘要（articles 文件没有 frontmatter）
+                // 从 .articles 文件内容中提取摘要（.articles 文件没有 frontmatter）
                 excerptMarkdown = extractExcerptMarkdown(articlesContent, path.dirname(articlesFilePath), data.excerptLength || 300)
               } else {
                 // 如果文件不存在，返回空摘要

@@ -7,4 +7,4 @@ tags:
  - design
 ---
 
-!!!include(articles/technology/project/gepick/basic/rpc-protocol.md)!!!
+!!!include(.articles/technology/project/gepick/basic/rpc-protocol.md)!!!

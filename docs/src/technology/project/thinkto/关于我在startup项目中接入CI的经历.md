@@ -8,4 +8,4 @@ tags:
 
 ---
 
-!!!include(articles/technology/project/thinkto/关于我在startup项目中接入CI的经历.md)!!!
+!!!include(.articles/technology/project/thinkto/关于我在startup项目中接入CI的经历.md)!!!
