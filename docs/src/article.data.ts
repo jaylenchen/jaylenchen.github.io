@@ -151,7 +151,11 @@ function extractExcerptMarkdown(content: string, baseDir: string, maxLength: num
 }
 
 export default {
-  watch: [resolve(__dirname, './**/*.md')],
+  watch: [
+    resolve(__dirname, './**/*.md'),
+    // 监听 .articles 下的 markdown，确保 include 源变更能触发重载
+    resolve(__dirname, '../.articles/**/*.md')
+  ],
   load(watchedFiles: any[]) {
     const baseDir = resolve(__dirname)
 

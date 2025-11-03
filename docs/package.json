@@ -4,11 +4,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vitepress dev --port 80 --host",
+    "copy-assets": "tsx .vitepress/scripts/copy-assets.ts",
+    "dev": "yarn copy-assets && vitepress dev --port 80 --host",
     "build": "vitepress build",
     "preview": "vitepress preview"
   },
   "exports": {
     "./*": "./src/*"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.6"
   }
 }

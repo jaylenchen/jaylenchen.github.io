@@ -132,7 +132,11 @@ export function copyAssetsToPublic(): Plugin {
       // 开发服务器启动时也执行一次复制
       syncAssets()
       
-      // 开发服务器：监听 .articles/assets 的变化
+      const docsDir = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
+      const articlesDir = resolve(docsDir, '.articles')
+      const srcDir = resolve(docsDir, 'src')
+      
+      // 监听 .articles/assets 的变化
       const watchFiles: string[] = []
       
       function watchAssetsDir(dir: string) {
@@ -152,12 +156,39 @@ export function copyAssetsToPublic(): Plugin {
         }
       }
       
+      // 监听 .articles 目录下的所有 markdown 文件
+      function watchArticlesDir(dir: string) {
+        if (!fs.existsSync(dir)) return
+        
+        const files = fs.readdirSync(dir)
+        for (const file of files) {
+          const filePath = resolve(dir, file)
+          const stats = fs.statSync(filePath)
+          
+          if (stats.isDirectory()) {
+            watchArticlesDir(filePath)
+          } else if (file.endsWith('.md')) {
+            server.watcher.add(filePath)
+            console.log(`👁️  已监听: ${path.relative(articlesDir, filePath)}`)
+          }
+        }
+      }
+      
       watchAssetsDir(articlesAssetsDir)
+      watchArticlesDir(articlesDir)
+      
+      // 确保整个 .articles 目录被监听（包括新文件）
+      server.watcher.add(articlesDir)
+      console.log(`✅ [HMR] 监听设置完成:`)
+      console.log(`  - articlesDir: ${articlesDir}`)
+      console.log(`  - srcDir: ${srcDir}`)
+      console.log(`  - 已添加整个 .articles 目录到 watcher`)
       
       // 监听文件变化
-      server.watcher.on('change', (file) => {
-        if (watchFiles.includes(file) && file.startsWith(articlesAssetsDir)) {
-          const relativePath = path.relative(articlesAssetsDir, file)
+      server.watcher.on('change', (changedFile) => {
+        // 处理资源文件
+        if (watchFiles.includes(changedFile) && changedFile.startsWith(articlesAssetsDir)) {
+          const relativePath = path.relative(articlesAssetsDir, changedFile)
           const destPath = resolve(publicDir, relativePath)
           const destDir = path.dirname(destPath)
           
@@ -165,10 +196,114 @@ export function copyAssetsToPublic(): Plugin {
             fs.mkdirSync(destDir, { recursive: true })
           }
           
-          fs.copyFileSync(file, destPath)
-          console.log(`🔄 已更新: ${relativePath}`)
+          fs.copyFileSync(changedFile, destPath)
+          console.log(`🔄 [Assets] 已更新: ${relativePath}`)
+          return
         }
       })
+    },
+    handleHotUpdate({ file, server }) {
+      // 处理 .articles 目录中的 markdown 文件变化
+      const docsDir = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
+      const articlesDir = resolve(docsDir, '.articles')
+      const srcDir = resolve(docsDir, 'src')
+      
+      if (file.startsWith(articlesDir) && file.endsWith('.md')) {
+        console.log(`🔥 [HMR] .articles 文件变化: ${path.relative(articlesDir, file)}`)
+        
+        // 查找引用这个文件的 src 文件
+        const relativeFromArticles = path.relative(articlesDir, file)
+        const includePath = `.articles/${relativeFromArticles.replace(/\\/g, '/')}`
+        const referencingFiles: string[] = []
+        
+        // 查找所有引用这个文件的 src 文件
+        function findReferencingFiles(dir: string) {
+          if (!fs.existsSync(dir)) return
+          
+          const files = fs.readdirSync(dir)
+          for (const item of files) {
+            const itemPath = resolve(dir, item)
+            const stats = fs.statSync(itemPath)
+            
+            if (stats.isDirectory()) {
+              findReferencingFiles(itemPath)
+            } else if (item.endsWith('.md')) {
+              try {
+                const content = fs.readFileSync(itemPath, 'utf-8')
+                const escapedPath = includePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+                const altPath = includePath.replace(/^\.articles\//, 'articles/')
+                const escapedAltPath = altPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+                const pattern = new RegExp(`!!!include\\((${escapedPath}|${escapedAltPath})\\)!!!`)
+                
+                if (pattern.test(content)) {
+                  referencingFiles.push(itemPath)
+                  console.log(`  ✓ 找到引用文件: ${path.relative(srcDir, itemPath)}`)
+                }
+              } catch (e) {
+                // Ignore
+              }
+            }
+          }
+        }
+        
+        findReferencingFiles(srcDir)
+        
+        if (referencingFiles.length > 0) {
+          console.log(`  🚀 触发 ${referencingFiles.length} 个引用文件的热更新`)
+          
+          // 收集需要更新的模块
+          const modulesToUpdate: any[] = []
+          
+          for (const srcFile of referencingFiles) {
+            // 使用 getModulesByFile 查找所有相关模块
+            const modules = server.moduleGraph.getModulesByFile(srcFile)
+            if (modules && modules.size > 0) {
+              modules.forEach(module => {
+                // 失效模块，强制重新编译
+                server.moduleGraph.invalidateModule(module)
+                modulesToUpdate.push(module)
+                console.log(`  ✓ 已失效模块: ${module.id || module.url || 'unknown'}`)
+              })
+            } else {
+              // 如果找不到模块，修改文件时间戳触发重新编译
+              try {
+                const stats = fs.statSync(srcFile)
+                const newTime = new Date(Date.now() + 1000)
+                fs.utimesSync(srcFile, stats.atime, newTime)
+                console.log(`  ✓ 已更新时间戳: ${path.relative(srcDir, srcFile)}`)
+                
+                // 再次尝试查找模块
+                setTimeout(() => {
+                  const modules = server.moduleGraph.getModulesByFile(srcFile)
+                  if (modules && modules.size > 0) {
+                    modules.forEach(module => {
+                      server.moduleGraph.invalidateModule(module)
+                      modulesToUpdate.push(module)
+                    })
+                  }
+                }, 100)
+              } catch (e) {
+                console.error(`  ✗ 处理失败: ${srcFile}`, e)
+              }
+            }
+          }
+          
+          // 如果找到了模块，返回它们以触发 HMR
+          if (modulesToUpdate.length > 0) {
+            console.log(`  ✅ 返回 ${modulesToUpdate.length} 个模块触发 HMR`)
+            return modulesToUpdate
+          }
+          
+          // 如果没有找到模块，强制触发全量重新加载
+          console.log(`  ⚠️  未找到模块，触发全量重新加载`)
+          setTimeout(() => {
+            server.ws.send({ type: 'full-reload' })
+            console.log(`  🚀 已发送 full-reload 消息`)
+          }, 200)
+        } else {
+          console.log(`  ⚠️  未找到引用文件`)
+        }
+      }
     }
   }
 }

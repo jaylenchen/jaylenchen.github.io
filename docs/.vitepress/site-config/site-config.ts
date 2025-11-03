@@ -7,6 +7,7 @@ import { markdown } from './markdown';
 import { customElements } from './custom-elements'
 import { resolve } from "node:path"
 import { copyAssetsToPublic } from '../plugins/copy-assets-to-public'
+import { watchIncludedMarkdown } from '../plugins/watch-includes.ts'
 
 
 const docsConfig: UserConfig<DefaultTheme.Config> = {
@@ -47,6 +48,7 @@ const buildConfig: UserConfig<DefaultTheme.Config> = {
         include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
       }),
       svgLoader(),
+      watchIncludedMarkdown(),
       copyAssetsToPublic()
     ],
     resolve: {
