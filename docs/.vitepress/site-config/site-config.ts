@@ -6,6 +6,7 @@ import { DefaultTheme, UserConfig } from 'vitepress'
 import { markdown } from './markdown';
 import { customElements } from './custom-elements'
 import { resolve } from "node:path"
+import { copyAssetsToPublic } from '../plugins/copy-assets-to-public'
 
 
 const docsConfig: UserConfig<DefaultTheme.Config> = {
@@ -45,7 +46,8 @@ const buildConfig: UserConfig<DefaultTheme.Config> = {
         dirs: ['.vitepress/theme/components'],
         include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
       }),
-      svgLoader()
+      svgLoader(),
+      copyAssetsToPublic()
     ],
     resolve: {
       alias: {

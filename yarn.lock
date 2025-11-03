@@ -3069,6 +3069,7 @@ __metadata:
     jquery: "npm:^3.7.1"
     markdown-it: "npm:^14.0.0"
     markdown-it-footnote: "npm:^4.0.0"
+    markdown-it-include: "npm:^2.0.0"
     markdown-it-mathjax3: "npm:^4.3.2"
     mermaid: "npm:^11.0.0"
     unplugin-vue-components: "npm:^0.27.2"
@@ -6945,6 +6946,15 @@ __metadata:
   version: 4.0.0
   resolution: "markdown-it-footnote@npm:4.0.0"
   checksum: 10c0/47aa807b143af211d7eca376c724b05e939e8b5960f6e287c63eca7f121be7ac697ff5601d5b7c89cbde7a32713a66b2a6f375251fad1fe989bd05d07f80e4cd
+  languageName: node
+  linkType: hard
+
+"markdown-it-include@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "markdown-it-include@npm:2.0.0"
+  peerDependencies:
+    markdown-it: ">=8.4.2"
+  checksum: 10c0/3c3bff0d594ab4b619c9eb6775ff988ad0d19a27ca1baa34ed432b4bcda375a01c234b769262bb3e39b0342e64d7e5d471d10759770fa3484166bdf301988d91
   languageName: node
   linkType: hard
 
