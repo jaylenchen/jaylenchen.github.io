@@ -842,16 +842,19 @@ mjx-container>svg {
 }
 
 .VPMenu :deep(.item) {
-  padding: 0.45rem 0.7rem !important;
+  padding: 0 !important; /* remove button-like padding */
+  min-height: auto !important;
+  line-height: 1.2 !important;
   border-radius: 0 !important;
   background: transparent !important;
   transition: color 0.2s ease, background 0.2s ease;
 }
 
+/* Remove hover background; we'll use underline animation instead */
 .VPMenu :deep(.item:hover),
 .VPMenu :deep(.item:focus),
 .VPMenu :deep(.item:active) {
-  background: rgba(240, 246, 255, 0.85) !important;
+  background: transparent !important;
   color: var(--vp-c-brand-1) !important;
   outline: none !important;
 }
@@ -865,4 +868,83 @@ mjx-container>svg {
 .VPMenu :deep(.label a) {
   background: none !important;
   border-radius: 0 !important;
+}
+
+/* Underline hover animation for dropdown links */
+.VPMenu .VPMenuLink > .VPLink.link {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0 !important; /* remove anchor inner padding */
+  line-height: 1.2 !important; /* tighten text box height */
+  text-decoration: none;
+}
+
+.VPMenu .VPMenuLink > .VPLink.link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0; /* bring underline closer to text */
+  width: 100%;
+  height: 1.5px;
+  background: var(--vp-c-brand-1);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s ease;
+}
+
+/* Ensure each item consumes full menu width */
+.VPMenu .VPMenuGroup,
+.VPMenu .VPMenuGroup > .VPMenuLink {
+  width: 100%;
+}
+
+.VPMenu .VPMenuLink > .VPLink.link:hover::after,
+.VPMenu .VPMenuLink > .VPLink.link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* fully remove any default hover background on dropdown links */
+.VPMenu .VPMenuLink > .VPLink.link,
+.VPMenu .VPMenuLink > .VPLink.link:hover,
+.VPMenu .VPMenuLink > .VPLink.link:focus,
+.VPMenu .VPMenuLink > .VPLink.link:active {
+  background: transparent !important;
+}
+
+/* Tighten nav dropdown spacing for real DOM classes (VPMenuGroup, VPMenuLink) */
+.VPMenu .items {
+  padding-top: 0.2rem !important;
+  padding-bottom: 0.2rem !important;
+}
+
+.VPMenu .VPMenuGroup {
+  margin: 0.15rem 0 !important; /* revert: group spacing */
+}
+
+.VPMenu .VPMenuGroup > .title {
+  margin: 0.05rem 0 0.12rem !important; /* revert title spacing */
+  line-height: 1.15 !important;
+  text-align: center !important;
+}
+
+.VPMenu .VPMenuGroup > .VPMenuLink {
+  margin: 0.36rem 0 !important; /* increase gap between items further */
+}
+
+/* Nav dropdown spacing: reduce gap between group title and its list */
+.VPMenu :deep(.group) {
+  padding-top: 0.1rem !important;
+  padding-bottom: 0.1rem !important;
+}
+
+.VPMenu :deep(.group .title) {
+  margin-top: 0.05rem !important;
+  margin-bottom: 0.12rem !important;
+  line-height: 1.15 !important;
+}
+
+.VPMenu :deep(.group .items) {
+  margin-top: 0 !important;
 }
