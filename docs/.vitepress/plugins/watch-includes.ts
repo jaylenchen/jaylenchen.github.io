@@ -8,15 +8,23 @@ import { fileURLToPath } from 'node:url'
 export function watchIncludedMarkdown(): Plugin {
   let docsDir = ''
   let articlesDir = ''
+  let sidebarDir = ''
+  let lastReloadAt = 0
+  const VIRTUAL_ID = 'virtual:sidebar-mtime'
+  let configPath = ''
 
   try {
     const __filename = fileURLToPath(import.meta.url)
     const __dirname = dirname(__filename)
     docsDir = resolve(__dirname, '../..')
     articlesDir = resolve(docsDir, '.articles')
+    sidebarDir = resolve(docsDir, '.vitepress/sidebar')
+    configPath = resolve(docsDir, '.vitepress/config.ts')
   } catch {
     docsDir = process.cwd()
     articlesDir = resolve(docsDir, '.articles')
+    sidebarDir = resolve(docsDir, '.vitepress/sidebar')
+    configPath = resolve(docsDir, '.vitepress/config.ts')
   }
 
   const includeRe = /!!!include\(([^)]+)\)!!!/g
@@ -26,6 +34,16 @@ export function watchIncludedMarkdown(): Plugin {
     name: 'watch-included-markdown',
     apply: 'serve',
     enforce: 'pre',
+    resolveId(id) {
+      if (id === VIRTUAL_ID) return id
+      return null
+    },
+    load(id) {
+      if (id === VIRTUAL_ID) {
+        return `export const sidebarMtime = ${Date.now()}`
+      }
+      return null
+    },
     transform(code, id) {
       if (!id.endsWith('.md')) return null
 
@@ -70,19 +88,37 @@ export function watchIncludedMarkdown(): Plugin {
       return changed ? { code: mutated, map: null } : null
     },
     handleHotUpdate({ file, server }) {
-      // .articles 文件变化，找到所有父级 markdown 模块并返回
-      if (!file.startsWith(articlesDir)) return
-      const parents = includeToParents.get(file)
-      if (!parents || parents.size === 0) return
-      const modules: any[] = []
-      parents.forEach(parentId => {
-        const mod = server.moduleGraph.getModuleById(parentId)
-        if (mod) {
-          server.moduleGraph.invalidateModule(mod)
-          modules.push(mod)
+      // 为了稳定性，统一对相关变更触发全量刷新，避免选择性失效导致的运行时异常
+      const isMdChange = file.endsWith('.md')
+      const isArticlesChange = file.startsWith(articlesDir)
+      if (isMdChange || isArticlesChange) {
+        // 无效化虚拟模块以促使依赖它的侧边栏文件重新评估
+        const vmod = server.moduleGraph.getModuleById(VIRTUAL_ID)
+        if (vmod) {
+          try { server.moduleGraph.invalidateModule(vmod) } catch {}
+          server.ws.send({ type: 'update', updates: [{ type: 'js-update', path: VIRTUAL_ID, acceptedPath: VIRTUAL_ID, timestamp: Date.now() }] })
         }
-      })
-      if (modules.length > 0) return modules
+
+        // 同时无效化所有侧边栏相关模块，确保重新执行读取 h1 的逻辑
+        server.moduleGraph.idToModuleMap.forEach((m) => {
+          const id = m.id || ''
+          if (id.includes('/.vitepress/sidebar/')) {
+            try { server.moduleGraph.invalidateModule(m) } catch {}
+          }
+        })
+
+        // 关键：无效化 config.ts，以便 VitePress 重新评估 themeConfig.sidebar
+        const cfg = server.moduleGraph.getModuleById(configPath)
+        if (cfg) {
+          try { server.moduleGraph.invalidateModule(cfg) } catch {}
+        }
+        const now = Date.now()
+        if (now - lastReloadAt > 250) {
+          lastReloadAt = now
+          try { server.ws.send({ type: 'full-reload' }) } catch {}
+        }
+      }
+      return []
     }
   }
 }

@@ -1,11 +1,9 @@
 import { DefaultTheme } from "vitepress"
+import { item } from "../../../helpers/sidebarItem"
 
 export namespace Mermaid {
     export const base = '/technology/common/mermaid'
     export const items : DefaultTheme.SidebarItem[] = [
-        {
-            text: '使用Mermaid绘制UML类图',
-            link: `${base}/class-diagrams`
-        }
+        item(`${base}/class-diagrams`)
     ]
 }   

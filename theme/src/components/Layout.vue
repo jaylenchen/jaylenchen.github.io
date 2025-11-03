@@ -5,6 +5,7 @@ import md5 from 'blueimp-md5'
 
 import Comment from './Comment.vue'
 import Copyright from './Copyright.vue'
+import SidebarTitleSync from './SidebarTitleSync.vue'
 
 const { Layout } = DefaultTheme
 const { page, theme, frontmatter } = useData()
@@ -14,6 +15,9 @@ const { page, theme, frontmatter } = useData()
   <div class="app-shell">
     <div class="app-shell__content">
       <Layout>
+        <template #sidebar-nav-after>
+          <SidebarTitleSync />
+        </template>
         <template #doc-footer-before>
           <Copyright
             v-if="(frontmatter?.aside ?? true) && (frontmatter?.showArticleMetadata ?? true) && !(frontmatter.authorLink)"

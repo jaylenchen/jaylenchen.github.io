@@ -1,4 +1,5 @@
 import { DefaultTheme } from "vitepress"
+import { item } from "../../../helpers/sidebarItem"
 
 export namespace Gepick {
     export const base = '/technology/project/gepick'
@@ -10,28 +11,13 @@ export namespace Gepick {
             text: '基础能力',
             collapsed: false,
             items: [
+                item(basic('di-framework')),
+                item(basic('cli-system')),
+                item(basic('rpc-protocol')),
+                item(basic('ipc-channel')),
+                item(basic('design-pattern-review-and-think')),
                 {
-                  text: '基于InversifyJS的服务基础框架',
-                  link: basic('di-framework')
-                },
-                {
-                  text: '如何设计一个可扩展的CLI系统',
-                  link: basic('cli-system')
-                },
-                {
-                  text: 'RPC协议的设计与实现概述',
-                  link: basic('rpc-protocol')
-                },
-                {
-                  text: 'IPCChannel的设计与实现',
-                  link: basic('ipc-channel')
-                },
-                {
-                  text: '关于设计模式应用的回顾与思考',
-                  link: basic('design-pattern-review-and-think')
-                },
-                {
-                  text: '设计一个与VSCode类似的插件系统'
+                  text: '如何设计一个与VSCode类似的插件系统'
                 }
               ]
           },

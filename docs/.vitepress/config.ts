@@ -19,6 +19,7 @@ import { Rust } from './sidebar/technology/common/rust'
 import { Life } from "./sidebar/life";
 import { copyAssetsToPublic } from './plugins/copy-assets-to-public'
 import { watchIncludedMarkdown } from './plugins/watch-includes.ts'
+import { sidebarTitles } from './plugins/sidebar-titles'
 
 
 // #region theme config
@@ -360,6 +361,7 @@ namespace SiteConfig {
         }),
         svgLoader(),
         watchIncludedMarkdown(),
+        sidebarTitles(),
         copyAssetsToPublic()
       ],
       resolve: {
