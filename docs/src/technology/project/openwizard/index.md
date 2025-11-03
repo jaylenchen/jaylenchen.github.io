@@ -1,5 +1,4 @@
 ---
-title: Openwizard
 editLink: false
 lastUpdated: false
 sidebar: true

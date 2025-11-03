@@ -6,6 +6,7 @@ import svgLoader from 'vite-svg-loader'
 import mathjax3 from 'markdown-it-mathjax3';
 import footnote from 'markdown-it-footnote';
 import markdownItInclude from 'markdown-it-include';
+import { installHeadingAutoNumber } from './markdown/heading-number'
 
 
 import { Gepick } from './sidebar/technology/project/gepick'
@@ -331,6 +332,9 @@ namespace SiteConfig {
 
         // 转换 assets 路径 - 在 include 之后执行，确保处理 include 进来的内容
         md.use(markdownItConvertAssetsPaths);
+
+        // 为 h2–h6 自动添加分级编号（h1 不编号）：h2 中文、h3+ 阿拉伯
+        installHeadingAutoNumber(md as any)
 
         // 在所有文档的<h1>标签后添加<ArticleMetadata/>组件
         md.renderer.rules.heading_close = (tokens, idx, options, env, slf) => {

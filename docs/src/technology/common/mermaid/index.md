@@ -1,5 +1,4 @@
 ---
-title: Mermaid 可视化指南
 editLink: false
 lastUpdated: false
 sidebar: true

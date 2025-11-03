@@ -161,6 +161,17 @@ samp {
   letter-spacing: -0.02em;
 }
 
+/* 序号样式（由 markdown 插件插入的 span.heading-number） */
+.vp-doc .heading-number {
+  display: inline-block;
+  margin-right: 0.35em;
+}
+
+/* tighter spacing for Chinese h2 numbers like 一、二、三 */
+.vp-doc h2 .heading-number {
+  margin-right: 0; /* reduce gap for wide CJK numeral + 顿号 */
+}
+
 .vp-doc h1 {
   font-size: clamp(1.8rem, 3vw, 2.2rem);
   font-weight: 750;
@@ -930,7 +941,7 @@ mjx-container>svg {
 }
 
 .VPMenu .VPMenuGroup > .VPMenuLink {
-  margin: 0.36rem 0 !important; /* increase gap between items further */
+  margin: 0.7rem 0 !important; /* increase gap between items further */
 }
 
 /* Nav dropdown spacing: reduce gap between group title and its list */

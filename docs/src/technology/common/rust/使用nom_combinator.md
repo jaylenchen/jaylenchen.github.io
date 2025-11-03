@@ -1,7 +1,5 @@
 ---
-publish: true
 date: 2023/09/04 14:00
-title: 使用nom::combinator
 project: common
 tags:
  - parser-combinator

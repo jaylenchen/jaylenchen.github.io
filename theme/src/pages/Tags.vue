@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { getQueryParam } from '@blog/theme/utils/utils';
+import { getQueryParam, countUniqueArticles } from '@blog/theme/utils/utils';
 import ArticleMetadata from '@blog/theme/components/ArticleMetadata.vue'
 import EmptySvg from '@blog/theme/assets/svgs/empty.svg';
 
@@ -29,9 +29,8 @@ const tagEntries = computed(() => {
 });
 
 const totalTagCount = computed(() => tagEntries.value.length);
-const totalArticleCount = computed(() =>
-  tagEntries.value.reduce((sum, entry) => sum + entry.count, 0)
-);
+// 统计唯一文章数（使用通用函数，避免多处维护）
+const totalArticleCount = computed(() => countUniqueArticles(tagEntries.value.flatMap(e => e.articles)));
 /**
  * 初始化标签数据
  * {tagTitle1: [article1, article2, ...}
@@ -239,11 +238,18 @@ if (initialTag && initialTag !== '') {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 0.5rem;
-  padding: 0.9rem;
+  gap: 0.35rem;
+  padding: 0.6rem;
   border: 1px solid rgba(120, 150, 220, 0.25);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.75);
+  background: linear-gradient(
+    180deg,
+    rgba(250, 252, 255, 0.92) 0%,
+    rgba(238, 245, 255, 0.88) 45%,
+    rgba(232, 242, 255, 0.85) 100%
+  );
+  box-shadow: 0 12px 24px rgba(120, 150, 220, 0.12);
+  backdrop-filter: blur(6px);
   max-height: 320px;
   overflow-y: auto;
 }
@@ -260,15 +266,20 @@ if (initialTag && initialTag !== '') {
 .tags__item {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.7rem;
+  gap: 0.32rem;
+  padding: 0.22rem 0.5rem;
   border-radius: 999px;
-  border: 1px solid var(--vp-c-divider);
-  background: var(--vp-c-bg);
+  border: 1px solid rgba(120, 150, 220, 0.22);
+  background: rgba(245, 249, 255, 0.92);
   color: inherit;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   cursor: pointer;
   white-space: nowrap;
+}
+
+.tags__item:hover {
+  border-color: rgba(120, 150, 220, 0.3);
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .tags__item.is-active {
@@ -281,8 +292,17 @@ if (initialTag && initialTag !== '') {
 }
 
 .tags__item-count {
-  font-size: 0.78rem;
-  color: var(--vp-c-text-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+  background: rgba(120, 150, 220, 0.12);
+  border-radius: 50%;
+  margin-left: 0.4rem;
 }
 
 .tags__content {

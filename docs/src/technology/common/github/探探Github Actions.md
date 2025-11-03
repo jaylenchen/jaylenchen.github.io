@@ -1,7 +1,5 @@
 ---
-publish: true
 date: 2024/06/05 18:00
-title: 探探Github Actions
 project: common
 tags:
 - github

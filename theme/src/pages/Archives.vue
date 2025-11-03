@@ -17,7 +17,7 @@ import DogSvg from '../assets/svgs/chinese-zodiac/dog.svg';
 import PigSvg from '../assets/svgs/chinese-zodiac/pig.svg';
 
 import { goToArchivesPage } from '../utils/route';
-import { getQueryParam, getChineseZodiac } from '../utils/utils';
+import { getQueryParam, getChineseZodiac, countUniqueArticles } from '../utils/utils';
 // @ts-ignore
 import { data as articleData } from '@blog/docs/article.data'
 
@@ -102,6 +102,8 @@ const allArticles = computed(() => {
   const sorted = [...articleData].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   return sorted
 })
+
+const totalArticlesCount = computed(() => countUniqueArticles(allArticles.value))
 
 const latestUpdated = computed(() => {
   if (!allArticles.value.length) {
@@ -306,7 +308,7 @@ watch(
             用文字的灶台燃起思维的火花，用心在这思维的厨房里烹饪，就能够做出一道又道美味的佳肴，至于能有多美味，交给时间吧...
           </p>
           <div class="archives__hero-meta">
-            <span class="meta-pill">累计 {{ allArticles.length }} 篇文章</span>
+            <span class="meta-pill">累计 {{ totalArticlesCount }} 篇文章</span>
             <span v-if="latestUpdated" class="meta-pill">最近更新 {{ latestUpdated }}</span>
           </div>
         </div>

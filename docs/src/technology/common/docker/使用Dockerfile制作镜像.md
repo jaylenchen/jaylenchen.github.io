@@ -1,7 +1,5 @@
 ---
-publish: true
 date: 2021/09/25 14:00
-title: 使用Dockerfile制作镜像
 project: common
 tags:
 - docker

@@ -57,3 +57,14 @@ export function getChineseZodiacAlias(year: number) {
   const arr = ['猴年', '鸡年', '狗年', '猪年', '鼠年', '牛年', '虎年', '兔年', '龙年', '蛇年', '马年', '羊年'];
   return arr[year % 12];
 }
+
+/**
+ * 统计去重后的文章数量（按 path 唯一）
+ */
+export function countUniqueArticles(articles: Array<{ path?: string }>): number {
+  const unique = new Set<string>();
+  for (const a of articles || []) {
+    if (a && typeof a.path === 'string') unique.add(a.path);
+  }
+  return unique.size;
+}

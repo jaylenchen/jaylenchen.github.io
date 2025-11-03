@@ -1,5 +1,4 @@
 ---
-title: Gepick
 editLink: false
 lastUpdated: false
 sidebar: true

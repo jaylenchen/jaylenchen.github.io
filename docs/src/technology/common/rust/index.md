@@ -1,5 +1,4 @@
 ---
-title: Rust 实战指引
 editLink: false
 lastUpdated: false
 sidebar: true

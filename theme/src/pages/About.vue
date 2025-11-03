@@ -101,7 +101,7 @@
 
 .lead img {
   width: 100%;
-  border-radius: 1rem;
+  border-radius: 6px;
   background: var(--vp-c-bg-soft);
   border: 1px solid var(--vp-c-divider);
 }

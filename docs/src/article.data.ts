@@ -7,8 +7,9 @@ import mathjax3 from 'markdown-it-mathjax3'
 import footnote from 'markdown-it-footnote'
 // @ts-ignore
 import markdownItInclude from 'markdown-it-include'
+import { installHeadingAutoNumber } from '../.vitepress/markdown/heading-number'
 
-const excludedFiles = ['index.md', 'tags.md', 'archives.md']
+const excludedFiles = ['index.md', 'tags.md', 'archives.md', 'about.md']
 
 // 创建 markdown-it 渲染器
 const md = new MarkdownIt({
@@ -45,6 +46,9 @@ md.renderer.rules.image = (tokens: any[], idx: number, options: any, env: any, s
   
   return defaultImageRender(tokens, idx, options, env, self);
 };
+
+// 为摘要渲染也添加标题编号（与站点渲染一致）：h1 不编号；h2 中文数字+顿号；h3+ 阿拉伯分级
+installHeadingAutoNumber(md as any)
 
 // 处理 include 语句：读取被引用的文件内容并替换
 function resolveIncludes(content: string, baseDir: string): string {
@@ -158,23 +162,41 @@ export default {
   ],
   load(watchedFiles: any[]) {
     const baseDir = resolve(__dirname)
+    const docsDir = resolve(baseDir, '..')
+    const articlesDir = resolve(docsDir, '.articles')
 
     const articles = watchedFiles
       .filter((file: string) => {
-        const filename = path.basename(file)
-        return !excludedFiles.includes(filename)
-      })
-      .filter((articleFile: string) => {
-        const articleContent = fs.readFileSync(articleFile, 'utf-8')
-        const { data } = parseFrontmatter(articleContent)
-
-        return !!data.publish
+        const normalizedFile = resolve(file)
+        const filename = path.basename(normalizedFile)
+        
+        // 排除特定文件名
+        if (excludedFiles.includes(filename)) {
+          return false
+        }
+        
+        // 排除 .articles 目录下的文件（它们只是被 include 的内容，不是独立文章）
+        const normalizedArticlesDir = resolve(articlesDir)
+        if (normalizedFile.startsWith(normalizedArticlesDir)) {
+          return false
+        }
+        
+        // 只处理 src/ 目录下的文件
+        const normalizedBaseDir = resolve(baseDir)
+        return normalizedFile.startsWith(normalizedBaseDir)
       })
       .map((articleFile: string) => {
         const articleContent = fs.readFileSync(articleFile, 'utf-8')
         const { data, content } = parseFrontmatter(articleContent)
         const relativePath = relative(baseDir, articleFile).replace(/\\/g, '/').replace(/\.md$/, '')
         const normalizedPath = `/${relativePath}`
+
+        // 计算标题：优先 frontmatter.title，否则回退到正文或 include 的首个 h1
+        let title: string | undefined = (data as any).title
+        const firstH1 = (mdText: string): string | undefined => {
+          const m = mdText.match(/^#\s+(.+)$/m)
+          return m ? m[1].trim() : undefined
+        }
 
         // 提取摘要，优先使用 frontmatter 中的 excerpt，否则自动提取
         let excerptMarkdown = data.excerpt
@@ -195,6 +217,7 @@ export default {
             try {
               if (fs.existsSync(articlesFilePath)) {
                 const articlesContent = fs.readFileSync(articlesFilePath, 'utf-8')
+                if (!title) title = firstH1(articlesContent)
                 // 从 .articles 文件内容中提取摘要（.articles 文件没有 frontmatter）
                 excerptMarkdown = extractExcerptMarkdown(articlesContent, path.dirname(articlesFilePath), data.excerptLength || 300)
               } else {
@@ -208,6 +231,7 @@ export default {
           } else {
             // 没有 include，直接提取当前文件的摘要
             excerptMarkdown = extractExcerptMarkdown(content, path.dirname(articleFile), data.excerptLength || 300)
+            if (!title) title = firstH1(content)
           }
         }
         // 使用 markdown-it 渲染摘要为 HTML
@@ -215,6 +239,7 @@ export default {
 
         return {
           ...data,
+          title,
           path: normalizedPath,
           excerpt
         }
