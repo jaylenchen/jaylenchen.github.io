@@ -492,13 +492,13 @@ sequenceDiagram
       protected client?: ILoggerClient;
     	@ILogLevelCliContribution cli: ILogLevelCliContribution
     
-      @PostConstruct()
-      protected init(): void {
-          // 监听配置层的配置变化，向client进行转发
-          this.cli.onLogConfigChanged(() => {
-              this.client?.onLogConfigChanged();
-          });
-      }
+      @PostConstruct()//[!code ++]
+      protected init(): void {//[!code ++]
+          // 监听配置层的配置变化，向client进行转发 //[!code ++]
+          this.cli.onLogConfigChanged(() => {//[!code ++]
+              this.client?.onLogConfigChanged();//[!code ++]
+          });//[!code ++]
+      }//[!code ++]
     
       async log(name: string, logLevel: number, message: string, params: any[]): Promise<void> {
           const configuredLogLevel = await this.getLogLevel(name);
@@ -839,12 +839,12 @@ export class Logger implements ILogger {
         this._logLevel = this.server.getLogLevel(this.name);  // 初始化时获取级别并缓存
     }
   
-    @Postconstruct()
-    protected init():void {
-        this.watcher.onLogLevelChanged(event => {
-            this._logLevel = this.server.getLogLevel(this.name);
-        })
-    }
+    @Postconstruct() // [!code ++]
+    protected init():void { // [!code ++]
+        this.watcher.onLogLevelChanged(event => { // [!code ++]
+            this._logLevel = this.server.getLogLevel(this.name); // [!code ++]
+        }) // [!code ++]
+    } // [!code ++]
   
     async log(logLevel: number, message: any, ...params: any[]): Promise<void> {
         // 第一次过滤：使用缓存的级别（性能优化）
