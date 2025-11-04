@@ -834,7 +834,7 @@ export class Logger implements ILogger {
     constructor(
         @ILoggerName name: ILoggerName,
         @ILoggerServer server: ILoggerServer,
-        @ILoggerWatcher watcher: ILoggerWatcher
+        @ILoggerWatcher watcher: ILoggerWatcher //[!code ++]
     ){
         this._logLevel = this.server.getLogLevel(this.name);  // 初始化时获取级别并缓存
     }
