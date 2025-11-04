@@ -892,6 +892,18 @@ watch(
   font-size: 0.875rem;
 }
 
+/* Support native collapsible sections in excerpts */
+.archives__article-excerpt :deep(details) {
+  margin: 0;
+}
+
+.archives__article-excerpt :deep(summary) {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+  margin: 0;
+}
+
 .archives__article-read-more {
   align-self: flex-start;
   margin-top: 0.5rem;

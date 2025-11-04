@@ -12,8 +12,9 @@ export namespace Gepick {
             collapsed: false,
             items: [
                 item(basic('di-framework')),
-                item(basic('cli-system')),
                 item(basic('rpc-protocol')),
+                item(basic('cli-system')),
+                item(basic('cross-process-logging-system-design')),
                 item(basic('ipc-channel')),
                 item(basic('design-pattern-review-and-think')),
                 {

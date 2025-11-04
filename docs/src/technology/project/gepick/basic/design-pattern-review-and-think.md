@@ -1,5 +1,5 @@
 ---
-date: 2025/10/20 21:00
+date: 2025/10/20
 project: gepick
 tags:
  - design

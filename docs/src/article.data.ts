@@ -79,7 +79,7 @@ function resolveIncludes(content: string, baseDir: string): string {
 }
 
 // 提取文章摘要的函数 - 返回 Markdown 格式
-function extractExcerptMarkdown(content: string, baseDir: string, maxLength: number = 300): string {
+function extractExcerptMarkdown(content: string, baseDir: string, maxLength: number = 450): string {
   // 移除 frontmatter
   let text = content.replace(/^---[\s\S]*?---\n/, '')
   
@@ -89,9 +89,11 @@ function extractExcerptMarkdown(content: string, baseDir: string, maxLength: num
   // 按段落处理，跳过复杂内容块和 include 语句
   const lines = text.split('\n')
   const processedLines: string[] = []
+  const countedParts: string[] = []
   let inCodeBlock = false
   let inContainer = false
   let inMermaid = false
+  let inDetails = false
   
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
@@ -125,16 +127,49 @@ function extractExcerptMarkdown(content: string, baseDir: string, maxLength: num
       continue
     }
     
+    // 处理 details 折叠块：仅保留 <details>/<summary> 标签行，跳过内部正文
+    const trimmed = line.trim()
+    if (trimmed.startsWith('<details')) {
+      inDetails = true
+      // 保留 details 起始行（在摘要里显示折叠控件）
+      processedLines.push(line)
+      continue
+    }
+    if (inDetails) {
+      if (trimmed.startsWith('</details')) {
+        inDetails = false
+        // 结束标签需要加入摘要，避免后续内容被误包裹在 details 内
+        processedLines.push(line)
+        continue
+      }
+      // 仅保留 summary 行，其它折叠内部内容跳过
+      if (trimmed.startsWith('<summary') || trimmed.startsWith('</summary')) {
+        processedLines.push(line)
+        countedParts.push(line)
+        // summary 文本参与长度/行数统计
+        const currentText = countedParts.join('\n\n')
+        if (currentText.length > maxLength || countedParts.length >= 7) {
+          break
+        }
+        continue
+      }
+      // details 内部正文：保留但不参与统计
+      processedLines.push(line)
+      continue
+    }
+
     // 跳过代码块和容器块内的内容
     if (inCodeBlock || inContainer) {
       continue
     }
     
     // 跳过复杂内容（但保留图片和标题）
+    const isHtmlTagLine = trimmed.startsWith('<') && trimmed.endsWith('>')
+
     if (
-      line.trim().startsWith('<') && line.trim().endsWith('>') || // HTML 标签
-      line.trim().startsWith('|') || // 表格行
-      line.trim().match(/^---+$/) // 分隔线
+      isHtmlTagLine ||
+      trimmed.startsWith('|') || // 表格行
+      trimmed.match(/^---+$/) // 分隔线
     ) {
       continue
     }
@@ -142,9 +177,10 @@ function extractExcerptMarkdown(content: string, baseDir: string, maxLength: num
     // 如果这一行有内容，添加到摘要
     if (line.trim()) {
       processedLines.push(line)
-      // 如果字符数超过限制或已经有 5 行或更多，停止
-      const currentText = processedLines.join('\n\n')
-      if (currentText.length > maxLength || processedLines.length >= 5) {
+      countedParts.push(line)
+      // 如果字符数超过限制或已经有 7 行或更多，停止
+      const currentText = countedParts.join('\n\n')
+      if (currentText.length > maxLength || countedParts.length >= 7) {
         break
       }
     }
@@ -219,7 +255,7 @@ export default {
                 const articlesContent = fs.readFileSync(articlesFilePath, 'utf-8')
                 if (!title) title = firstH1(articlesContent)
                 // 从 .articles 文件内容中提取摘要（.articles 文件没有 frontmatter）
-                excerptMarkdown = extractExcerptMarkdown(articlesContent, path.dirname(articlesFilePath), data.excerptLength || 300)
+                excerptMarkdown = extractExcerptMarkdown(articlesContent, path.dirname(articlesFilePath), data.excerptLength || 450)
               } else {
                 // 如果文件不存在，返回空摘要
                 excerptMarkdown = ''
@@ -230,7 +266,7 @@ export default {
             }
           } else {
             // 没有 include，直接提取当前文件的摘要
-            excerptMarkdown = extractExcerptMarkdown(content, path.dirname(articleFile), data.excerptLength || 300)
+            excerptMarkdown = extractExcerptMarkdown(content, path.dirname(articleFile), data.excerptLength || 450)
             if (!title) title = firstH1(content)
           }
         }

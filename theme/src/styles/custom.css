@@ -185,6 +185,8 @@ samp {
   font-size: clamp(1.5rem, 2.5vw, 1.85rem);
   font-weight: 700;
   border-top: none;
+  /* tighten vertical spacing for markdown h2 */
+  margin: 0 0 0.8rem;
 }
 
 .vp-doc h3 {
@@ -197,6 +199,45 @@ samp {
   font-size: 1.2rem;
   font-weight: 650;
 }
+
+/* Remove default margins for details/summary in article pages */
+.vp-doc details {
+  margin: 0;
+}
+
+.vp-doc summary {
+  margin: 0;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+
+/* Mermaid rendering fixes: avoid SVG clipping and line-height mis-measurement */
+.vp-doc .mermaid,
+.vp-doc .mermaid > svg {
+  overflow: visible !important;
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Avoid forcing line-height globally inside Mermaid to prevent bbox miscalc */
+/* (rely on Mermaid's own metrics) */
+
+/* Try to prevent inner label clipping inside Mermaid nodes */
+.vp-doc .mermaid .node > foreignObject,
+.vp-doc .mermaid foreignObject,
+.vp-doc .mermaid .nodeLabel,
+.vp-doc .mermaid .label {
+  overflow: visible !important;
+}
+
+/* Allow wrapping only when needed; prefer Mermaid defaults */
+
+/* When Mermaid falls back to <text>, allow better spacing */
+/* Do not override text baseline; keep Mermaid defaults */
+
+/* [reverted] spacing/padding around Mermaid moved out per user request */
 
 .vp-doc blockquote {
   margin: 1.5rem 0;
@@ -216,6 +257,11 @@ samp {
 
 .vp-doc code {
   font-size: 0.95rem;
+}
+
+/* Archives excerpt should not clip complex content like Mermaid */
+.archives__article-excerpt {
+  overflow: visible !important;
 }
 
 .vp-doc table {
