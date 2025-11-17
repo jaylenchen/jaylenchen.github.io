@@ -1,4 +1,4 @@
-# 如何设计一个基于inversifyJS更易用的DI服务框架
+# 设计一个基于inversifyJS更易用的DI服务框架
 
 ## 引言
 

@@ -35,3 +35,6 @@ cache/
 docs/src/public
 !docs/src/CNAME
 !docs/src/svgs
+
+src/.vitepress/cache
+.vitepress/cache

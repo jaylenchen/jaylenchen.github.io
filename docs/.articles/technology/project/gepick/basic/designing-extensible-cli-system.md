@@ -1,4 +1,4 @@
-# 如何设计一个可扩展的CLI系统
+# 设计一个可扩展的CLI系统
 
 ![img](../../../../assets/technology/project/gepick/basic/cli-system.png)
 
