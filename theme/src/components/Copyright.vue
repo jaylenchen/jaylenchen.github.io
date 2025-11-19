@@ -76,9 +76,9 @@ const licenseDisplay = '自由转载-非商用-非衍生-保持署名（创意�
   margin: 3rem auto 0;
   padding: 1.4rem 1.6rem;
   max-width: 760px;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(120, 150, 220, 0.25);
-  border-radius: 18px;
+  background: rgba(240, 248, 255, 0.6);
+  border: 1px solid rgba(24, 144, 255, 0.25);
+  border-radius: 8px;
   color: var(--vp-c-text-2);
   font-size: 0.98rem;
   backdrop-filter: blur(6px);
@@ -140,7 +140,7 @@ a {
   font-weight: 500;
   color: var(--vp-c-brand-1);
   text-decoration: none;
-  border-bottom: 1px solid rgba(120, 150, 220, 0.4);
+  border-bottom: 1px solid rgba(45, 45, 45, 0.4);
   padding-bottom: 1px;
 }
 
@@ -152,7 +152,7 @@ a:hover {
 @media (max-width: 640px) {
   .copyright {
     padding: 1rem 1.1rem;
-    border-radius: 16px;
+    border-radius: 8px;
   }
 
   .item {

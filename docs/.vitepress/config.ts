@@ -187,7 +187,7 @@ namespace SiteConfig {
       return self.renderToken(tokens, idx, options);
     });
 
-    // 重写 image 渲染规则，在渲染时转换路径
+    // 重写 image 渲染规则，在渲染时转换路径并添加懒加载
     md.renderer.rules.image = (tokens: any[], idx: number, options: any, env: any, self: any) => {
       const token = tokens[idx];
       const src = token.attrGet('src');
@@ -200,6 +200,12 @@ namespace SiteConfig {
           // 转换为绝对路径：/path/to/file
           const newPath = `/${assetsMatch[1]}`;
           token.attrSet('src', newPath);
+        }
+        
+        // 添加懒加载属性（除了第一张图片）
+        if (idx > 0 || tokens.length > 1) {
+          token.attrSet('loading', 'lazy');
+          token.attrSet('decoding', 'async');
         }
       }
 
@@ -300,6 +306,14 @@ namespace SiteConfig {
   const buildConfig: UserConfig<DefaultTheme.Config> = {
     base: '/',
     srcDir: resolve(__dirname, '../src'),
+    head: [
+      // DNS 预解析和预连接
+      ['link', { rel: 'dns-prefetch', href: 'https://api.github.com' }],
+      ['link', { rel: 'preconnect', href: 'https://api.github.com', crossorigin: '' }],
+      // 资源提示
+      ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover' }],
+      ['meta', { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' }],
+    ],
     rewrites: {
       'technology/project/gepick/index.md': 'technology/project/gepick.md',
       'technology/project/openwizard/index.md': 'technology/project/openwizard.md',
@@ -371,6 +385,51 @@ namespace SiteConfig {
           "@blog/theme": resolve(__dirname, "../../theme/src"),
         },
       },
+      build: {
+        rollupOptions: {
+          output: {
+            manualChunks: (id) => {
+              // Gitalk 相关
+              if (id.includes('gitalk') || id.includes('jquery')) {
+                return 'gitalk';
+              }
+              // Ant Design Vue
+              if (id.includes('ant-design-vue')) {
+                return 'ant-design';
+              }
+              // Mermaid
+              if (id.includes('mermaid')) {
+                return 'mermaid';
+              }
+              // MathJax
+              if (id.includes('mathjax')) {
+                return 'mathjax';
+              }
+              // Vue 核心
+              if (id.includes('vue') && !id.includes('node_modules')) {
+                return 'vue-core';
+              }
+              // node_modules 中的其他大型库
+              if (id.includes('node_modules')) {
+                if (id.includes('vitepress')) {
+                  return 'vitepress';
+                }
+                return 'vendor';
+              }
+            }
+          }
+        },
+        // 优化构建
+        chunkSizeWarningLimit: 1000,
+        cssCodeSplit: true,
+        minify: 'terser',
+        terserOptions: {
+          compress: {
+            drop_console: true,
+            drop_debugger: true,
+          },
+        },
+      }
     }
   }
 

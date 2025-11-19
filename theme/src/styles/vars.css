@@ -1,26 +1,28 @@
 :root {
-  --day-primary-1: #5c8ef3;
-  --day-primary-2: #779df7;
-  --day-primary-3: #96b1f9;
-  --day-primary-soft: rgba(120, 150, 220, 0.18);
+  /* 极客时间风格 - 柔和的蓝绿色系 */
+  --day-primary-1: #1890ff;
+  --day-primary-2: #40a9ff;
+  --day-primary-3: #69c0ff;
+  --day-primary-soft: rgba(24, 144, 255, 0.18);
 
-  --vp-local-nav-bg-color: rgba(244, 249, 255, 0.9);
-  --vp-c-gutter: rgba(120, 150, 220, 0.22);
-  --vp-c-border: rgba(120, 150, 220, 0.28);
-  --vp-c-bg-soft: rgba(255, 255, 255, 0.82);
+  --vp-local-nav-bg-color: rgba(240, 248, 255, 0.9);
+  --vp-nav-bg-color: rgba(240, 248, 255, 0.85);
+  --vp-c-gutter: rgba(24, 144, 255, 0.15);
+  --vp-c-border: rgba(24, 144, 255, 0.2);
+  --vp-c-bg-soft: rgba(240, 248, 255, 0.82);
 
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: -webkit-linear-gradient(
     315deg,
-    var(--day-primary-1) 25%,
-    var(--day-primary-3)
+    #1890ff 25%,
+    #52c41a 75%
   );
 
   --vp-home-hero-image-background-image: linear-gradient(
     -45deg,
-    rgba(92, 142, 243, 0.4) 0%,
-    rgba(215, 226, 255, 0.7) 40%,
-    rgba(255, 255, 255, 0.9) 100%
+    rgba(24, 144, 255, 0.15) 0%,
+    rgba(82, 196, 26, 0.1) 40%,
+    rgba(240, 248, 255, 0.95) 100%
   );
   --vp-home-hero-image-filter: blur(32px);
 
@@ -32,7 +34,7 @@
   /* 代码块背景色 */
   --vp-code-block-bg: #2d2d2d;
 
-  /* 正文文字颜色 - 优雅的深灰色，易读且舒适 */
+  /* 正文文字颜色 - 深灰色，易读且舒适 */
   --doc-text-color: rgb(45, 45, 50);
 }
 

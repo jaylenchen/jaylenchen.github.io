@@ -10,7 +10,7 @@ import DateSvg from '../assets/svgs/date.svg'
 import ReadingTimeSvg from '../assets/svgs/reading-time.svg'
 import ProjectSvg from '../assets/svgs/project.svg'
 import TagSvg from '../assets/svgs/tag.svg'
-import { goToArchivesPage } from '../utils/route';
+import { goToArchivesPage, goToTagsPage } from '../utils/route';
 
 
 interface Props {
@@ -144,9 +144,9 @@ function handleProjectClick(project: string) {
   goToArchivesPage('project', project)
 }
 
-// 处理标签点击
+// 处理标签点击 - 跳转到 Tags 页面并选中对应标签
 function handleTagClick(tag: string) {
-  goToArchivesPage('tag', tag)
+  goToTagsPage(tag)
 }
 
 

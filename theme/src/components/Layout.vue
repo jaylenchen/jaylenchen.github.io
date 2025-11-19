@@ -33,8 +33,7 @@ const { page, theme, frontmatter } = useData()
       </Layout>
     </div>
     <footer class="global-footer">
-      Powered by <a href="https://github.com/jaylenchen" target="_blank" rel="noopener">jaylenchen</a>
-      | Copyright © 2020-2025
+      © 2025 Jaylenchen. All rights reserved.
     </footer>
   </div>
 </template>
@@ -71,7 +70,7 @@ const { page, theme, frontmatter } = useData()
 .global-footer a {
   color: inherit;
   text-decoration: none;
-  border-bottom: 1px solid rgba(120, 150, 220, 0.35);
+  border-bottom: 1px solid rgba(24, 144, 255, 0.35);
   padding-bottom: 1px;
 }
 

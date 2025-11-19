@@ -4,7 +4,7 @@ import ArticleMetadata from './components/ArticleMetadata.vue'
 
 import theme from 'vitepress/theme'
 
-import "ant-design-vue/dist/reset.css";
+// 按需导入 ant-design-vue 样式，而不是整个 reset.css
 import './styles/vars.css';
 import './styles/custom.css';
 
