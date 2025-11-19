@@ -642,7 +642,7 @@ export class Logger implements ILogger {
 
 接下来，我们来实现通信层的相关成分，***这部分内容会涉及到其他系统，建议是先到相关文章了解下对应系统的作用，然后回到本文会更加容易理解***。
 
-通信层的基础是文章“[如何设计一个RPC通讯系统](/technology/project/gepick/basic/rpc-protocol.md)”当中设计的RPC系统，如果你对RPC系统还不熟悉，建议先阅读该文章。下面我们会应用RPC基础通讯系统来完成跨进程日志系统的RPC通信层的搭建：
+通信层的基础是文章"[如何设计一个RPC通讯系统](/technology/project/gepick/basic/designing-rpc-protocol)"当中设计的RPC系统，如果你对RPC系统还不熟悉，建议先阅读该文章。下面我们会应用RPC基础通讯系统来完成跨进程日志系统的RPC通信层的搭建：
 
 - `[common]`定义通讯路径
 
