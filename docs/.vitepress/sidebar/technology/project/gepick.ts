@@ -8,7 +8,7 @@ export namespace Gepick {
 
   export const items: DefaultTheme.SidebarItem[] = [
     {
-      text: "搭建核心系统",
+      text: "基础设施搭建",
       collapsed: false,
       items: [
         item(basic('designing-di-framework')),
@@ -17,7 +17,7 @@ export namespace Gepick {
       ]
     },
     {
-      text: '构建基础生态',
+      text: '核心生态构建',
       collapsed: false,
       items: [
         item(basic('designing-extensible-cli-system')),
@@ -29,7 +29,7 @@ export namespace Gepick {
       ]
     },
     {
-      text: '集成AI能力',
+      text: 'AI能力集成',
       collapsed: false,
       items: [
         item(ai('designing-chat-session-data-model')),

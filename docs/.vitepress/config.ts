@@ -314,8 +314,8 @@ namespace SiteConfig {
     markdown: {
       // Shiki主题, 所有主题参见: https://github.com/shikijs/shiki/blob/main/docs/themes.md
       theme: {
-        light: 'github-light',
-        dark: 'github-dark-dimmed'
+        light:'dracula-soft',
+        dark: 'dracula-soft'
       },
       // lineNumbers: true, // 启用行号
 

@@ -788,17 +788,25 @@ watch(
 
 .archives__article-excerpt {
   margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.65;
-  color: var(--vp-c-text-2);
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  color: var(--doc-text-color);
   overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", "Helvetica Neue", Helvetica, Arial, "Noto Sans SC", sans-serif;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  font-variant-ligatures: common-ligatures;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .archives__article-excerpt :deep(p) {
-  margin: 0 0 0.9rem;
-  color: var(--vp-c-text-2);
-  font-size: 0.875rem;
-  line-height: 1.65;
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  color: var(--doc-text-color);
+  font-weight: 400;
+  letter-spacing: 0.015em;
 }
 
 .archives__article-excerpt :deep(p:last-child) {
@@ -806,33 +814,37 @@ watch(
 }
 
 .archives__article-excerpt :deep(h1) {
-  font-size: 1.1rem;
+  font-size: 1.125rem;
   font-weight: 700;
-  margin: 0 0 0.5rem;
+  margin: 0.75rem 0 0.5rem;
   line-height: 1.4;
+  color: var(--doc-text-color);
 }
 
 .archives__article-excerpt :deep(h2) {
-  font-size: 1rem;
+  font-size: 1.0625rem;
   font-weight: 700;
-  margin: 0 0 0.5rem;
+  margin: 0.75rem 0 0.5rem;
   line-height: 1.4;
+  color: var(--doc-text-color);
 }
 
 .archives__article-excerpt :deep(h3) {
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 650;
-  margin: 0 0 0.45rem;
+  margin: 0.75rem 0 0.45rem;
   line-height: 1.4;
+  color: var(--doc-text-color);
 }
 
 .archives__article-excerpt :deep(h4),
 .archives__article-excerpt :deep(h5),
 .archives__article-excerpt :deep(h6) {
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
   font-weight: 600;
-  margin: 0 0 0.4rem;
+  margin: 0.75rem 0 0.4rem;
   line-height: 1.4;
+  color: var(--doc-text-color);
 }
 
 .archives__article-excerpt :deep(strong) {
@@ -850,18 +862,32 @@ watch(
 }
 
 .archives__article-excerpt :deep(code) {
-  background: rgba(120, 150, 220, 0.1);
-  padding: 0.15rem 0.35rem;
+  font-family: 'Anonymous Pro', 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', 'Menlo', 'Consolas', 'DejaVu Sans Mono', monospace;
+  font-size: 0.9em;
+  font-weight: normal;
+  font-style: normal;
+  color: #f8f8f2;
+  background: #2d2d2d;
+  padding: 0.2em 0.5em;
+  margin: 0 0.2em;
   border-radius: 4px;
-  font-size: 0.8em;
-  color: var(--vp-c-brand-1);
+  border: none;
+  vertical-align: baseline;
+  line-height: 1.5;
+  letter-spacing: 0;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 .archives__article-excerpt :deep(ul),
 .archives__article-excerpt :deep(ol) {
-  margin: 0 0 0.9rem;
+  margin: 0 0 1rem;
   padding-left: 1.5rem;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  color: var(--doc-text-color);
+  font-weight: 400;
+  letter-spacing: 0.015em;
 }
 
 .archives__article-excerpt :deep(li) {
@@ -884,24 +910,119 @@ watch(
 }
 
 .archives__article-excerpt :deep(blockquote) {
-  margin: 0.6rem 0;
-  padding: 0.5rem 0.65rem;
-  border-left: 3px solid rgba(120, 150, 220, 0.3);
-  background: rgba(120, 150, 220, 0.05);
-  border-radius: 4px;
-  font-size: 0.875rem;
+  margin: 1rem 0;
+  padding: 0.875rem 1rem;
+  border-left: 4px solid rgba(120, 150, 220, 0.45);
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--doc-text-color);
+  font-style: normal;
+  letter-spacing: 0.015em;
 }
 
-/* Support native collapsible sections in excerpts */
+/* Support native collapsible sections in excerpts - 简约卡片样式 */
 .archives__article-excerpt :deep(details) {
-  margin: 0;
+  margin: 0.75rem 0;
+  padding: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(120, 150, 220, 0.25);
+  overflow: hidden;
 }
 
 .archives__article-excerpt :deep(summary) {
+  margin: 0;
+  padding: 0.65rem 0.875rem;
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.9rem;
   color: var(--vp-c-text-1);
+  background: rgba(120, 150, 220, 0.05);
+  border-bottom: 1px solid rgba(120, 150, 220, 0.2);
+  user-select: none;
+}
+
+.archives__article-excerpt :deep(summary:hover) {
+  background: rgba(120, 150, 220, 0.04);
+}
+
+.archives__article-excerpt :deep(summary::marker) {
+  color: var(--vp-c-brand-1);
+  font-size: 0.9em;
+}
+
+/* Archives Details 内容区域 */
+.archives__article-excerpt :deep(details > *:not(summary)) {
   margin: 0;
+  margin-left: 12px;
+  color: var(--doc-text-color);
+  line-height: 1.75;
+  font-size: 0.9rem;
+  letter-spacing: 0.015em;
+}
+
+/* Archives Details 内部的列表样式 - 简约风格 */
+.archives__article-excerpt :deep(details > *:not(summary) ul),
+.archives__article-excerpt :deep(details > *:not(summary) ol) {
+  margin: 0 !important;
+  padding-left: 0;
+  list-style: none;
+}
+
+.archives__article-excerpt :deep(details > *:not(summary) li) {
+  position: relative;
+  margin: 0.4rem 0;
+  line-height: 1.75;
+  color: var(--doc-text-color);
+}
+
+/* 简约小圆点样式 */
+.archives__article-excerpt :deep(details > *:not(summary) ul li::before) {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--vp-c-brand-1);
+}
+
+/* 有序列表样式 */
+.archives__article-excerpt :deep(details > *:not(summary) ol) {
+  counter-reset: list-counter;
+}
+
+.archives__article-excerpt :deep(details > *:not(summary) ol li) {
+  counter-increment: list-counter;
+}
+
+.archives__article-excerpt :deep(details > *:not(summary) ol li::before) {
+  content: counter(list-counter) '.';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+  font-size: 0.9em;
+  line-height: 1.75;
+}
+
+/* 嵌套列表 */
+.archives__article-excerpt :deep(details > *:not(summary) ul ul),
+.archives__article-excerpt :deep(details > *:not(summary) ol ol),
+.archives__article-excerpt :deep(details > *:not(summary) ul ol),
+.archives__article-excerpt :deep(details > *:not(summary) ol ul) {
+  margin: 0.4rem 0 0.4rem 1rem;
+  padding-left: 0;
+}
+
+.archives__article-excerpt :deep(details > *:not(summary) ul ul li::before) {
+  width: 6px;
+  height: 6px;
+  background: var(--vp-c-brand-2);
 }
 
 .archives__article-read-more {
