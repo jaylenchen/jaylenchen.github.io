@@ -431,7 +431,7 @@ namespace SiteConfig {
         },
         // 优化构建
         chunkSizeWarningLimit: 1000,
-        cssCodeSplit: true,
+        cssCodeSplit: false, // 禁用 CSS 代码分割，确保所有 CSS 正确加载
         minify: 'esbuild', // 使用 esbuild 压缩（VitePress 默认）
       }
     }

@@ -50,6 +50,7 @@ enum ArchiveType {
 const articles = ref<any[]>([...articleData]); // 文档原始数据
 const archiveData = ref<{ [x: string]: { [x: string]: any[]; } }>({}); // 文档归档数据
 const archiveType = ref<ArchiveType>(ArchiveType.All);
+const isLoading = ref(true); // 加载状态
 // 初始化时使用空值，在 onMounted 中从 URL 读取（避免 SSR 错误）
 const condition = reactive({
   project: '',
@@ -560,6 +561,13 @@ onMounted(() => {
   
   initTimeLine();
   
+  // 数据加载完成后，延迟一小段时间再隐藏 loading（确保渲染完成）
+  nextTick(() => {
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 100);
+  });
+  
   // 如果是项目筛选或年份筛选，滚动到 aside 位置
   if (archiveType.value === ArchiveType.Project || archiveType.value === ArchiveType.Year) {
     nextTick(() => {
@@ -719,7 +727,13 @@ watch(
         </div>
       </aside>
 
-      <div class="archives__layout" v-if="archiveEntries.length" ref="contentEl">
+      <!-- Loading 状态：当数据加载中或文章列表为空时显示 -->
+      <div v-if="isLoading || !archiveEntries.length" class="archives__loading">
+        <div class="archives__loading-spinner"></div>
+        <p class="archives__loading-text">加载中...</p>
+      </div>
+
+      <div class="archives__layout" v-if="!isLoading && archiveEntries.length" ref="contentEl">
         <!-- 标签筛选：显示年份标题组块和按年份分页 -->
         <template v-if="archiveType === ArchiveType.Tag">
           <section 
@@ -1715,6 +1729,39 @@ watch(
   font-size: 0.95rem;
   color: var(--vp-c-text-3);
   text-align: center;
+}
+
+/* Loading 状态样式 */
+.archives__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 3rem 0;
+  gap: 1.5rem;
+}
+
+.archives__loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(24, 144, 255, 0.15);
+  border-top-color: var(--vp-c-brand-1);
+  border-radius: 50%;
+  animation: archives-spin 0.8s linear infinite;
+}
+
+.archives__loading-text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--vp-c-text-2);
+  font-weight: 500;
+}
+
+@keyframes archives-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 860px) {

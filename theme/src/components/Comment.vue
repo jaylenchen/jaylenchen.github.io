@@ -30,8 +30,7 @@ onMounted(async () => {
       import('ant-design-vue')
     ]);
     
-    // 动态导入 CSS
-    await import('../styles/gitalk.css');
+    // CSS 已在 index.ts 中静态导入，无需动态导入
     
     $ = jQuery;
     message = antdMessage;
