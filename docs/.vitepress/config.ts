@@ -307,6 +307,8 @@ namespace SiteConfig {
     base: '/',
     srcDir: resolve(__dirname, '../src'),
     head: [
+      // Favicon - 浏览器 tab 的 logo
+      ['link', { rel: 'icon', type: 'image/svg+xml', href: '/svgs/avatar.svg' }],
       // DNS 预解析和预连接
       ['link', { rel: 'dns-prefetch', href: 'https://api.github.com' }],
       ['link', { rel: 'preconnect', href: 'https://api.github.com', crossorigin: '' }],
