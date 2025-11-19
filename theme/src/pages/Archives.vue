@@ -50,14 +50,15 @@ enum ArchiveType {
 const articles = ref<any[]>([...articleData]); // 文档原始数据
 const archiveData = ref<{ [x: string]: { [x: string]: any[]; } }>({}); // 文档归档数据
 const archiveType = ref<ArchiveType>(ArchiveType.All);
+// 初始化时使用空值，在 onMounted 中从 URL 读取（避免 SSR 错误）
 const condition = reactive({
-  project: getQueryParam('project')?.trim(),
-  tag: getQueryParam('tag')?.trim(),
-  year: getQueryParam('year')?.trim()
+  project: '',
+  tag: '',
+  year: ''
 })
-const project = ref(getQueryParam('project')?.trim());
-const tag = ref(getQueryParam('tag')?.trim());
-const year = ref(getQueryParam('year')?.trim());
+const project = ref('');
+const tag = ref('');
+const year = ref('');
 const activeYear = ref<string | null>(null);
 const contentEl = ref<HTMLElement | null>(null);
 let sectionObserver: IntersectionObserver | null = null;
@@ -307,6 +308,7 @@ function goToYearPage(year: string, page: number) {
     nextTick(() => {
       setTimeout(() => {
         // 查找年份 section
+        if (typeof document === 'undefined') return;
         const yearSection = document.querySelector<HTMLElement>(`[data-archive-year="${year}"]`);
         if (!yearSection) {
           console.warn(`Year section not found for year: ${year}`);
@@ -338,11 +340,13 @@ function goToYearPage(year: string, page: number) {
         // 计算目标滚动位置：元素顶部 - 导航栏高度
         const targetPosition = elementTop - totalNavHeight;
         
-        // 滚动到目标位置
-        window.scrollTo({ 
-          top: Math.max(0, targetPosition), 
-          behavior: 'smooth' 
-        });
+        // 滚动到目标位置（仅在客户端执行）
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ 
+            top: Math.max(0, targetPosition), 
+            behavior: 'smooth' 
+          });
+        }
       }, 150);
     });
   }
@@ -540,6 +544,20 @@ const archiveEntries = computed(() => {
 });
 
 onMounted(() => {
+  // 在客户端初始化 URL 参数（避免 SSR 错误）
+  if (typeof window !== 'undefined') {
+    const projectParam = getQueryParam('project')?.trim();
+    const tagParam = getQueryParam('tag')?.trim();
+    const yearParam = getQueryParam('year')?.trim();
+    
+    condition.project = projectParam || '';
+    condition.tag = tagParam || '';
+    condition.year = yearParam || '';
+    project.value = projectParam || '';
+    tag.value = tagParam || '';
+    year.value = yearParam || '';
+  }
+  
   initTimeLine();
   
   // 如果是项目筛选或年份筛选，滚动到 aside 位置
@@ -554,6 +572,9 @@ onMounted(() => {
 
 // 滚动到 aside 位置的函数
 function scrollToAside() {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return;
+  }
   const aside = document.querySelector<HTMLElement>('.archives__aside');
   if (!aside) {
     return;
@@ -578,11 +599,13 @@ function scrollToAside() {
   const extraOffset = 8; // 减少8px，让 aside 显示得更美观
   const targetPosition = elementTop - totalNavHeight - extraOffset;
   
-  // 滚动到目标位置
-  window.scrollTo({ 
-    top: Math.max(0, targetPosition), 
-    behavior: 'smooth' 
-  });
+  // 滚动到目标位置（仅在客户端执行）
+  if (typeof window !== 'undefined') {
+    window.scrollTo({ 
+      top: Math.max(0, targetPosition), 
+      behavior: 'smooth' 
+    });
+  }
 }
 
 watch(
@@ -595,9 +618,9 @@ watch(
 
     // 只有在有年份参数时才设置 activeYear，否则保持为 null（表示显示全部）
     if (condition.year) {
-      if (!activeYear.value || !entries.some((item) => item.year === activeYear.value)) {
-        activeYear.value = entries[0].year;
-      }
+    if (!activeYear.value || !entries.some((item) => item.year === activeYear.value)) {
+      activeYear.value = entries[0].year;
+    }
     } else {
       activeYear.value = null;
     }
@@ -644,18 +667,18 @@ watch(
       <aside class="archives__aside" aria-label="年份导航" v-if="archiveEntries.length">
         <div class="archives__aside-header">
           <div class="archives__aside-header-left">
-            <p class="archives__aside-title">
-              <template v-if="archiveType === ArchiveType.All">年份导航</template>
+          <p class="archives__aside-title">
+            <template v-if="archiveType === ArchiveType.All">年份导航</template>
               <template v-else-if="archiveType === ArchiveType.Project">
                 <component :is="ProjectSvg" class="archives__project-icon" />
                 {{ condition.project }}
               </template>
-              <template v-else-if="archiveType === ArchiveType.Tag">#{{ condition.tag }}</template>
+            <template v-else-if="archiveType === ArchiveType.Tag">#{{ condition.tag }}</template>
               <template v-else-if="archiveType === ArchiveType.Year">
                 <component :is="yearIcon(condition.year)" class="archives__project-icon" />
                 {{ condition.year }}年
               </template>
-            </p>
+          </p>
             <div v-if="archiveType !== ArchiveType.All" class="archives__filter-stats">
               <span class="meta-pill">累计 {{ articles.length }} 篇文章</span>
               <span v-if="filteredLatestUpdated" class="meta-pill">最近更新 {{ filteredLatestUpdated }}</span>
@@ -882,13 +905,13 @@ watch(
             </div>
           </header>
 
-          <ul class="archives__article-list">
+              <ul class="archives__article-list">
             <li v-for="article in getPaginatedYearArticles(currentYearEntry)" :key="article.path" class="archives__article-item">
-              <ArticleMetadata :article="article" />
-              <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
-              <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
-            </li>
-          </ul>
+                  <ArticleMetadata :article="article" />
+                  <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
+                  <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
+                </li>
+              </ul>
 
           <!-- 年份分页器 -->
           <div v-if="getYearTotalPages(currentYearEntry) > 1" class="archives__year-pagination">

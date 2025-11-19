@@ -385,6 +385,16 @@ namespace SiteConfig {
           "@blog/theme": resolve(__dirname, "../../theme/src"),
         },
       },
+      optimizeDeps: {
+        include: ['mark.js/vanilla'],
+        exclude: ['gitalk', 'jquery'],
+        esbuildOptions: {
+          target: 'esnext',
+        },
+      },
+      ssr: {
+        noExternal: ['mark.js'],
+      },
       build: {
         rollupOptions: {
           output: {
@@ -422,13 +432,7 @@ namespace SiteConfig {
         // 优化构建
         chunkSizeWarningLimit: 1000,
         cssCodeSplit: true,
-        minify: 'terser',
-        terserOptions: {
-          compress: {
-            drop_console: true,
-            drop_debugger: true,
-          },
-        },
+        minify: 'esbuild', // 使用 esbuild 压缩（VitePress 默认）
       }
     }
   }

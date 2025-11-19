@@ -52,7 +52,7 @@ onMounted(async () => {
     // 如果点赞，先判断有没有登录
     const $gc = $('#comment-container');
     $gc.on('click', '.gt-comment-like', function () {
-      if (!window.localStorage.getItem('GT_ACCESS_TOKEN')) {
+      if (typeof window !== 'undefined' && !window.localStorage.getItem('GT_ACCESS_TOKEN')) {
         message.warning({
           content: '点赞前请先使用Github进行登录~',
         })

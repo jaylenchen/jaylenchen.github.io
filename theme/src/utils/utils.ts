@@ -16,6 +16,7 @@ export function formatDate(date: string | number | Date) {
  * @returns 参数值
  */
 export function getQueryParam(paramName: string) {
+  if (typeof window === 'undefined') return null;
   const reg = new RegExp("(^|&)"+ paramName +"=([^&]*)(&|$)");
   let value = decodeURIComponent(window.location.search.substr(1)).match(reg);
   if (value != null) {
@@ -31,6 +32,7 @@ export function getQueryParam(paramName: string) {
  * @param paramValue 参数值
  */
 export function goToLink(url: string, paramName?: string, paramValue?: string) {
+  if (typeof window === 'undefined') return;
   if (paramName && paramValue) {
     window.location.href = url + '?' + paramName + '=' + paramValue;
   } else {
