@@ -96,30 +96,47 @@ function yearIcon(year: string | number) {
 function handleYearIconClick(newYear: string | number) {
   const normalizedYear = normalizeYear(newYear);
   if (!normalizedYear) {
-    goToArchivesPage();
+    selectAll();
     return;
   }
 
-  goToArchivesPage('year', String(normalizedYear))
+  const yearValue = `${normalizedYear}年`;
+  selectYear(yearValue);
 }
 
 function resetCurrentPage() {
-  goToArchivesPage()
+  selectAll()
 }
 
 function selectYear(yearValue: string) {
-  activeYear.value = yearValue;
-  goToArchivesPage('year', yearValue.replace('年', ''));
-  // 滚动到 aside 位置
+  const yearNum = yearValue.replace('年', '');
+  condition.year = yearNum;
+  year.value = yearNum;
+  initTimeLine();
+  
+  // DOM 更新后平滑滚动到顶部
   nextTick(() => {
-    setTimeout(() => {
-      scrollToAside();
-    }, 300);
+    requestAnimationFrame(() => {
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
   });
 }
 
 function selectAll() {
-  goToArchivesPage();
+  condition.year = '';
+  year.value = '';
+  initTimeLine();
+  
+  // DOM 更新后平滑滚动到顶部
+  nextTick(() => {
+    requestAnimationFrame(() => {
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  });
 }
 
 const allArticles = computed(() => {
@@ -305,50 +322,14 @@ function goToYearPage(year: string, page: number) {
   const totalPages = getYearTotalPages(yearEntry);
   if (page >= 1 && page <= totalPages) {
     yearPages.value[year] = page;
-    // 滚动到对应年份的标题位置
+    
+    // DOM 更新后平滑滚动到顶部
     nextTick(() => {
-      setTimeout(() => {
-        // 查找年份 section
-        if (typeof document === 'undefined') return;
-        const yearSection = document.querySelector<HTMLElement>(`[data-archive-year="${year}"]`);
-        if (!yearSection) {
-          console.warn(`Year section not found for year: ${year}`);
-          return;
-        }
-        
-        // 查找年份标题 header
-        const yearHeader = yearSection.querySelector<HTMLElement>('.archives__content-header');
-        if (!yearHeader) {
-          console.warn(`Year header not found for year: ${year}`);
-          return;
-        }
-        
-        // 获取导航栏高度
-        const navbar = document.querySelector<HTMLElement>('.VPNavBar');
-        const localNav = document.querySelector<HTMLElement>('.VPLocalNav');
-        const navbarHeight = navbar ? navbar.offsetHeight : 0;
-        const localNavHeight = localNav ? localNav.offsetHeight : 0;
-        const totalNavHeight = navbarHeight + localNavHeight;
-        
-        // 计算元素相对于文档顶部的绝对位置
-        let elementTop = 0;
-        let element = yearHeader as HTMLElement | null;
-        while (element) {
-          elementTop += element.offsetTop;
-          element = element.offsetParent as HTMLElement | null;
-        }
-        
-        // 计算目标滚动位置：元素顶部 - 导航栏高度
-        const targetPosition = elementTop - totalNavHeight;
-        
-        // 滚动到目标位置（仅在客户端执行）
+      requestAnimationFrame(() => {
         if (typeof window !== 'undefined') {
-          window.scrollTo({ 
-            top: Math.max(0, targetPosition), 
-            behavior: 'smooth' 
-          });
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-      }, 150);
+      });
     });
   }
 }
@@ -370,16 +351,19 @@ function nextYearPage(year: string) {
   }
 }
 
-// 项目分页函数 - 滚动到 aside 位置
+// 项目分页函数 - 滚动到顶部
 function goToProjectPage(page: number) {
   const totalPages = getProjectTotalPages();
   if (page >= 1 && page <= totalPages) {
     projectPage.value = page;
-    // 滚动到 aside 位置
+    
+    // DOM 更新后平滑滚动到顶部
     nextTick(() => {
-      setTimeout(() => {
-        scrollToAside();
-      }, 150);
+      requestAnimationFrame(() => {
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
     });
   }
 }
@@ -397,16 +381,19 @@ function nextProjectPage() {
   }
 }
 
-// 全部文章分页函数 - 滚动到 aside 位置
+// 全部文章分页函数 - 滚动到顶部
 function goToAllArticlesPage(page: number) {
   const totalPages = getAllArticlesTotalPages();
   if (page >= 1 && page <= totalPages) {
     allArticlesPage.value = page;
-    // 滚动到 aside 位置
+    
+    // DOM 更新后平滑滚动到顶部
     nextTick(() => {
-      setTimeout(() => {
-        scrollToAside();
-      }, 150);
+      requestAnimationFrame(() => {
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
     });
   }
 }
@@ -520,6 +507,54 @@ function initTimeLine() {
     archiveData.value[yearKey][monthKey].push(article);
   }
 }
+
+// 所有年份的列表（用于年份导航按钮，始终显示所有年份）
+const allYearEntries = computed(() => {
+  const allYearData: { [x: string]: { [x: string]: any[]; } } = {};
+  
+  // 基于所有文章数据生成年份列表
+  for (let i = 0; i < articleData.length; i++) {
+    const article = articleData[i];
+    const date = new Date(article.date);
+    if (Number.isNaN(date.getTime())) {
+      continue;
+    }
+
+    const yearKey = `${date.getFullYear()}年`;
+    const monthKey = `${date.getMonth() + 1}月`;
+
+    if (!allYearData[yearKey]) {
+      allYearData[yearKey] = {};
+    }
+
+    if (!allYearData[yearKey][monthKey]) {
+      allYearData[yearKey][monthKey] = [];
+    }
+
+    allYearData[yearKey][monthKey].push(article);
+  }
+
+  return Object.keys(allYearData)
+    .sort((a, b) => {
+      const yearA = normalizeYear(a) ?? 0;
+      const yearB = normalizeYear(b) ?? 0;
+      return yearB - yearA;
+    })
+    .map((yearKey) => {
+      const months = allYearData[yearKey];
+      const monthEntries = Object.keys(months)
+        .sort((a, b) => {
+          const monthA = Number(String(a).replace(/[^\d]/g, '')) || 0;
+          const monthB = Number(String(b).replace(/[^\d]/g, '')) || 0;
+          return monthB - monthA;
+        })
+        .map((monthKey) => ({ month: monthKey, articles: months[monthKey] }));
+
+      const articleCount = monthEntries.reduce((total, monthEntry) => total + monthEntry.articles.length, 0);
+
+      return { year: yearKey, months: monthEntries, count: articleCount };
+    });
+});
 
 const archiveEntries = computed(() => {
   return Object.keys(archiveData.value)
@@ -647,85 +682,30 @@ watch(
 <template>
   <div class="archives">
     <div class="archives__inner">
-      <header class="archives__hero">
-        <div class="archives__hero-card">
-          <a
-            class="archives__hero-heading"
-            href="https://github.com/jaylenchen"
-            target="_blank"
-            rel="noopener"
-          >
-            <img
-              class="archives__hero-avatar"
-              src="/svgs/avatar.svg"
-              alt="jaylenchen avatar"
-            />
-            <span class="archives__hero-name">jaylenchen</span>
-          </a>
-          <p>
-            用文字的灶台燃起思维的火花，用心在这思维的厨房里烹饪，就能够做出一道又道美味的佳肴，至于能有多美味，交给时间吧...
-          </p>
-          <div class="archives__hero-meta">
-            <span class="meta-pill">累计 {{ totalArticlesCount }} 篇文章</span>
-            <span v-if="latestUpdated" class="meta-pill">最近更新 {{ latestUpdated }}</span>
-          </div>
-        </div>
-      </header>
 
-      <aside class="archives__aside" aria-label="年份导航" v-if="archiveEntries.length">
-        <div class="archives__aside-header">
-          <div class="archives__aside-header-left">
-          <p class="archives__aside-title">
-            <template v-if="archiveType === ArchiveType.All">年份导航</template>
-              <template v-else-if="archiveType === ArchiveType.Project">
-                <component :is="ProjectSvg" class="archives__project-icon" />
-                {{ condition.project }}
-              </template>
-            <template v-else-if="archiveType === ArchiveType.Tag">#{{ condition.tag }}</template>
-              <template v-else-if="archiveType === ArchiveType.Year">
-                <component :is="yearIcon(condition.year)" class="archives__project-icon" />
-                {{ condition.year }}年
-              </template>
-          </p>
-            <div v-if="archiveType !== ArchiveType.All" class="archives__filter-stats">
-              <span class="meta-pill">累计 {{ articles.length }} 篇文章</span>
-              <span v-if="filteredLatestUpdated" class="meta-pill">最近更新 {{ filteredLatestUpdated }}</span>
-            </div>
-          </div>
-          <button 
-            v-if="archiveType !== ArchiveType.All" 
-            type="button"
-            class="archives__clear-button"
-            @click="resetCurrentPage()"
-            aria-label="清除筛选"
-          >
-            ✕
-          </button>
-        </div>
-        <div v-if="archiveType === ArchiveType.All" class="archives__aside-buttons">
-          <button
-            type="button"
-            class="archives__year-button"
-            :class="{ 'is-active': archiveType === ArchiveType.All && !condition.year }"
-            @click="selectAll()"
-          >
-            <span class="archives__year-label">全部</span>
-            <span class="archives__year-count">{{ totalArticlesCount }}</span>
-          </button>
-          <button
-            v-for="yearEntry in archiveEntries"
-            :key="yearEntry.year"
-            type="button"
-            class="archives__year-button"
-            :class="{ 'is-active': condition.year && currentYearEntry && currentYearEntry.year === yearEntry.year }"
-            @click="selectYear(yearEntry.year)"
-          >
-            <component :is="yearIcon(yearEntry.year)" class="archives__year-button-icon" />
-            <span class="archives__year-label">{{ yearEntry.year }}</span>
-            <span class="archives__year-count">{{ yearEntry.count }}</span>
-          </button>
-        </div>
-      </aside>
+      <!-- 年份导航筛选栏 -->
+      <div class="archives__year-filter" v-if="allYearEntries.length">
+        <button
+          type="button"
+          class="archives__year-button"
+          :class="{ 'is-active': !condition.year }"
+          @click="selectAll()"
+        >
+          <span class="archives__year-label">全部</span>
+          <span class="archives__year-count">{{ totalArticlesCount }}</span>
+        </button>
+        <button
+          v-for="yearEntry in allYearEntries"
+          :key="yearEntry.year"
+          type="button"
+          class="archives__year-button"
+          :class="{ 'is-active': condition.year === yearEntry.year.replace('年', '') }"
+          @click="selectYear(yearEntry.year)"
+        >
+          <span class="archives__year-label">{{ yearEntry.year.replace('年', '') }}</span>
+          <span class="archives__year-count">{{ yearEntry.count }}</span>
+        </button>
+      </div>
 
       <!-- Loading 状态：当数据加载中或文章列表为空时显示 -->
       <div v-if="isLoading || !archiveEntries.length" class="archives__loading">
@@ -773,7 +753,6 @@ watch(
                 :disabled="(yearPages[yearEntry.year] || 1) === 1"
                 aria-label="上一页"
               >
-                ‹
               </button>
               <div class="archives__pagination-pages">
                 <template v-for="(page, index) in getPaginationPages(yearPages[yearEntry.year] || 1, getYearTotalPages(yearEntry))" :key="index">
@@ -797,7 +776,6 @@ watch(
                 :disabled="(yearPages[yearEntry.year] || 1) === getYearTotalPages(yearEntry)"
                 aria-label="下一页"
               >
-                ›
               </button>
             </div>
           </section>
@@ -824,7 +802,6 @@ watch(
                 :disabled="projectPage === 1"
                 aria-label="上一页"
               >
-                ‹
               </button>
               <div class="archives__pagination-pages">
                 <template v-for="(page, index) in getPaginationPages(projectPage, getProjectTotalPages())" :key="index">
@@ -848,7 +825,6 @@ watch(
                 :disabled="projectPage === getProjectTotalPages()"
                 aria-label="下一页"
               >
-                ›
               </button>
             </div>
           </section>
@@ -875,7 +851,6 @@ watch(
                 :disabled="allArticlesPage === 1"
                 aria-label="上一页"
               >
-                ‹
               </button>
               <div class="archives__pagination-pages">
                 <template v-for="(page, index) in getPaginationPages(allArticlesPage, getAllArticlesTotalPages())" :key="index">
@@ -899,72 +874,59 @@ watch(
                 :disabled="allArticlesPage === getAllArticlesTotalPages()"
                 aria-label="下一页"
               >
-                ›
               </button>
             </div>
           </section>
         </template>
 
-        <!-- 年份筛选：显示年份标题组块和按年份分页 -->
-        <section v-else-if="archiveType === ArchiveType.Year && currentYearEntry" class="archives__content" :data-archive-year="currentYearEntry.year">
-          <header class="archives__content-header">
-            <component
-              :is="yearIcon(currentYearEntry.year)"
-              @click="handleYearIconClick(currentYearEntry.year)"
-              class="archives__year-icon"
-            />
-            <div class="archives__block-meta">
-              <h2>{{ currentYearEntry.year }}</h2>
-              <p>{{ currentYearEntry.count }} 篇文章</p>
-            </div>
-          </header>
+        <!-- 年份筛选：不显示年份标题组块，只显示合并后的文章列表和统一分页 -->
+        <template v-else-if="archiveType === ArchiveType.Year && currentYearEntry">
+          <section class="archives__content">
+            <ul class="archives__article-list">
+              <li v-for="article in getPaginatedYearArticles(currentYearEntry)" :key="article.path" class="archives__article-item">
+                <ArticleMetadata :article="article" />
+                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
+                <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
+              </li>
+            </ul>
 
-              <ul class="archives__article-list">
-            <li v-for="article in getPaginatedYearArticles(currentYearEntry)" :key="article.path" class="archives__article-item">
-                  <ArticleMetadata :article="article" />
-                  <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
-                  <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
-                </li>
-              </ul>
-
-          <!-- 年份分页器 -->
-          <div v-if="getYearTotalPages(currentYearEntry) > 1" class="archives__year-pagination">
-            <button 
-              type="button"
-              class="archives__pagination-btn"
-              :class="{ 'is-disabled': (yearPages[currentYearEntry.year] || 1) === 1 }"
-              @click="prevYearPage(currentYearEntry.year)"
-              :disabled="(yearPages[currentYearEntry.year] || 1) === 1"
-              aria-label="上一页"
-            >
-              ‹
-            </button>
-            <div class="archives__pagination-pages">
-              <template v-for="(page, index) in getPaginationPages(yearPages[currentYearEntry.year] || 1, getYearTotalPages(currentYearEntry))" :key="index">
-                <button
-                  v-if="typeof page === 'number'"
-                  type="button"
-                  class="archives__pagination-page"
-                  :class="{ 'is-active': page === (yearPages[currentYearEntry.year] || 1) }"
-                  @click="goToYearPage(currentYearEntry.year, page)"
-                >
-                  {{ page }}
-                </button>
-                <span v-else class="archives__pagination-ellipsis">{{ page }}</span>
-              </template>
+            <!-- 年份统一分页器 -->
+            <div v-if="getYearTotalPages(currentYearEntry) > 1" class="archives__year-pagination">
+              <button 
+                type="button"
+                class="archives__pagination-btn"
+                :class="{ 'is-disabled': (yearPages[currentYearEntry.year] || 1) === 1 }"
+                @click="prevYearPage(currentYearEntry.year)"
+                :disabled="(yearPages[currentYearEntry.year] || 1) === 1"
+                aria-label="上一页"
+              >
+              </button>
+              <div class="archives__pagination-pages">
+                <template v-for="(page, index) in getPaginationPages(yearPages[currentYearEntry.year] || 1, getYearTotalPages(currentYearEntry))" :key="index">
+                  <button
+                    v-if="typeof page === 'number'"
+                    type="button"
+                    class="archives__pagination-page"
+                    :class="{ 'is-active': page === (yearPages[currentYearEntry.year] || 1) }"
+                    @click="goToYearPage(currentYearEntry.year, page)"
+                  >
+                    {{ page }}
+                  </button>
+                  <span v-else class="archives__pagination-ellipsis">{{ page }}</span>
+                </template>
+              </div>
+              <button 
+                type="button"
+                class="archives__pagination-btn"
+                :class="{ 'is-disabled': (yearPages[currentYearEntry.year] || 1) === getYearTotalPages(currentYearEntry) }"
+                @click="nextYearPage(currentYearEntry.year)"
+                :disabled="(yearPages[currentYearEntry.year] || 1) === getYearTotalPages(currentYearEntry)"
+                aria-label="下一页"
+              >
+              </button>
             </div>
-            <button 
-              type="button"
-              class="archives__pagination-btn"
-              :class="{ 'is-disabled': (yearPages[currentYearEntry.year] || 1) === getYearTotalPages(currentYearEntry) }"
-              @click="nextYearPage(currentYearEntry.year)"
-              :disabled="(yearPages[currentYearEntry.year] || 1) === getYearTotalPages(currentYearEntry)"
-              aria-label="下一页"
-            >
-              ›
-            </button>
-          </div>
-        </section>
+          </section>
+        </template>
       </div>
 
       <p v-else class="archives__empty">暂无文章记录。</p>
@@ -989,6 +951,7 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
+  padding-top: 3.5rem; /* 为固定的年份导航留出空间 */
 }
 
 .archives__hero {
@@ -1010,14 +973,15 @@ watch(
 
 .archives__hero-card {
   position: relative;
-  padding: 2.4rem 2.1rem 2.6rem;
+  padding: 1.4rem 1.8rem 1.6rem;
   border-radius: 8px;
-  border: 1px solid rgba(24, 144, 255, 0.22);
-  background: rgba(240, 248, 255, 0.92);
+  border: 1px solid rgba(24, 144, 255, 0.3);
+  background: rgba(240, 245, 250, 0.95);
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 0.6rem;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.08);
 }
 
 .archives__hero-card::before {
@@ -1060,13 +1024,6 @@ watch(
   color: rgba(48, 64, 110, 0.9);
 }
 
-.archives__hero-card p {
-  margin: 0;
-  font-size: 1.02rem;
-  line-height: 1.85;
-  color: rgba(55, 74, 122, 0.86);
-}
-
 .archives__hero-meta {
   display: flex;
   flex-wrap: wrap;
@@ -1078,15 +1035,14 @@ watch(
 .meta-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.85rem;
+  gap: 0.3rem;
+  padding: 0.3rem 0.65rem;
   border-radius: 4px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   letter-spacing: 0.02em;
   color: rgba(55, 78, 135, 0.9);
-  background: rgba(240, 248, 255, 0.72);
+  background: rgba(200, 210, 220, 0.72);
   border: 1px solid rgba(24, 144, 255, 0.24);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 @media (max-width: 640px) {
@@ -1107,11 +1063,6 @@ watch(
 
   .archives__hero-name {
     font-size: 1.4rem;
-  }
-
-  .archives__hero-card p {
-    font-size: 0.98rem;
-    line-height: 1.75;
   }
 
   .meta-pill {
@@ -1153,37 +1104,39 @@ watch(
 .archives__aside {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid rgba(24, 144, 255, 0.15);
+  gap: 0.6rem;
+  padding-top: 0;
+  margin-top: 0;
+  align-self: flex-start;
+  max-width: 280px;
 }
 
 .archives__aside-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
-  gap: 0.75rem;
+  margin-bottom: 0.2rem;
+  gap: 0.5rem;
 }
 
 .archives__aside-header-left {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
   flex: 1;
 }
 
 .archives__aside-title {
   margin: 0;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--vp-c-text-3);
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .archives__project-icon {
@@ -1202,7 +1155,7 @@ watch(
   padding: 0;
   border: 1px solid rgba(24, 144, 255, 0.25);
   border-radius: 999px;
-  background: rgba(240, 248, 255, 0.7);
+  background: rgba(200, 210, 220, 0.7);
   color: var(--vp-c-text-2);
   font-size: 1rem;
   line-height: 1;
@@ -1219,28 +1172,59 @@ watch(
 .archives__filter-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0.4rem;
   margin: 0;
 }
 
-.archives__aside-buttons {
+.archives__year-filter {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: auto;
+  max-width: 90%;
+  flex: 0 0 auto;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: 0.6rem;
+  border: 1px solid rgba(24, 144, 255, 0.25);
+  border-radius: 8px;
+  background: rgba(200, 210, 220, 0.9);
+  backdrop-filter: blur(6px);
+  box-sizing: border-box;
+}
+
+.archives__year-filter::-webkit-scrollbar {
+  width: 6px;
+}
+
+.archives__year-filter::-webkit-scrollbar-thumb {
+  background: rgba(24, 144, 255, 0.18);
+  border-radius: 999px;
+}
+
+
+.archives__aside-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: flex-start;
 }
 
 .archives__year-button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.7rem;
+  gap: 0.32rem;
+  padding: 0.22rem 0.5rem;
   border-radius: 999px;
-  border: 1px solid transparent;
-  background: rgba(240, 248, 255, 0.7);
-  color: inherit;
-  font-size: 0.8rem;
+  border: 1px solid rgba(24, 144, 255, 0.25);
+  background: rgba(200, 210, 220, 0.92);
+  color: rgb(60, 60, 67);
+  font-size: 0.78rem;
   cursor: pointer;
-  transition: all 0.2s ease;
   white-space: nowrap;
 }
 
@@ -1253,17 +1237,18 @@ watch(
 
 .archives__year-button:hover {
   border-color: rgba(24, 144, 255, 0.35);
-  background: rgba(240, 248, 255, 0.9);
+  background: rgba(190, 200, 210, 0.95);
 }
 
 .archives__year-button.is-active {
   border-color: rgba(24, 144, 255, 0.5);
   background: rgba(24, 144, 255, 0.12);
-  color: var(--vp-c-brand-1);
 }
 
 .archives__year-label {
   font-weight: 500;
+  color: inherit;
+  font-size: inherit;
 }
 
 .archives__year-pagination {
@@ -1277,25 +1262,41 @@ watch(
 }
 
 .archives__pagination-btn {
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 2rem;
+  height: 2rem;
   padding: 0;
-  border-radius: 4px;
+  border-radius: 999px;
   border: 1px solid rgba(24, 144, 255, 0.25);
-  background: rgba(240, 248, 255, 0.92);
-  color: var(--vp-c-text-1);
-  font-size: 1.2rem;
-  font-weight: 600;
+  background: rgba(200, 210, 220, 0.92);
+  color: rgb(60, 60, 67);
+  font-size: 0;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.archives__pagination-btn::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(-45deg);
+  transition: all 0.2s ease;
+}
+
+.archives__year-pagination > .archives__pagination-btn:last-child::before,
+.archives__pagination-btn[aria-label="下一页"]::before {
+  transform: rotate(135deg);
 }
 
 .archives__pagination-btn:hover:not(.is-disabled) {
   border-color: rgba(24, 144, 255, 0.35);
-  background: rgba(245, 250, 255, 0.95);
+  background: rgba(190, 200, 210, 0.95);
+  color: var(--vp-c-brand-1);
 }
 
 .archives__pagination-btn.is-disabled {
@@ -1312,12 +1313,12 @@ watch(
 .archives__pagination-page {
   min-width: 2.2rem;
   height: 2.2rem;
-  padding: 0 0.5rem;
-  border-radius: 4px;
+  padding: 0.22rem 0.5rem;
+  border-radius: 999px;
   border: 1px solid rgba(24, 144, 255, 0.25);
-  background: rgba(240, 248, 255, 0.92);
+  background: rgba(240, 245, 250, 0.95);
   color: var(--vp-c-text-1);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -1327,14 +1328,12 @@ watch(
 
 .archives__pagination-page:hover {
   border-color: rgba(24, 144, 255, 0.35);
-  background: rgba(245, 250, 255, 0.95);
+  background: rgba(190, 200, 210, 0.95);
 }
 
 .archives__pagination-page.is-active {
   border-color: rgba(24, 144, 255, 0.5);
   background: rgba(24, 144, 255, 0.12);
-  color: var(--vp-c-brand-1);
-  font-weight: 600;
 }
 
 .archives__pagination-ellipsis {
@@ -1351,22 +1350,21 @@ watch(
 .archives__year-filter {
   font-size: 0.75rem;
   color: var(--vp-c-text-3);
-  margin-left: 0.25rem;
   margin-right: 0;
 }
 
 .archives__year-count {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  font-size: 0.7rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  font-size: 0.68rem;
   font-weight: 600;
   color: var(--vp-c-text-1);
   background: rgba(24, 144, 255, 0.12);
   border-radius: 50%;
-  margin-left: 0.5rem;
+  margin-left: 0.4rem;
 }
 
 .archives__content {
@@ -1411,7 +1409,9 @@ watch(
   gap: 0.8rem;
   padding: 1.05rem 1.2rem;
   border-radius: 8px;
-  background: rgba(240, 248, 255, 0.9);
+  background: rgba(240, 245, 250, 0.95);
+  border: 1px solid rgba(24, 144, 255, 0.25);
+  box-shadow: 0 2px 6px rgba(24, 144, 255, 0.08);
   border: 1px solid rgba(24, 144, 255, 0.2);
   backdrop-filter: blur(8px);
 }
@@ -1446,13 +1446,14 @@ watch(
 .archives__article-item {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1.35rem 1.3rem;
-  border-radius: 8px;
-  background: rgba(240, 248, 255, 0.88);
-  border: 1px solid rgba(24, 144, 255, 0.18);
-  transition: transform 0.25s ease;
-  margin-bottom: 1.2rem;
+  gap: 0.6rem;
+  padding: 1rem 1.1rem;
+  border-radius: 6px;
+  background: rgba(240, 245, 250, 0.95);
+  border: 1px solid rgba(24, 144, 255, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  margin-bottom: 0.9rem;
+  box-shadow: 0 2px 6px rgba(24, 144, 255, 0.08);
 }
 
 .archives__article-item:hover {
@@ -1592,7 +1593,7 @@ watch(
   margin: 1rem 0;
   padding: 0.875rem 1rem;
   border-left: 4px solid rgba(24, 144, 255, 0.45);
-  background: rgba(240, 248, 255, 0.6);
+  background: rgba(200, 210, 220, 0.6);
   border-radius: 12px;
   font-size: 0.9375rem;
   line-height: 1.75;
@@ -1606,7 +1607,7 @@ watch(
   margin: 0.75rem 0;
   padding: 0;
   border-radius: 8px;
-  background: rgba(240, 248, 255, 0.6);
+  background: rgba(200, 210, 220, 0.6);
   border: 1px solid rgba(24, 144, 255, 0.25);
   overflow: hidden;
 }

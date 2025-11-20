@@ -5,16 +5,17 @@
   --day-primary-3: #69c0ff;
   --day-primary-soft: rgba(24, 144, 255, 0.18);
 
-  --vp-local-nav-bg-color: rgba(240, 248, 255, 0.9);
-  --vp-nav-bg-color: rgba(240, 248, 255, 0.85);
+  --vp-local-nav-bg-color: rgba(200, 210, 220, 0.9);
+  --vp-nav-bg-color: rgba(200, 210, 220, 0.85);
   --vp-c-gutter: rgba(24, 144, 255, 0.15);
   --vp-c-border: rgba(24, 144, 255, 0.2);
-  --vp-c-bg-soft: rgba(240, 248, 255, 0.82);
+  --vp-c-divider: rgba(24, 144, 255, 0.2);
+  --vp-c-bg-soft: rgba(200, 210, 220, 0.82);
 
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: #1890ff;
 
-  --vp-home-hero-image-background-image: rgba(240, 248, 255, 0.95);
+  --vp-home-hero-image-background-image: rgba(200, 210, 220, 0.95);
   --vp-home-hero-image-filter: blur(32px);
 
   --vp-c-brand-1: var(--day-primary-1);

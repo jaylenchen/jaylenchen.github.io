@@ -242,7 +242,7 @@ if (initialTag && initialTag !== '') {
   padding: 0.6rem;
   border: 1px solid rgba(24, 144, 255, 0.25);
   border-radius: 8px;
-  background: rgba(240, 248, 255, 0.9);
+  background: rgba(200, 210, 220, 0.9);
   box-shadow: 0 12px 24px rgba(24, 144, 255, 0.12);
   backdrop-filter: blur(6px);
   max-height: 320px;
@@ -265,7 +265,7 @@ if (initialTag && initialTag !== '') {
   padding: 0.22rem 0.5rem;
   border-radius: 999px;
   border: 1px solid rgba(24, 144, 255, 0.25);
-  background: rgba(240, 248, 255, 0.92);
+  background: rgba(200, 210, 220, 0.92);
   color: inherit;
   font-size: 0.78rem;
   cursor: pointer;
@@ -274,7 +274,7 @@ if (initialTag && initialTag !== '') {
 
 .tags__item:hover {
   border-color: rgba(24, 144, 255, 0.35);
-  background: rgba(245, 250, 255, 0.9);
+  background: rgba(190, 200, 210, 0.95);
 }
 
 .tags__item.is-active {
@@ -348,7 +348,7 @@ if (initialTag && initialTag !== '') {
   padding: 0.32rem 0.75rem;
   border-radius: 999px;
   border: 1px solid rgba(24, 144, 255, 0.25);
-  background: rgba(240, 248, 255, 0.92);
+  background: rgba(200, 210, 220, 0.92);
   color: var(--vp-c-text-2);
   font-size: 0.78rem;
   cursor: pointer;

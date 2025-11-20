@@ -35,16 +35,17 @@ const { page, theme, frontmatter } = useData()
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: rgba(240, 248, 255, 1);
+  background: rgba(200, 210, 220, 1);
 }
 
 .app-shell__content {
   flex: 1 0 auto;
   display: flex;
   flex-direction: column;
-  background: transparent;
+  background: rgba(200, 210, 220, 1);
   position: relative;
   z-index: 0;
+  min-height: 100vh;
 }
 
 .global-footer {

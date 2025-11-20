@@ -11,7 +11,7 @@
 html {
   height: 100%;
   min-height: 100vh;
-  background: rgba(240, 248, 255, 1);
+  background: rgba(200, 210, 220, 1);
   overscroll-behavior: none;
 }
 
@@ -21,7 +21,7 @@ body {
   color: var(--vp-c-text-1);
   margin: 0;
   position: relative;
-  background: rgba(240, 248, 255, 1);
+  background: rgba(200, 210, 220, 1);
 }
 
 body::before {
@@ -29,7 +29,7 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: rgba(240, 248, 255, 1);
+  background: rgba(200, 210, 220, 1);
   pointer-events: none;
 }
 
@@ -39,11 +39,20 @@ body * {
 
 #app {
   min-height: 100vh;
-  background: rgba(240, 248, 255, 1);
+  background: rgba(200, 210, 220, 1);
+}
+
+#app {
+  min-height: 100vh;
+  background: rgba(200, 210, 220, 1);
+}
+
+.VPContent {
+  min-height: 100vh;
+  background: rgba(200, 210, 220, 1);
 }
 
 #app,
-.VPContent,
 .VPDoc,
 .VPDoc .container,
 .VPDoc .content,
@@ -68,7 +77,7 @@ body * {
 .VPNavScreen,
 .VPNavScreen .container,
 .VPNavScreen .items {
-  background: rgba(240, 248, 255, 0.85) !important;
+  background: rgba(200, 210, 220, 0.85) !important;
   backdrop-filter: blur(16px) !important;
   box-shadow: none !important;
   border: none !important;
@@ -79,7 +88,7 @@ body * {
 }
 
 .VPNavBar {
-  background: rgba(240, 248, 255, 0.85) !important;
+  background: rgba(200, 210, 220, 0.85) !important;
   backdrop-filter: blur(16px) !important;
   border-bottom: none !important;
   box-shadow: none !important;
@@ -87,7 +96,7 @@ body * {
 
 @media (max-width: 959px) {
   .VPNavScreen {
-    background: rgba(240, 248, 255, 1) !important;
+    background: rgba(200, 210, 220, 1) !important;
   }
 }
 
@@ -412,7 +421,7 @@ samp {
   margin: 1rem 0;
   padding: 0;
   border-radius: 8px;
-  background: rgba(240, 248, 255, 0.6);
+  background: rgba(200, 210, 220, 0.6);
   border: 1px solid rgba(24, 144, 255, 0.25);
   overflow: hidden;
 }
@@ -574,7 +583,7 @@ samp {
   margin: 1.5rem 0;
   padding: 1rem 1.2rem;
   border-left: 4px solid rgba(24, 144, 255, 0.45);
-  background: rgba(240, 248, 255, 0.6);
+  background: rgba(200, 210, 220, 0.6);
   border-radius: 12px;
   color: var(--doc-text-color);
   font-style: normal;
@@ -724,7 +733,7 @@ samp {
   border-spacing: 0;
   width: 100%;
   margin: 1.5rem 0;
-  background: rgba(240, 248, 255, 0.85);
+  background: rgba(200, 210, 220, 0.85);
   border-radius: 6px;
   border: 1px solid rgba(24, 144, 255, 0.25);
 }
@@ -886,7 +895,7 @@ mjx-container>svg {
 }
 
 .VPSidebar {
-  background: rgba(240, 248, 255, 0.95) !important;
+  background: rgba(200, 210, 220, 0.95) !important;
 }
 
 @media (min-width: 960px) {
@@ -896,7 +905,7 @@ mjx-container>svg {
 }
 
 .DocSearch-Button {
-  background: rgba(240, 248, 255, 0.82) !important;
+  background: rgba(200, 210, 220, 0.82) !important;
   border-radius: 18px !important;
   border: 1px solid rgba(24, 144, 255, 0.25) !important;
   color: var(--vp-c-text-1) !important;
@@ -905,14 +914,14 @@ mjx-container>svg {
 }
 
 .DocSearch-Button:hover {
-  background: rgba(240, 248, 255, 0.92) !important;
+  background: rgba(200, 210, 220, 0.92) !important;
   border-color: rgba(24, 144, 255, 0.35) !important;
   box-shadow: 0 10px 24px rgba(24, 144, 255, 0.16);
 }
 
 .DocSearch-Modal,
 .DocSearch-Container {
-  background: rgba(240, 248, 255, 0.9) !important;
+  background: rgba(200, 210, 220, 0.9) !important;
   border-radius: 22px !important;
   border: 1px solid rgba(24, 144, 255, 0.25) !important;
   backdrop-filter: blur(12px);
@@ -921,7 +930,7 @@ mjx-container>svg {
 
 .DocSearch-Form,
 .DocSearch-Input {
-  background: rgba(240, 248, 255, 0.75) !important;
+  background: rgba(200, 210, 220, 0.75) !important;
   border: 1px solid rgba(24, 144, 255, 0.25) !important;
   border-radius: 16px !important;
 }
@@ -997,7 +1006,7 @@ mjx-container>svg {
   left: 0;
   right: 0;
   height: 180px;
-  background: rgba(240, 248, 255, 0.95);
+  background: rgba(200, 210, 220, 0.95);
   pointer-events: none;
   z-index: -1;
 }
@@ -1065,7 +1074,7 @@ mjx-container>svg {
 }
 
 .VPLocalNav {
-  background: rgba(240, 248, 255, 0.9) !important;
+  background: rgba(200, 210, 220, 0.9) !important;
   border-bottom: 1px solid rgba(24, 144, 255, 0.24) !important;
   backdrop-filter: blur(12px);
 }
@@ -1083,7 +1092,7 @@ mjx-container>svg {
 
 .VPLocalNavOutlineDropdown .items {
   border-color: rgba(24, 144, 255, 0.3) !important;
-  background: rgba(240, 248, 255, 1) !important;
+  background: rgba(200, 210, 220, 1) !important;
   box-shadow: 0 20px 40px rgba(24, 144, 255, 0.16) !important;
 }
 
@@ -1216,7 +1225,7 @@ mjx-container>svg {
 }
 
 .VPSidebarItem.is-active > .item {
-  background: rgba(240, 248, 255, 0.85);
+  background: rgba(200, 210, 220, 0.85);
   border-radius: 0.6rem;
 }
 
@@ -1367,7 +1376,7 @@ mjx-container>svg {
 
 .VPDocAsideOutline .outline-link:hover {
   color: var(--vp-c-brand-1);
-  background: rgba(240, 248, 255, 0.4);
+  background: rgba(200, 210, 220, 0.4);
 }
 
 .VPDocAsideOutline .outline-link.active {
@@ -1383,7 +1392,7 @@ mjx-container>svg {
 }
 
 .VPMenu {
-  background: rgba(240, 248, 255, 0.95) !important;
+  background: rgba(200, 210, 220, 0.95) !important;
   border: 1px solid rgba(24, 144, 255, 0.18) !important;
   border-radius: 0 !important;
   box-shadow: none !important;
