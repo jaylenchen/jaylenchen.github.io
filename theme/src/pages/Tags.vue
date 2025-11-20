@@ -102,9 +102,6 @@ if (initialTag && initialTag !== '') {
     <div class="tags__inner">
       <div class="tags__layout" v-if="tagEntries.length">
         <aside class="tags__aside" aria-label="标签导航">
-          <p class="tags__kicker">tags</p>
-          <p class="tags__lede">共 {{ totalTagCount }} 个标签 · {{ totalArticleCount }} 篇文章</p>
-          <p class="tags__body">选择一个标签，在左侧查看对应文章列表。</p>
 
           <div class="tags__list" aria-label="标签列表">
             <button
