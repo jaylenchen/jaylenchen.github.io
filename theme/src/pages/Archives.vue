@@ -1411,12 +1411,7 @@ watch(
   gap: 0.8rem;
   padding: 1.05rem 1.2rem;
   border-radius: 8px;
-  background: linear-gradient(
-    180deg,
-    rgba(240, 248, 255, 0.92) 0%,
-    rgba(245, 250, 255, 0.88) 45%,
-    rgba(250, 252, 255, 0.85) 100%
-  );
+  background: rgba(240, 248, 255, 0.9);
   border: 1px solid rgba(24, 144, 255, 0.2);
   backdrop-filter: blur(8px);
 }

@@ -35,6 +35,7 @@ const { page, theme, frontmatter } = useData()
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: rgba(240, 248, 255, 1);
 }
 
 .app-shell__content {
