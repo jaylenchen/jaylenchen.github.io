@@ -139,6 +139,21 @@ function selectAll() {
   });
 }
 
+function clearProject() {
+  condition.project = '';
+  project.value = '';
+  initTimeLine();
+  
+  // DOM 更新后平滑滚动到顶部
+  nextTick(() => {
+    requestAnimationFrame(() => {
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  });
+}
+
 const allArticles = computed(() => {
   const sorted = [...articleData].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   return sorted
@@ -162,6 +177,34 @@ const latestUpdated = computed(() => {
     day: 'numeric'
   });
 });
+
+// 项目文章数和最近更新时间
+const projectArticlesCount = computed(() => {
+  if (archiveType.value !== ArchiveType.Project || !condition.project) {
+    return 0;
+  }
+  return getAllProjectArticles().length;
+})
+
+const projectLastUpdated = computed(() => {
+  if (archiveType.value !== ArchiveType.Project || !condition.project) {
+    return '';
+  }
+  const articles = getAllProjectArticles();
+  if (!articles.length) {
+    return '';
+  }
+  const latestDate = articles[0].date;
+  if (!latestDate) {
+    return '';
+  }
+  const date = new Date(latestDate);
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+})
 
 const filteredLatestUpdated = computed(() => {
   if (!articles.value.length) {
@@ -683,8 +726,33 @@ watch(
   <div class="archives">
     <div class="archives__inner">
 
+      <!-- 项目信息卡片 -->
+      <div class="archives__project-filter" v-if="archiveType === ArchiveType.Project && condition.project">
+        <div class="archives__project-header">
+          <div class="archives__project-info">
+            <component :is="ProjectSvg" class="archives__project-icon" />
+            <span class="archives__project-name">{{ condition.project }}</span>
+          </div>
+          <button
+            type="button"
+            class="archives__project-close"
+            @click="clearProject"
+            aria-label="退出项目筛选"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="archives__project-meta">
+          <span class="archives__project-count">累计总共 {{ projectArticlesCount }} 篇文章</span>
+          <span class="archives__project-separator">·</span>
+          <span class="archives__project-update">最近更新于 {{ projectLastUpdated }}</span>
+        </div>
+      </div>
+
       <!-- 年份导航筛选栏 -->
-      <div class="archives__year-filter" v-if="allYearEntries.length">
+      <div class="archives__year-filter" v-else-if="allYearEntries.length">
         <button
           type="button"
           class="archives__year-button"
@@ -1174,6 +1242,96 @@ watch(
   flex-wrap: wrap;
   gap: 0.4rem;
   margin: 0;
+}
+
+.archives__project-filter {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: auto;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(24, 144, 255, 0.25);
+  border-radius: 8px;
+  background: rgba(200, 210, 220, 0.9);
+  backdrop-filter: blur(6px);
+  box-sizing: border-box;
+}
+
+.archives__project-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.archives__project-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.archives__project-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  color: rgb(60, 60, 67);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.archives__project-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgb(60, 60, 67);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.archives__project-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: rgb(60, 60, 67);
+  line-height: 1.4;
+  flex-wrap: wrap;
+  margin-left: calc(1.25rem + 0.5rem);
+}
+
+.archives__project-separator {
+  color: var(--vp-c-text-3);
+}
+
+.archives__project-close {
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: rgb(60, 60, 67);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.archives__project-close:hover {
+  background: rgba(24, 144, 255, 0.1);
+  color: var(--vp-c-brand-1);
 }
 
 .archives__year-filter {
@@ -1792,6 +1950,40 @@ watch(
 
   .archives__month {
     padding: 0.85rem 0.95rem;
+  }
+
+  .archives__project-filter {
+    max-width: calc(100% - 2rem);
+    padding: 0.5rem 0.6rem;
+    gap: 0.4rem;
+  }
+
+  .archives__project-header {
+    gap: 0.5rem;
+  }
+
+  .archives__project-info {
+    gap: 0.5rem;
+  }
+
+  .archives__project-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .archives__project-name {
+    font-size: 0.85rem;
+  }
+
+  .archives__project-meta {
+    font-size: 0.7rem;
+    gap: 0.3rem;
+    margin-left: calc(1.25rem + 0.5rem);
+  }
+
+  .archives__project-close {
+    width: 1.5rem;
+    height: 1.5rem;
   }
 }
 </style>
