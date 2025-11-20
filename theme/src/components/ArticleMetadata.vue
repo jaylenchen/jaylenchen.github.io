@@ -94,8 +94,6 @@ function calculateReadingTime(): number {
       'aside',         // 侧边栏
       '.edit-link',    // 编辑链接
       'footer',        // 页脚
-      '.comment',      // 评论
-      '.gitalk-container', // Gitalk 评论
       'script',        // 脚本
       'style',         // 样式
       '.header-anchor', // 标题锚点链接

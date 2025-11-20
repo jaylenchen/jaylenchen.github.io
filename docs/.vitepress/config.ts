@@ -37,11 +37,6 @@ namespace ThemeConfig {
       license: '署名-相同方式共享 4.0 国际 (CC BY-SA 4.0)',
       licenseLink: 'http://creativecommons.org/licenses/by-sa/4.0/'
     },
-    // 自定义扩展: 评论配置
-    commentConfig: {
-      type: 'gitalk',
-      showComment: true // 是否显示评论
-    }
   }
 
   type CustomConfig = typeof customConfig
@@ -389,7 +384,6 @@ namespace SiteConfig {
       },
       optimizeDeps: {
         include: ['mark.js/vanilla'],
-        exclude: ['gitalk', 'jquery'],
         esbuildOptions: {
           target: 'esnext',
         },
@@ -401,10 +395,6 @@ namespace SiteConfig {
         rollupOptions: {
           output: {
             manualChunks: (id) => {
-              // Gitalk 相关
-              if (id.includes('gitalk') || id.includes('jquery')) {
-                return 'gitalk';
-              }
               // Ant Design Vue
               if (id.includes('ant-design-vue')) {
                 return 'ant-design';

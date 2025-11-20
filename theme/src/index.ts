@@ -7,7 +7,6 @@ import theme from 'vitepress/theme'
 // 按需导入 ant-design-vue 样式，而不是整个 reset.css
 import './styles/vars.css';
 import './styles/custom.css';
-import './styles/gitalk.css';
 
 import type { EnhanceAppContext } from 'vitepress';
 import type { DefineComponent } from 'vue';

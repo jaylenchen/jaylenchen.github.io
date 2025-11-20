@@ -3,7 +3,6 @@ import DefaultTheme from 'vitepress/theme'
 import { useData } from 'vitepress'
 import md5 from 'blueimp-md5'
 
-import Comment from './Comment.vue'
 import Copyright from './Copyright.vue'
 import SidebarTitleSync from './SidebarTitleSync.vue'
 
@@ -22,13 +21,6 @@ const { page, theme, frontmatter } = useData()
           <Copyright
             v-if="(frontmatter?.aside ?? true) && (frontmatter?.showArticleMetadata ?? true) && !(frontmatter.authorLink)"
             :key="md5(page.relativePath)" />
-        </template>
-        <template #doc-after>
-          <Comment
-            v-if="(theme.commentConfig?.showComment ?? true) && (frontmatter?.showComment ?? true)"
-            :key="md5(page.relativePath)"
-            :comment-config="theme.commentConfig"
-          />
         </template>
       </Layout>
     </div>
