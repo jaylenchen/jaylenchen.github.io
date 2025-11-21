@@ -142,6 +142,9 @@ namespace ThemeConfig {
     socialLinks: [
       { icon: 'github', link: 'https://github.com/jaylenchen' },
     ],
+    // footer: {
+    //   copyright: '© 2025 Jaylenchen. All rights reserved.'
+    // },
     langMenuLabel: '多语言',
     returnToTopLabel: '回到顶部',
     sidebarMenuLabel: '菜单',

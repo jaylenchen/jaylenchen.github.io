@@ -144,31 +144,31 @@ if (initialTag && initialTag !== '') {
           </div>
 
           <template v-else>
-            <header class="tags__content-header">
-              <div>
-                <h2>#{{ selectedTagEntry.title }}</h2>
-                <p>{{ selectedTagEntry.count }} 篇文章</p>
-              </div>
-            </header>
-
-            <div v-if="selectedTagEntry.articles.length" class="tags__list-wrapper">
-              <div class="tags__timeline">
-                <ul class="tags__timeline-list">
-                  <li
-                    v-for="article in selectedTagEntry.articles"
-                    :key="article.path"
-                    class="tags__timeline-item"
-                  >
-                    <span class="tags__timeline-dot"></span>
-                    <div class="tags__article-item">
-                      <a :href="article.path" target="_self" class="tags__article-link">{{ article.title }}</a>
-                      <ArticleMetadata :article="article" class="tags-meta" />
-                    </div>
-                  </li>
-                </ul>
-              </div>
+          <header class="tags__content-header">
+            <div>
+              <h2>#{{ selectedTagEntry.title }}</h2>
+              <p>{{ selectedTagEntry.count }} 篇文章</p>
             </div>
-            <p v-else class="tags__empty">这个标签暂时没有文章。</p>
+          </header>
+
+          <div v-if="selectedTagEntry.articles.length" class="tags__list-wrapper">
+            <div class="tags__timeline">
+              <ul class="tags__timeline-list">
+                <li
+                  v-for="article in selectedTagEntry.articles"
+                  :key="article.path"
+                  class="tags__timeline-item"
+                >
+                  <span class="tags__timeline-dot"></span>
+                  <div class="tags__article-item">
+                    <a :href="article.path" target="_self" class="tags__article-link">{{ article.title }}</a>
+                    <ArticleMetadata :article="article" class="tags-meta" />
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <p v-else class="tags__empty">这个标签暂时没有文章。</p>
           </template>
         </section>
       </div>
@@ -201,22 +201,131 @@ if (initialTag && initialTag !== '') {
   min-height: auto;
 }
 
+/* PC端固定高度，防止页面滚动 */
+@media (min-width: 960px) {
+  :global(body),
+  :global(html) {
+    overflow: hidden !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+  }
+
+  :global(.vp-doc._tags) {
+    height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+  }
+
+  :global(.vp-doc._tags > div),
+  :global(.vp-doc._tags .container),
+  :global(.vp-doc._tags .content),
+  :global(.vp-doc._tags .content-container),
+  :global(.vp-doc._tags .main) {
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  :global(.VPFooter) {
+    display: none !important;
+  }
+}
+
 .tags {
   max-width: 1200px;
-  margin: 1.5rem auto 2.2rem;
+  margin: 0 auto;
   color: var(--vp-c-text-1);
   width: 100%;
   padding: 0 1.5rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 2.2rem;
+  gap: 1rem;
+}
+
+/* PC端固定高度，防止页面滚动 */
+@media (min-width: 960px) {
+  .tags {
+    flex: 1 !important;
+    overflow: hidden !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    padding-top: 1rem !important;
+  }
+
+  .tags__inner {
+    flex: 1 !important;
+    overflow: hidden !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+
+  .tags__layout {
+    flex: 1 !important;
+    overflow: hidden !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+  }
+
+  .tags__aside {
+    flex-shrink: 0;
+    max-height: 100%;
+    overflow-y: auto;
+  }
+
+  .tags__aside::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .tags__aside::-webkit-scrollbar-track {
+    background: rgba(200, 210, 220, 0.3);
+    border-radius: 3px;
+  }
+
+  .tags__aside::-webkit-scrollbar-thumb {
+    background: rgba(24, 144, 255, 0.25);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+  }
+
+  .tags__aside::-webkit-scrollbar-thumb:hover {
+    background: rgba(24, 144, 255, 0.35);
+  }
+
+  .tags__content {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+  }
+
+  .tags__content-header {
+    flex: 0 0 auto !important;
+  }
+
+  .tags__list-wrapper {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+  }
 }
 
 .tags__inner {
   display: flex;
   flex-direction: column;
-  gap: 2.2rem;
+  gap: 1rem;
 }
 
 .tags__layout {
@@ -265,7 +374,6 @@ if (initialTag && initialTag !== '') {
   border: 1px solid rgba(24, 144, 255, 0.25);
   border-radius: 8px;
   background: rgba(200, 210, 220, 0.9);
-  box-shadow: 0 12px 24px rgba(24, 144, 255, 0.12);
   backdrop-filter: blur(6px);
   max-height: 320px;
   overflow-y: auto;
@@ -366,12 +474,19 @@ if (initialTag && initialTag !== '') {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  min-height: 400px;
-  gap: 1.5rem;
+  min-height: 300px;
+  gap: 1rem;
   border: 2px dashed rgba(24, 144, 255, 0.25);
   border-radius: 12px;
-  padding: 2rem;
+  padding: 1.5rem;
+}
+
+/* PC端 empty state 占据可用空间 */
+@media (min-width: 960px) {
+  .tags__empty-state {
+    flex: 1;
+    min-height: 0;
+  }
 }
 
 .tags__empty-icon {
@@ -391,7 +506,7 @@ if (initialTag && initialTag !== '') {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 0.8rem;
 }
 
 .tags__content::-webkit-scrollbar {
@@ -523,9 +638,30 @@ if (initialTag && initialTag !== '') {
   flex-direction: column;
 }
 
+/* PC端时间轴滚动条样式 */
+@media (min-width: 960px) {
+  .tags__list-wrapper::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .tags__list-wrapper::-webkit-scrollbar-track {
+    background: rgba(200, 210, 220, 0.3);
+    border-radius: 3px;
+  }
+
+  .tags__list-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(24, 144, 255, 0.25);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+  }
+
+  .tags__list-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(24, 144, 255, 0.35);
+  }
+}
+
 .tags__timeline {
   position: relative;
-  padding: 0.6rem 0 0.6rem 1.4rem;
 }
 
 .tags__timeline-list {
@@ -568,8 +704,8 @@ if (initialTag && initialTag !== '') {
 .tags__article-item {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  padding: 0.5rem 0;
+  gap: 0.2rem;
+  padding: 0.3rem 0;
   border-radius: 0;
   background: transparent;
   border: none;
@@ -617,23 +753,23 @@ if (initialTag && initialTag !== '') {
   }
 
   .tags {
-    padding: 1.5rem 1.25rem 2.5rem;
+    padding: 1rem 1.25rem 2rem;
   }
 
   .tags__article-item {
-    gap: 0.4rem;
-    padding: 0.5rem 0;
+    gap: 0.2rem;
+    padding: 0.3rem 0;
   }
 
   .tags__inner {
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
     overflow: visible;
   }
 
   .tags__layout {
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
     overflow: visible;
   }
 
@@ -647,6 +783,7 @@ if (initialTag && initialTag !== '') {
 
   .tags__content {
     overflow: visible;
+    width: 100%;
   }
 
   .tags__item-clear {
@@ -662,8 +799,8 @@ if (initialTag && initialTag !== '') {
   }
 
   .tags__empty-state {
-    min-height: 300px;
-    padding: 1.5rem;
+    min-height: 250px;
+    padding: 1rem;
   }
 
   .tags__empty-icon {

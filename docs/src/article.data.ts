@@ -255,7 +255,7 @@ export default {
                 const articlesContent = fs.readFileSync(articlesFilePath, 'utf-8')
                 if (!title) title = firstH1(articlesContent)
                 // 从 .articles 文件内容中提取摘要（.articles 文件没有 frontmatter）
-                excerptMarkdown = extractExcerptMarkdown(articlesContent, path.dirname(articlesFilePath), data.excerptLength || 250)
+                excerptMarkdown = extractExcerptMarkdown(articlesContent, path.dirname(articlesFilePath), data.excerptLength || 100)
               } else {
                 // 如果文件不存在，返回空摘要
                 excerptMarkdown = ''
@@ -266,18 +266,26 @@ export default {
             }
           } else {
             // 没有 include，直接提取当前文件的摘要
-            excerptMarkdown = extractExcerptMarkdown(content, path.dirname(articleFile), data.excerptLength || 250)
+            excerptMarkdown = extractExcerptMarkdown(content, path.dirname(articleFile), data.excerptLength || 100)
             if (!title) title = firstH1(content)
           }
         }
-        // 使用 markdown-it 渲染摘要为 HTML
-        const excerpt = excerptMarkdown ? md.render(excerptMarkdown) : ''
+        // 如果 frontmatter 中有 description 字段，优先使用它；否则使用自动提取的摘要
+        let excerpt = ''
+        if (data.description) {
+          // 使用手动设置的 description，支持 markdown 渲染
+          excerpt = md.render(data.description)
+        } else {
+          // 使用自动提取的摘要
+          excerpt = excerptMarkdown ? md.render(excerptMarkdown) : ''
+        }
 
         return {
           ...data,
           title,
           path: normalizedPath,
-          excerpt
+          excerpt,
+          description: data.description || '' // 保留原始 description 字段
         }
       })
 

@@ -66,7 +66,7 @@ let sectionObserver: IntersectionObserver | null = null;
 
 // 分页相关 - 每个年份独立分页
 const yearPages = ref<Record<string, number>>({}); // 存储每个年份的当前页码
-const articlesPerPage = 5; // 每页显示5篇文章
+const articlesPerPage = 6; // 每页显示6篇文章
 
 // 项目筛选时的统一分页
 const projectPage = ref(1); // 项目筛选时的当前页码
@@ -94,24 +94,6 @@ function yearIcon(year: string | number) {
 }
 
 // 拆分excerpt，提取标题和内容
-function splitExcerpt(htmlContent: string) {
-  if (!htmlContent) {
-    return { title: '', content: '' }
-  }
-  
-  // 使用正则匹配第一个标题标签（h1-h6）
-  const headingMatch = htmlContent.match(/^(<h[1-6][^>]*>.*?<\/h[1-6]>)/i)
-  
-  if (headingMatch) {
-    const title = headingMatch[1]
-    const content = htmlContent.substring(title.length).trim()
-    return { title, content }
-  }
-  
-  // 如果没有标题，全部作为内容返回
-  return { title: '', content: htmlContent }
-}
-
 function handleYearIconClick(newYear: string | number) {
   const normalizedYear = normalizeYear(newYear);
   if (!normalizedYear) {
@@ -320,8 +302,8 @@ function getAllArticlesTotalPages() {
 
 // 生成分页页码数组（智能分页，避免无限扩展）
 function getPaginationPages(currentPage: number, totalPages: number): (number | string)[] {
-  if (totalPages <= 7) {
-    // 如果总页数小于等于7，显示所有页码
+  if (totalPages <= 5) {
+    // 如果总页数小于等于5，显示所有页码
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
   
@@ -331,22 +313,22 @@ function getPaginationPages(currentPage: number, totalPages: number): (number | 
   pages.push(1);
   
   if (currentPage <= 3) {
-    // 当前页在前3页，显示前5页
-    for (let i = 2; i <= 5; i++) {
+    // 当前页在前3页，显示前4页
+    for (let i = 2; i <= 4; i++) {
       pages.push(i);
     }
     pages.push('...');
     pages.push(totalPages);
   } else if (currentPage >= totalPages - 2) {
-    // 当前页在后3页，显示后5页
+    // 当前页在后3页，显示后4页
     pages.push('...');
-    for (let i = totalPages - 4; i <= totalPages; i++) {
+    for (let i = totalPages - 3; i <= totalPages; i++) {
       pages.push(i);
     }
   } else {
-    // 当前页在中间，显示当前页前后各2页
+    // 当前页在中间，显示当前页前后各1页
     pages.push('...');
-    for (let i = currentPage - 2; i <= currentPage + 2; i++) {
+    for (let i = currentPage - 1; i <= currentPage + 1; i++) {
       pages.push(i);
     }
     pages.push('...');
@@ -831,9 +813,11 @@ watch(
 
             <ul class="archives__article-list">
               <li v-for="article in getPaginatedYearArticles(yearEntry)" :key="article.path" class="archives__article-item">
-                <div v-if="splitExcerpt(article.excerpt).title" class="archives__article-title" v-html="splitExcerpt(article.excerpt).title"></div>
+                <a :href="article.path" class="archives__article-title-link">
+                  <h3 class="archives__article-title">{{ article.title }}</h3>
+                </a>
                 <ArticleMetadata :article="article" />
-                <div v-if="splitExcerpt(article.excerpt).content" class="archives__article-excerpt" v-html="splitExcerpt(article.excerpt).content"></div>
+                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
                 <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
               </li>
             </ul>
@@ -881,9 +865,11 @@ watch(
           <section class="archives__content">
             <ul class="archives__article-list">
               <li v-for="article in getPaginatedProjectArticles()" :key="article.path" class="archives__article-item">
-                <div v-if="splitExcerpt(article.excerpt).title" class="archives__article-title" v-html="splitExcerpt(article.excerpt).title"></div>
+                <a :href="article.path" class="archives__article-title-link">
+                  <h3 class="archives__article-title">{{ article.title }}</h3>
+                </a>
                 <ArticleMetadata :article="article" />
-                <div v-if="splitExcerpt(article.excerpt).content" class="archives__article-excerpt" v-html="splitExcerpt(article.excerpt).content"></div>
+                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
                 <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
               </li>
             </ul>
@@ -931,9 +917,11 @@ watch(
           <section class="archives__content">
             <ul class="archives__article-list">
               <li v-for="article in getPaginatedAllArticles()" :key="article.path" class="archives__article-item">
-                <div v-if="splitExcerpt(article.excerpt).title" class="archives__article-title" v-html="splitExcerpt(article.excerpt).title"></div>
+                <a :href="article.path" class="archives__article-title-link">
+                  <h3 class="archives__article-title">{{ article.title }}</h3>
+                </a>
                 <ArticleMetadata :article="article" />
-                <div v-if="splitExcerpt(article.excerpt).content" class="archives__article-excerpt" v-html="splitExcerpt(article.excerpt).content"></div>
+                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
                 <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
               </li>
             </ul>
@@ -981,9 +969,11 @@ watch(
           <section class="archives__content">
             <ul class="archives__article-list">
               <li v-for="article in getPaginatedYearArticles(currentYearEntry)" :key="article.path" class="archives__article-item">
-                <div v-if="splitExcerpt(article.excerpt).title" class="archives__article-title" v-html="splitExcerpt(article.excerpt).title"></div>
+                <a :href="article.path" class="archives__article-title-link">
+                  <h3 class="archives__article-title">{{ article.title }}</h3>
+                </a>
                 <ArticleMetadata :article="article" />
-                <div v-if="splitExcerpt(article.excerpt).content" class="archives__article-excerpt" v-html="splitExcerpt(article.excerpt).content"></div>
+                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
                 <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
               </li>
             </ul>
@@ -1034,7 +1024,7 @@ watch(
 
 <style scoped>
 .archives {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   color: var(--vp-c-text-1);
   width: 100%;
@@ -1167,6 +1157,40 @@ watch(
     font-size: 0.8rem;
     padding: 0.35rem 0.75rem;
   }
+
+  .archives__year-pagination {
+    gap: 0.35rem;
+  }
+
+  .archives__pagination-btn {
+    width: 1.8rem;
+    height: 1.8rem;
+    min-width: 1.8rem;
+    min-height: 1.8rem;
+  }
+
+  .archives__pagination-btn::before {
+    width: 0.4rem;
+    height: 0.4rem;
+  }
+
+  .archives__pagination-page {
+    min-width: 1.8rem;
+    height: 1.8rem;
+    min-height: 1.8rem;
+    padding: 0.25rem 0.4rem;
+    font-size: 0.72rem;
+  }
+
+  .archives__pagination-ellipsis {
+    min-width: 1.2rem;
+    height: 1.8rem;
+    font-size: 0.75rem;
+  }
+
+  .archives__pagination-pages {
+    gap: 0.25rem;
+  }
 }
 
 .archives__filter {
@@ -1284,7 +1308,7 @@ watch(
   z-index: 10;
   /* 根据内容自适应宽度 */
   width: fit-content;
-  max-width: min(900px, calc(100vw - 3rem)); /* 不超过文章卡片宽度，也不超过视口 */
+  max-width: min(1400px, calc(100vw - 3rem)); /* 不超过文章卡片宽度，也不超过视口 */
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -1378,7 +1402,7 @@ watch(
   z-index: 10;
   /* 根据内容自适应宽度 */
   width: fit-content;
-  max-width: min(900px, calc(100vw - 3rem)); /* 不超过文章卡片宽度，也不超过视口 */
+  max-width: min(1400px, calc(100vw - 3rem)); /* 不超过文章卡片宽度，也不超过视口 */
   display: flex;
   flex-wrap: nowrap; /* 单行，不换行 */
   align-items: center;
@@ -1478,6 +1502,8 @@ watch(
 .archives__pagination-btn {
   width: 2rem;
   height: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
   padding: 0;
   border-radius: 999px;
   border: 1px solid rgba(24, 144, 255, 0.25);
@@ -1490,6 +1516,8 @@ watch(
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .archives__pagination-btn::before {
@@ -1525,9 +1553,10 @@ watch(
 }
 
 .archives__pagination-page {
-  min-width: 2.2rem;
-  height: 2.2rem;
-  padding: 0.22rem 0.5rem;
+  min-width: 2rem;
+  min-height: 2rem;
+  height: 2rem;
+  padding: 0.3rem 0.45rem;
   border-radius: 999px;
   border: 1px solid rgba(24, 144, 255, 0.25);
   background: rgba(240, 245, 250, 0.95);
@@ -1535,9 +1564,11 @@ watch(
   font-size: 0.78rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .archives__pagination-page:hover {
@@ -1551,11 +1582,12 @@ watch(
 }
 
 .archives__pagination-ellipsis {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.2rem;
-  height: 2.2rem;
+  min-width: 1.5rem;
+  height: 2rem;
+  padding: 0 0.25rem;
   color: var(--vp-c-text-3);
   font-size: 0.85rem;
   user-select: none;
@@ -1669,16 +1701,19 @@ watch(
   gap: 1.2rem;
 }
 
+.archives__article-list .archives__article-item + .archives__article-item {
+  margin-top: 0;
+}
+
 .archives__article-item {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
   padding: 1rem 1.1rem;
   border-radius: 6px;
-  background: rgba(240, 245, 250, 0.95);
+  background: rgba(210, 218, 225, 0.95);
   border: 1px solid rgba(24, 144, 255, 0.25);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-  margin-bottom: 0.9rem;
   box-shadow: 0 2px 6px rgba(24, 144, 255, 0.08);
 }
 
@@ -1687,40 +1722,24 @@ watch(
 }
 
 /* 文章标题样式 - 适合卡片展示 */
-.archives__article-title {
-  margin: 0;
+.archives__article-title-link {
+  text-decoration: none;
+  color: inherit;
 }
 
-.archives__article-title :deep(h1),
-.archives__article-title :deep(h2),
-.archives__article-title :deep(h3),
-.archives__article-title :deep(h4),
-.archives__article-title :deep(h5),
-.archives__article-title :deep(h6) {
+.archives__article-title {
   margin: 0;
   padding: 0 0 0.5rem;
   border-bottom: 2px solid rgba(24, 144, 255, 0.3);
   font-weight: 600;
   line-height: 1.4;
   color: var(--vp-c-text-1);
+  font-size: 1.05rem;
+  transition: color 0.2s ease;
 }
 
-.archives__article-title :deep(h1) {
-  font-size: 1.25rem;
-}
-
-.archives__article-title :deep(h2) {
-  font-size: 1.125rem;
-}
-
-.archives__article-title :deep(h3) {
-  font-size: 1rem;
-}
-
-.archives__article-title :deep(h4),
-.archives__article-title :deep(h5),
-.archives__article-title :deep(h6) {
-  font-size: 0.95rem;
+.archives__article-title-link:hover .archives__article-title {
+  color: var(--vp-c-brand-1);
 }
 
 /* Metadata样式 - 卡片中不需要上下 margin */
@@ -1737,7 +1756,7 @@ watch(
 
 .archives__article-excerpt {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   line-height: 1.8;
   color: var(--doc-text-color);
   overflow: hidden;
@@ -2029,6 +2048,15 @@ watch(
   }
 }
 
+/* PC端一行展示两个卡片 */
+@media (min-width: 861px) {
+  .archives__article-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+  }
+}
+
 @media (max-width: 860px) {
   .archives {
     max-width: 100%;
@@ -2045,11 +2073,11 @@ watch(
   }
 
   .archives__year-filter {
-    max-width: min(900px, calc(100vw - 2.5rem)); /* 取两者中较小的值 */
+    max-width: min(1400px, calc(100vw - 2.5rem)); /* 取两者中较小的值 */
   }
 
   .archives__project-filter {
-    max-width: min(900px, calc(100vw - 2.5rem));
+    max-width: min(1400px, calc(100vw - 2.5rem));
   }
 
   .archives__content {
@@ -2077,11 +2105,11 @@ watch(
   }
 
   .archives__year-filter {
-    max-width: min(900px, calc(100vw - 2.2rem)); /* 取两者中较小的值 */
+    max-width: min(1400px, calc(100vw - 2.2rem)); /* 取两者中较小的值 */
   }
 
   .archives__project-filter {
-    max-width: min(900px, calc(100vw - 2.2rem));
+    max-width: min(1400px, calc(100vw - 2.2rem));
     padding: 0.5rem 0.6rem;
     gap: 0.4rem;
   }
