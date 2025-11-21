@@ -203,8 +203,8 @@ if (initialTag && initialTag !== '') {
 
 /* PC端固定高度，防止页面滚动 */
 @media (min-width: 960px) {
-  :global(body),
-  :global(html) {
+  :global(body:has(.vp-doc._tags)),
+  :global(html:has(.vp-doc._tags)) {
     overflow: hidden !important;
     height: 100vh !important;
     max-height: 100vh !important;
