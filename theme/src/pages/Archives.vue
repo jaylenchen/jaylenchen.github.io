@@ -163,6 +163,13 @@ function clearProject() {
   project.value = '';
   initTimeLine();
   
+  // 清除 URL 中的 project 参数
+  if (typeof window !== 'undefined') {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('project');
+    window.history.pushState({}, '', url.pathname + (url.search ? url.search : ''));
+  }
+  
   // DOM 更新后平滑滚动到顶部
   nextTick(() => {
     requestAnimationFrame(() => {

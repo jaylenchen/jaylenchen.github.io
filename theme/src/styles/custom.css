@@ -1152,8 +1152,10 @@ mjx-container>svg {
 
 .VPSidebarItem:not(.level-0) > .item {
   cursor: pointer;
-  padding: 0.18rem 0.15rem 0.18rem 0.45rem;
-  gap: 0.28rem;
+  padding: 0.3rem 0.15rem 0.3rem 0;
+  gap: 0.5rem;
+  display: flex;
+  align-items: flex-start;
 }
 
 .VPSidebarItem:not(.level-0) > .item:hover,
@@ -1186,6 +1188,7 @@ mjx-container>svg {
   color: var(--vp-c-text-2);
   transition: color 0.2s ease;
   margin: 0 !important;
+  line-height: 1.4;
 }
 
 .VPSidebarItem:not(.level-0) .text {
@@ -1195,7 +1198,7 @@ mjx-container>svg {
 .VPSidebarItem:not(.level-0).is-link > .item > .link {
   position: relative;
   display: flex;
-  flex: 1 1 auto;
+  flex: 1;
   padding: 0.05rem 0.1rem 0 0;
 }
 
@@ -1265,8 +1268,25 @@ mjx-container>svg {
   background: var(--vp-c-brand-1);
 }
 
-.VPSidebarItem .indicator {
+.VPSidebarItem.level-0 .indicator {
   display: none;
+}
+
+/* 文章列表的指示器改为时间轴圆点 */
+.VPSidebarItem:not(.level-0) .indicator {
+  position: static !important;
+  display: block;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--vp-c-brand-1);
+  box-shadow: 0 0 0 3px rgba(45, 45, 45, 0.15);
+  flex-shrink: 0;
+  margin-top: 0.65rem;
+  margin-left: calc(0.5rem - 1.2rem - 0.225rem);
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
 }
 
 .VPSidebar .items,
@@ -1276,6 +1296,23 @@ mjx-container>svg {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+/* 文章列表竖线引导 - 类似标签页时间轴 */
+.VPSidebarItem.level-0 > .items {
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.VPSidebarItem.level-0 > .items::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  width: 1px;
+  background: rgba(24, 144, 255, 0.18);
+  z-index: 0;
 }
 
 .VPDocAsideOutline .outline,

@@ -64,10 +64,20 @@ const toggleTag = (tagTitle: string) => {
   }
 
   selectTag.value = normalized;
+  
+  // 更新 URL 中的 tag 参数
+  const url = new URL(window.location.href);
+  url.searchParams.set('tag', normalized);
+  window.history.pushState({}, '', url.toString());
 };
 
 const clearSelection = () => {
   selectTag.value = '';
+  
+  // 清除 URL 中的 tag 参数
+  const url = new URL(window.location.href);
+  url.searchParams.delete('tag');
+  window.history.pushState({}, '', url.pathname);
 };
 
 const selectedTagArticles = computed(() => {
@@ -83,10 +93,7 @@ const selectedTagEntry = computed(() => {
     return null;
   }
 
-  return (
-    tagEntries.value.find((entry) => entry.title === selectTag.value) ??
-    tagEntries.value[0]
-  );
+  return tagEntries.value.find((entry) => entry.title === selectTag.value) ?? null;
 });
 
 // 如果URL路径有tag参数, 默认选中指定Tag, 例如: /tags?tag=Git
@@ -114,37 +121,55 @@ if (initialTag && initialTag !== '') {
             >
               <span class="tags__item-name">#{{ entry.title }}</span>
               <span class="tags__item-count">{{ entry.count }}</span>
+              <button 
+                v-if="selectedTagEntry && selectedTagEntry.title === entry.title"
+                type="button" 
+                class="tags__item-clear" 
+                @click.stop="clearSelection"
+                title="清除选择"
+                aria-label="清除选择"
+              >
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                </svg>
+              </button>
             </button>
           </div>
         </aside>
 
-        <section class="tags__content" v-if="selectedTagEntry">
-          <header class="tags__content-header">
-            <div>
-              <h2>#{{ selectedTagEntry.title }}</h2>
-              <p>{{ selectedTagEntry.count }} 篇文章</p>
-            </div>
-            <button type="button" class="tags__clear" v-if="selectTag" @click="clearSelection">清除选择</button>
-          </header>
-
-          <div v-if="selectedTagEntry.articles.length" class="tags__list-wrapper">
-            <div class="tags__timeline">
-              <ul class="tags__timeline-list">
-                <li
-                  v-for="article in selectedTagEntry.articles"
-                  :key="article.path"
-                  class="tags__timeline-item"
-                >
-                  <span class="tags__timeline-dot"></span>
-                  <div class="tags__article-item">
-                    <a :href="article.path" target="_self" class="tags__article-link">{{ article.title }}</a>
-                    <ArticleMetadata :article="article" class="tags-meta" />
-                  </div>
-                </li>
-              </ul>
-            </div>
+        <section class="tags__content">
+          <div v-if="!selectedTagEntry" class="tags__empty-state">
+            <EmptySvg class="tags__empty-icon" />
+            <p class="tags__empty-text">选个感兴趣的标签查看吧哥们儿...</p>
           </div>
-          <p v-else class="tags__empty">这个标签暂时没有文章。</p>
+
+          <template v-else>
+            <header class="tags__content-header">
+              <div>
+                <h2>#{{ selectedTagEntry.title }}</h2>
+                <p>{{ selectedTagEntry.count }} 篇文章</p>
+              </div>
+            </header>
+
+            <div v-if="selectedTagEntry.articles.length" class="tags__list-wrapper">
+              <div class="tags__timeline">
+                <ul class="tags__timeline-list">
+                  <li
+                    v-for="article in selectedTagEntry.articles"
+                    :key="article.path"
+                    class="tags__timeline-item"
+                  >
+                    <span class="tags__timeline-dot"></span>
+                    <div class="tags__article-item">
+                      <a :href="article.path" target="_self" class="tags__article-link">{{ article.title }}</a>
+                      <ArticleMetadata :article="article" class="tags-meta" />
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <p v-else class="tags__empty">这个标签暂时没有文章。</p>
+          </template>
         </section>
       </div>
 
@@ -196,9 +221,9 @@ if (initialTag && initialTag !== '') {
 
 .tags__layout {
   display: flex;
-  gap: 2rem;
+  gap: 4.5rem;
   align-items: flex-start;
-  flex-direction: row-reverse;
+  flex-direction: row;
 }
 
 .tags__aside {
@@ -256,6 +281,7 @@ if (initialTag && initialTag !== '') {
 }
 
 .tags__item {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.32rem;
@@ -295,6 +321,69 @@ if (initialTag && initialTag !== '') {
   background: rgba(24, 144, 255, 0.12);
   border-radius: 50%;
   margin-left: 0.4rem;
+}
+
+.tags__item-clear {
+  position: absolute;
+  top: -0.35rem;
+  right: -0.35rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  padding: 0;
+  border: 1px solid rgba(24, 144, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tags__item-clear svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+.tags__item:hover .tags__item-clear,
+.tags__item.is-active .tags__item-clear {
+  display: flex;
+}
+
+.tags__item-clear:hover {
+  border-color: var(--vp-c-brand-1);
+  background: rgba(255, 255, 255, 1);
+  color: var(--vp-c-brand-1);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.tags__empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 400px;
+  gap: 1.5rem;
+  border: 2px dashed rgba(24, 144, 255, 0.25);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.tags__empty-icon {
+  width: 12rem;
+  height: 12rem;
+  opacity: 0.6;
+}
+
+.tags__empty-text {
+  font-size: 1rem;
+  color: var(--vp-c-text-3);
+  margin: 0;
 }
 
 .tags__content {
@@ -344,15 +433,6 @@ if (initialTag && initialTag !== '') {
   color: var(--vp-c-text-3);
 }
 
-.tags__clear {
-  padding: 0.32rem 0.75rem;
-  border-radius: 999px;
-  border: 1px solid rgba(24, 144, 255, 0.25);
-  background: rgba(200, 210, 220, 0.92);
-  color: var(--vp-c-text-2);
-  font-size: 0.78rem;
-  cursor: pointer;
-}
 
 .tags__articles {
   flex: 1;
@@ -464,7 +544,7 @@ if (initialTag && initialTag !== '') {
   top: 0.5rem;
   bottom: 0.5rem;
   left: 0.35rem;
-  width: 2px;
+  width: 1px;
   background: rgba(24, 144, 255, 0.18);
 }
 
@@ -478,11 +558,11 @@ if (initialTag && initialTag !== '') {
 .tags__timeline-dot {
   justify-self: center;
   align-self: center;
-  width: 0.6rem;
-  height: 0.6rem;
+  width: 0.45rem;
+  height: 0.45rem;
   border-radius: 50%;
   background: var(--vp-c-brand-1);
-  box-shadow: 0 0 0 4px rgba(45, 45, 45, 0.18);
+  box-shadow: 0 0 0 3px rgba(45, 45, 45, 0.15);
 }
 
 .tags__article-item {
@@ -567,6 +647,32 @@ if (initialTag && initialTag !== '') {
 
   .tags__content {
     overflow: visible;
+  }
+
+  .tags__item-clear {
+    width: 1.15rem;
+    height: 1.15rem;
+    top: -0.3rem;
+    right: -0.3rem;
+  }
+
+  .tags__item-clear svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .tags__empty-state {
+    min-height: 300px;
+    padding: 1.5rem;
+  }
+
+  .tags__empty-icon {
+    width: 8rem;
+    height: 8rem;
+  }
+
+  .tags__empty-text {
+    font-size: 0.85rem;
   }
 
   .tags__content-inner {
