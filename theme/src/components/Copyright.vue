@@ -15,31 +15,6 @@ const licenseDisplay = '自由转载-非商用-非衍生-保持署名（创意�
 <template>
   <div class="copyright">
     <div class="content">
-      <!-- 版权属于 -->
-      <div class="item">
-        <div class="item-heading">
-          <div class="icon-wrapper">
-            <svg class="icon" viewBox="0 0 64 64" aria-hidden="true">
-              <title>原创作者</title>
-              <circle cx="32" cy="32" r="30" fill="#E6F1FF" />
-              <circle cx="32" cy="24" r="9.5" fill="#7FA2F7" />
-              <path
-                d="M18 48c0-8.6 6.9-15.5 15.5-15.5h1c8.6 0 15.5 6.9 15.5 15.5v5H18v-5Z"
-                fill="#4B79F7" />
-              <path
-                d="M43.6 52.2H20.4c-1.2 0-2.2-.9-2.2-2.1s1-2.1 2.2-2.1h23.2c1.2 0 2.2.9 2.2 2.1s-1 2.1-2.2 2.1Z"
-                fill="#D8E4FF" />
-            </svg>
-          </div>
-          <span class="label">作者：</span>
-        </div>
-        <div class="item-body">
-          <span class="value">
-            <a v-if="isOriginal" :href="authorLink" title="进入作者主页" target="_blank">{{ author }}</a>
-            <span v-else :title="author">{{ author }}</span>
-          </span>
-        </div>
-      </div>
       <!-- 作品协议 -->
       <div class="item">
         <div class="item-heading">
@@ -73,34 +48,34 @@ const licenseDisplay = '自由转载-非商用-非衍生-保持署名（创意�
 
 <style scoped>
 .copyright {
-  margin: 3rem auto 0;
-  padding: 1.4rem 1.6rem;
+  margin: 2rem auto 0;
+  padding: 1rem 1.2rem;
   max-width: 760px;
   background: rgba(240, 248, 255, 0.6);
   border: 1px solid rgba(24, 144, 255, 0.25);
   border-radius: 8px;
   color: var(--vp-c-text-2);
-  font-size: 0.98rem;
+  font-size: 0.9rem;
   backdrop-filter: blur(6px);
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 0.6rem;
 }
 
 .item {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.5rem;
   word-break: break-word;
 }
 
 .item-heading {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.3rem;
   flex-shrink: 0;
 }
 
@@ -119,8 +94,8 @@ const licenseDisplay = '自由转载-非商用-非衍生-保持署名（创意�
 }
 
 .icon-wrapper {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -151,21 +126,22 @@ a:hover {
 
 @media (max-width: 640px) {
   .copyright {
-    padding: 1rem 1.1rem;
+    padding: 0.8rem 1rem;
     border-radius: 8px;
+    margin: 1.5rem auto 0;
   }
 
   .item {
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
 
   .item-heading {
-    gap: 0.3rem;
+    gap: 0.25rem;
   }
 
   .item-body {
-    font-size: 0.92rem;
+    font-size: 0.85rem;
   }
 }
 </style>
