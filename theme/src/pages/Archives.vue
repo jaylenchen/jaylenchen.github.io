@@ -1019,7 +1019,7 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
-  padding-top: 3.5rem; /* 为固定的年份导航留出空间 */
+  padding-top: 1.8rem; /* 为固定的年份导航留出空间 */
 }
 
 .archives__hero {
@@ -1164,6 +1164,8 @@ watch(
 }
 
 .archives__layout {
+  max-width: 900px; /* 文章卡片容器宽度 */
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
@@ -1250,8 +1252,9 @@ watch(
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  width: auto;
-  max-width: 90%;
+  /* 根据内容自适应宽度 */
+  width: fit-content;
+  max-width: min(900px, calc(100vw - 3rem)); /* 不超过文章卡片宽度，也不超过视口 */
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -1340,12 +1343,12 @@ watch(
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  width: auto;
-  max-width: 90%;
-  flex: 0 0 auto;
+  /* 根据内容自适应宽度 */
+  width: fit-content;
+  max-width: min(900px, calc(100vw - 3rem)); /* 不超过文章卡片宽度，也不超过视口 */
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  flex-wrap: nowrap; /* 单行，不换行 */
+  align-items: center;
   gap: 0.35rem;
   padding: 0.6rem;
   border: 1px solid rgba(24, 144, 255, 0.25);
@@ -1353,15 +1356,29 @@ watch(
   background: rgba(200, 210, 220, 0.9);
   backdrop-filter: blur(6px);
   box-sizing: border-box;
+  /* 横向滚动 */
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 
 .archives__year-filter::-webkit-scrollbar {
-  width: 6px;
+  height: 4px; /* 横向滚动条高度 */
+}
+
+.archives__year-filter::-webkit-scrollbar-track {
+  background: rgba(24, 144, 255, 0.08);
+  border-radius: 2px;
 }
 
 .archives__year-filter::-webkit-scrollbar-thumb {
-  background: rgba(24, 144, 255, 0.18);
-  border-radius: 999px;
+  background: rgba(24, 144, 255, 0.25);
+  border-radius: 2px;
+}
+
+.archives__year-filter::-webkit-scrollbar-thumb:hover {
+  background: rgba(24, 144, 255, 0.35);
 }
 
 
@@ -1924,8 +1941,21 @@ watch(
     padding: 1.5rem 1.25rem 2.5rem;
   }
 
+  .archives__inner {
+    padding-top: 2.2rem; /* 移动端间距 */
+  }
+
   .archives__layout {
     gap: 2rem;
+    max-width: 100%; /* 移动端占满容器 */
+  }
+
+  .archives__year-filter {
+    max-width: min(900px, calc(100vw - 2.5rem)); /* 取两者中较小的值 */
+  }
+
+  .archives__project-filter {
+    max-width: min(900px, calc(100vw - 2.5rem));
   }
 
   .archives__content {
@@ -1948,14 +1978,22 @@ watch(
     padding: 1.5rem 1.1rem 2.2rem;
   }
 
-  .archives__month {
-    padding: 0.85rem 0.95rem;
+  .archives__inner {
+    padding-top: 2.4rem; /* 小屏移动端间距 */
+  }
+
+  .archives__year-filter {
+    max-width: min(900px, calc(100vw - 2.2rem)); /* 取两者中较小的值 */
   }
 
   .archives__project-filter {
-    max-width: calc(100% - 2rem);
+    max-width: min(900px, calc(100vw - 2.2rem));
     padding: 0.5rem 0.6rem;
     gap: 0.4rem;
+  }
+
+  .archives__month {
+    padding: 0.85rem 0.95rem;
   }
 
   .archives__project-header {
@@ -1984,6 +2022,11 @@ watch(
   .archives__project-close {
     width: 1.5rem;
     height: 1.5rem;
+  }
+
+  .archives__year-button {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
   }
 }
 </style>
