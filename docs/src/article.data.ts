@@ -255,7 +255,7 @@ export default {
                 const articlesContent = fs.readFileSync(articlesFilePath, 'utf-8')
                 if (!title) title = firstH1(articlesContent)
                 // 从 .articles 文件内容中提取摘要（.articles 文件没有 frontmatter）
-                excerptMarkdown = extractExcerptMarkdown(articlesContent, path.dirname(articlesFilePath), data.excerptLength || 450)
+                excerptMarkdown = extractExcerptMarkdown(articlesContent, path.dirname(articlesFilePath), data.excerptLength || 250)
               } else {
                 // 如果文件不存在，返回空摘要
                 excerptMarkdown = ''
@@ -266,7 +266,7 @@ export default {
             }
           } else {
             // 没有 include，直接提取当前文件的摘要
-            excerptMarkdown = extractExcerptMarkdown(content, path.dirname(articleFile), data.excerptLength || 450)
+            excerptMarkdown = extractExcerptMarkdown(content, path.dirname(articleFile), data.excerptLength || 250)
             if (!title) title = firstH1(content)
           }
         }

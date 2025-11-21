@@ -1312,19 +1312,14 @@ mjx-container>svg {
 }
 
 .VPDocAsideOutline .outline-title::before {
-  content: '';
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--vp-c-brand-1);
-  opacity: 0.8;
+  display: none;
 }
 
 .VPDocAsideOutline .outline {
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: 0.2rem 0 0.4rem;
+  padding: 0.5rem 1rem 0.8rem;
 }
 
 .VPDocAsideOutline .outline ul {
@@ -1341,13 +1336,7 @@ mjx-container>svg {
 }
 
 .VPDocAsideOutline .outline li::before {
-  content: '';
-  position: absolute;
-  top: 0.5rem;
-  left: -0.9rem;
-  width: 0.9rem;
-  height: 1px;
-  background: rgba(24, 144, 255, 0.18);
+  display: none;
 }
 
 .VPDocAsideOutline .outline li:last-child::after {
@@ -1511,4 +1500,11 @@ mjx-container>svg {
 
 .VPMenu :deep(.group .items) {
   margin-top: 0 !important;
+}
+
+/* 调整文档内容区域的 padding */
+@media (min-width: 960px) {
+  .VPDoc {
+    padding: 32px 16px 0 !important;
+  }
 }

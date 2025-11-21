@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, useAttrs, onMounted, nextTick } from 'vue'
+import { ref, computed, useAttrs } from 'vue'
 import { useData, useRoute } from 'vitepress'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
@@ -7,7 +7,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 
 import TimeSvg from '../assets/svgs/time.svg'
 import DateSvg from '../assets/svgs/date.svg'
-import ReadingTimeSvg from '../assets/svgs/reading-time.svg'
+import AuthorSvg from '../assets/svgs/author.svg'
 import ProjectSvg from '../assets/svgs/project.svg'
 import TagSvg from '../assets/svgs/tag.svg'
 import { goToArchivesPage, goToTagsPage } from '../utils/route';
@@ -46,97 +46,6 @@ const isListPage = computed(() => {
   return path.startsWith('/archives') || path.startsWith('/tags') || path === '/'
 })
 
-// 阅读时长：只在文章详情页显示和计算
-const readingTime = ref<number | null>(null)
-
-// 字数统计的正则表达式
-const wordPattern = /[a-zA-Z0-9_\u0392-\u03C9\u00C0-\u00FF\u0600-\u06FF\u0400-\u04FF]+|[\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF\u3040-\u309F\uAC00-\uD7AF]+/g
-
-// 计算字数
-function countWord(data: string): number {
-  const m = data.match(wordPattern)
-  let count = 0
-  if (!m) return 0
-  for (let i = 0; i < m.length; i += 1) {
-    // CJK 字符按字符长度计算，其他按 1 计算
-    if (m[i].charCodeAt(0) >= 0x4E00) {
-      count += m[i].length
-    } else {
-      count += 1
-    }
-  }
-  return count
-}
-
-// 计算阅读时长（基于字数）
-function calculateReadingTime(): number {
-  try {
-    const mainContent = document.querySelector('.vp-doc .content') || 
-                        document.querySelector('.vp-doc .main') || 
-                        document.querySelector('.vp-doc')
-    
-    if (!mainContent) return 0
-    
-    // 克隆节点，避免修改原始 DOM
-    const cloned = mainContent.cloneNode(true) as HTMLElement
-    
-    // 排除不应该计入字数的元素
-    const excludeSelectors = [
-      'pre',           // 代码块
-      '.mermaid',      // Mermaid 图表
-      '.math',         // 数学公式
-      '.MathJax',      // MathJax
-      '.meta-wrapper', // 文章元数据
-      '.article-meta', // 文章元数据
-      '.VPDocAside',   // 侧边栏
-      '.outline',      // 目录
-      'nav',           // 导航
-      'aside',         // 侧边栏
-      '.edit-link',    // 编辑链接
-      'footer',        // 页脚
-      'script',        // 脚本
-      'style',         // 样式
-      '.header-anchor', // 标题锚点链接
-      'img'            // 图片
-    ]
-    
-    excludeSelectors.forEach(selector => {
-      cloned.querySelectorAll(selector).forEach(el => el.remove())
-    })
-    
-    const text = cloned.textContent || ''
-    const wordCount = countWord(text)
-    
-    // 阅读速度：250 字/分钟（中文平均值）
-    const minutes = Math.ceil(wordCount / 250)
-    return Math.max(1, minutes) // 至少 1 分钟
-  } catch (e) {
-    console.warn('阅读时长计算失败:', e)
-    return 0
-  }
-}
-
-let hasCalculated = false
-
-onMounted(() => {
-  // 只在文章详情页计算阅读时长
-  if (isListPage.value) {
-    return
-  }
-  
-  // 使用 nextTick 确保 DOM 已更新，立即计算
-  nextTick(() => {
-    if (hasCalculated) {
-      return
-    }
-    const minutes = calculateReadingTime()
-    if (minutes > 0) {
-      readingTime.value = minutes
-      hasCalculated = true
-    }
-  })
-})
-
 // 处理项目点击
 function handleProjectClick(project: string) {
   goToArchivesPage('project', project)
@@ -152,6 +61,34 @@ function handleTagClick(tag: string) {
 
 <template>
   <div class="meta-wrapper">
+    <!-- 时间 -->
+    <div class="meta-item">
+      <span class="meta-icon date">
+        <DateSvg></DateSvg>
+      </span>
+      <time class="meta-content" :datetime="date.toISOString()" :title="dayjs().to(dayjs(date))">
+        {{
+          date.toLocaleString('zh', {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+          })
+        }}
+      </time>
+    </div>
+
+    <!-- 作者 -->
+    <div class="meta-item">
+      <span class="meta-icon author">
+        <AuthorSvg></AuthorSvg>
+      </span>
+      <span class="meta-content">
+        <a href="https://github.com/jaylenchen" target="_blank" rel="noopener noreferrer">
+          jaylenchen
+        </a>
+      </span>
+    </div>
+
     <!-- 项目 -->
     <div v-if="project" class="meta-item">
       <span class="meta-icon project">
@@ -181,51 +118,40 @@ function handleTagClick(tag: string) {
       </span>
     </div>
 
-    <!-- 时间 -->
-    <div class="meta-item">
-      <span class="meta-icon date">
-        <DateSvg></DateSvg>
-      </span>
-      <time class="meta-content" :datetime="date.toISOString()" :title="dayjs().to(dayjs(date))">
-        {{
-          date.toLocaleString('zh', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric'
-          })
-        }}
-      </time>
-    </div>
-
-    <!-- 阅读时长：只在文章详情页显示 -->
-    <div v-if="!isListPage && readingTime !== null && readingTime > 0" class="meta-item">
-      <span class="meta-icon reading-time">
-        <ReadingTimeSvg></ReadingTimeSvg>
-      </span>
-      <span class="meta-content">
-        {{ readingTime }} 分钟
-      </span>
-    </div>
   </div>
 </template>
 
 <style scoped>
 .meta-wrapper {
-  margin-top: 10px;
-  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2px;
+}
+
+/* 标签页特殊样式 - 更紧凑 */
+.tags-meta .meta-wrapper {
+  margin: 0;
+  gap: 0.3rem;
+  padding: 0;
 }
 
 .meta-item {
-  display: inline-block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
   vertical-align: middle;
   max-width: 240px;
   color: var(--vp-c-text-1);
   cursor: default;
   font-size: 14px;
-  margin-right: 1rem;
+  padding: 2px;
+}
+
+/* 标签页特殊样式 - 更小的 padding */
+.tags-meta .meta-item {
+  padding: 0;
+  font-size: 0.8rem;
 }
 
 .meta-item.original {
@@ -234,39 +160,41 @@ function handleTagClick(tag: string) {
 }
 
 .meta-icon,
-meta-content {
-  display: inline-block;
+.meta-content {
+  display: inline-flex;
+  align-items: center;
   margin-right: .375rem;
   vertical-align: middle;
 }
 
 .meta-icon {
-  position: relative;
-  bottom: 1.5px;
-}
-
-.meta-icon.author {
-  bottom: 1.3px;
-}
-
-.meta-icon.date {
-  bottom: 1.3px;
-}
-
-.meta-icon.reading-time {
-  bottom: 1.3px;
+  line-height: 1;
+  overflow: visible;
+  color: var(--vp-c-text-3);
 }
 
 .meta-icon svg {
   height: 18px;
   width: 18px;
+  display: block;
+  overflow: visible;
+}
+
+.meta-content {
+  font-weight: 400;
+  color: var(--vp-c-text-2);
+  font-size: 0.875rem;
+}
+
+time.meta-content {
+  display: inline-flex;
+  align-items: center;
 }
 
 .meta-content a {
   font-weight: 400;
-  color: var(--vp-c-text-1);
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  color: var(--vp-c-text-2);
+  text-decoration: none;
 }
 
 .meta-content a:hover {

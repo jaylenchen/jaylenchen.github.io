@@ -93,6 +93,25 @@ function yearIcon(year: string | number) {
   return yearSvgMap[zodiac] ?? defaultYearIcon;
 }
 
+// 拆分excerpt，提取标题和内容
+function splitExcerpt(htmlContent: string) {
+  if (!htmlContent) {
+    return { title: '', content: '' }
+  }
+  
+  // 使用正则匹配第一个标题标签（h1-h6）
+  const headingMatch = htmlContent.match(/^(<h[1-6][^>]*>.*?<\/h[1-6]>)/i)
+  
+  if (headingMatch) {
+    const title = headingMatch[1]
+    const content = htmlContent.substring(title.length).trim()
+    return { title, content }
+  }
+  
+  // 如果没有标题，全部作为内容返回
+  return { title: '', content: htmlContent }
+}
+
 function handleYearIconClick(newYear: string | number) {
   const normalizedYear = normalizeYear(newYear);
   if (!normalizedYear) {
@@ -805,8 +824,9 @@ watch(
 
             <ul class="archives__article-list">
               <li v-for="article in getPaginatedYearArticles(yearEntry)" :key="article.path" class="archives__article-item">
+                <div v-if="splitExcerpt(article.excerpt).title" class="archives__article-title" v-html="splitExcerpt(article.excerpt).title"></div>
                 <ArticleMetadata :article="article" />
-                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
+                <div v-if="splitExcerpt(article.excerpt).content" class="archives__article-excerpt" v-html="splitExcerpt(article.excerpt).content"></div>
                 <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
               </li>
             </ul>
@@ -854,8 +874,9 @@ watch(
           <section class="archives__content">
             <ul class="archives__article-list">
               <li v-for="article in getPaginatedProjectArticles()" :key="article.path" class="archives__article-item">
+                <div v-if="splitExcerpt(article.excerpt).title" class="archives__article-title" v-html="splitExcerpt(article.excerpt).title"></div>
                 <ArticleMetadata :article="article" />
-                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
+                <div v-if="splitExcerpt(article.excerpt).content" class="archives__article-excerpt" v-html="splitExcerpt(article.excerpt).content"></div>
                 <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
               </li>
             </ul>
@@ -903,8 +924,9 @@ watch(
           <section class="archives__content">
             <ul class="archives__article-list">
               <li v-for="article in getPaginatedAllArticles()" :key="article.path" class="archives__article-item">
+                <div v-if="splitExcerpt(article.excerpt).title" class="archives__article-title" v-html="splitExcerpt(article.excerpt).title"></div>
                 <ArticleMetadata :article="article" />
-                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
+                <div v-if="splitExcerpt(article.excerpt).content" class="archives__article-excerpt" v-html="splitExcerpt(article.excerpt).content"></div>
                 <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
               </li>
             </ul>
@@ -952,8 +974,9 @@ watch(
           <section class="archives__content">
             <ul class="archives__article-list">
               <li v-for="article in getPaginatedYearArticles(currentYearEntry)" :key="article.path" class="archives__article-item">
+                <div v-if="splitExcerpt(article.excerpt).title" class="archives__article-title" v-html="splitExcerpt(article.excerpt).title"></div>
                 <ArticleMetadata :article="article" />
-                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
+                <div v-if="splitExcerpt(article.excerpt).content" class="archives__article-excerpt" v-html="splitExcerpt(article.excerpt).content"></div>
                 <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
               </li>
             </ul>
@@ -1164,7 +1187,7 @@ watch(
 }
 
 .archives__layout {
-  max-width: 900px; /* 文章卡片容器宽度 */
+  max-width: 100%; /* 文章卡片容器宽度 */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -1258,11 +1281,12 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid rgba(24, 144, 255, 0.25);
-  border-radius: 8px;
-  background: rgba(200, 210, 220, 0.9);
-  backdrop-filter: blur(6px);
+  padding: 0.6rem 1rem;
+  border: 1px solid rgba(24, 144, 255, 0.2);
+  border-radius: 16px;
+  background: rgba(240, 245, 250, 0.95); /* 与卡片背景一致 */
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.1);
   box-sizing: border-box;
 }
 
@@ -1317,24 +1341,26 @@ watch(
 }
 
 .archives__project-close {
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 1.6rem;
+  height: 1.6rem;
   padding: 0;
-  border: none;
-  background: transparent;
+  border: 1px solid rgba(24, 144, 255, 0.15);
+  background: rgba(200, 210, 220, 0.5);
   color: rgb(60, 60, 67);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s ease;
+  border-radius: 50%;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
 }
 
 .archives__project-close:hover {
-  background: rgba(24, 144, 255, 0.1);
+  border-color: rgba(24, 144, 255, 0.3);
+  background: rgba(24, 144, 255, 0.12);
   color: var(--vp-c-brand-1);
+  transform: rotate(90deg);
 }
 
 .archives__year-filter {
@@ -1349,12 +1375,13 @@ watch(
   display: flex;
   flex-wrap: nowrap; /* 单行，不换行 */
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.6rem;
-  border: 1px solid rgba(24, 144, 255, 0.25);
-  border-radius: 8px;
-  background: rgba(200, 210, 220, 0.9);
-  backdrop-filter: blur(6px);
+  gap: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid rgba(24, 144, 255, 0.2);
+  border-radius: 999px; /* 完全圆角的胶囊形状 */
+  background: rgba(240, 245, 250, 0.95); /* 与卡片背景一致的灰蓝色 */
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.1); /* 蓝色系阴影 */
   box-sizing: border-box;
   /* 横向滚动 */
   overflow-x: auto;
@@ -1364,21 +1391,19 @@ watch(
 }
 
 .archives__year-filter::-webkit-scrollbar {
-  height: 4px; /* 横向滚动条高度 */
+  height: 0; /* 隐藏滚动条，但保持滚动功能 */
 }
 
 .archives__year-filter::-webkit-scrollbar-track {
-  background: rgba(24, 144, 255, 0.08);
-  border-radius: 2px;
+  background: transparent;
 }
 
 .archives__year-filter::-webkit-scrollbar-thumb {
-  background: rgba(24, 144, 255, 0.25);
-  border-radius: 2px;
+  background: transparent;
 }
 
 .archives__year-filter::-webkit-scrollbar-thumb:hover {
-  background: rgba(24, 144, 255, 0.35);
+  background: transparent;
 }
 
 
@@ -1393,14 +1418,16 @@ watch(
   display: inline-flex;
   align-items: center;
   gap: 0.32rem;
-  padding: 0.22rem 0.5rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 999px;
-  border: 1px solid rgba(24, 144, 255, 0.25);
-  background: rgba(200, 210, 220, 0.92);
+  border: 1px solid rgba(24, 144, 255, 0.15);
+  background: rgba(200, 210, 220, 0.6);
   color: rgb(60, 60, 67);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
+  font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .archives__year-button-icon {
@@ -1411,13 +1438,18 @@ watch(
 }
 
 .archives__year-button:hover {
-  border-color: rgba(24, 144, 255, 0.35);
-  background: rgba(190, 200, 210, 0.95);
+  border-color: rgba(24, 144, 255, 0.3);
+  background: rgba(24, 144, 255, 0.12);
+  color: var(--vp-c-brand-1);
+  transform: translateY(-1px);
 }
 
 .archives__year-button.is-active {
   border-color: rgba(24, 144, 255, 0.5);
-  background: rgba(24, 144, 255, 0.12);
+  background: rgba(24, 144, 255, 0.18);
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(24, 144, 255, 0.2);
 }
 
 .archives__year-label {
@@ -1532,14 +1564,26 @@ watch(
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.2rem;
-  height: 1.2rem;
-  font-size: 0.68rem;
+  min-width: 1.3rem;
+  height: 1.3rem;
+  padding: 0 0.3rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  color: var(--vp-c-text-1);
-  background: rgba(24, 144, 255, 0.12);
-  border-radius: 50%;
-  margin-left: 0.4rem;
+  color: rgba(60, 60, 67, 0.7);
+  background: rgba(240, 245, 250, 0.8);
+  border-radius: 999px;
+  margin-left: 0.25rem;
+}
+
+.archives__year-button:hover .archives__year-count {
+  background: rgba(24, 144, 255, 0.2);
+  color: var(--vp-c-brand-1);
+}
+
+.archives__year-button.is-active .archives__year-count {
+  background: rgba(24, 144, 255, 0.3);
+  color: var(--vp-c-brand-1);
+  font-weight: 700;
 }
 
 .archives__content {
@@ -1633,6 +1677,49 @@ watch(
 
 .archives__article-item:hover {
   transform: translateY(-2px);
+}
+
+/* 文章标题样式 - 适合卡片展示 */
+.archives__article-title {
+  margin: 0;
+}
+
+.archives__article-title :deep(h1),
+.archives__article-title :deep(h2),
+.archives__article-title :deep(h3),
+.archives__article-title :deep(h4),
+.archives__article-title :deep(h5),
+.archives__article-title :deep(h6) {
+  margin: 0;
+  padding: 0 0 0.5rem;
+  border-bottom: 2px solid rgba(24, 144, 255, 0.3);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--vp-c-text-1);
+}
+
+.archives__article-title :deep(h1) {
+  font-size: 1.25rem;
+}
+
+.archives__article-title :deep(h2) {
+  font-size: 1.125rem;
+}
+
+.archives__article-title :deep(h3) {
+  font-size: 1rem;
+}
+
+.archives__article-title :deep(h4),
+.archives__article-title :deep(h5),
+.archives__article-title :deep(h6) {
+  font-size: 0.95rem;
+}
+
+/* Metadata样式 - 卡片中不需要上下 margin */
+.archives__article-item :deep(.meta-wrapper) {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .archives__article-item :deep(.article-meta) {
