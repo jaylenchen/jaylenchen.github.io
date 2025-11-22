@@ -12,28 +12,14 @@
     padding: 32px 16px 0 !important;
   }
 
-  /* 覆盖 VitePress 默认的 container 和 content 最大宽度限制 */
-  /* 使用通用选择器覆盖所有可能的 container 和 content 元素 */
-  .VPDoc:not(.has-sidebar) .container,
-  .VPDoc:not(.has-sidebar) > .container,
-  .VPDoc:not(.has-sidebar) [class*="container"],
+  /* 只覆盖 content 的最大宽度限制，不覆盖父级 container */
   .VPDoc:not(.has-sidebar) .content {
     max-width: 100% !important;
   }
-
-  .VPDoc:not(.has-sidebar) .container,
-  .VPDoc:not(.has-sidebar) > .container,
-  .VPDoc:not(.has-sidebar) [class*="container"] {
-    display: flex !important;
-    justify-content: center !important;
-  }
 }
 
-/* 覆盖 1440px 及以上屏幕的 container 和 content 最大宽度限制 */
+/* 覆盖 1440px 及以上屏幕的 content 最大宽度限制 */
 @media (min-width: 1440px) {
-  .VPDoc:not(.has-sidebar) .container,
-  .VPDoc:not(.has-sidebar) > .container,
-  .VPDoc:not(.has-sidebar) [class*="container"],
   .VPDoc:not(.has-sidebar) .content {
     max-width: 100% !important;
   }
