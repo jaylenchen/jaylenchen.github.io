@@ -12,43 +12,29 @@
     padding: 32px 16px 0 !important;
   }
 
-  .content[data-v-da69c9d5] {
-    padding: 0 32px 64px !important;
-  }
-
-  /* 主页内容区域在 960px 及以上使用 100% 宽度 */
-  .VPDoc:not(.has-sidebar) .content[data-v-da69c9d5] {
+  /* 覆盖 VitePress 默认的 container 和 content 最大宽度限制 */
+  /* 使用通用选择器覆盖所有可能的 container 和 content 元素 */
+  .VPDoc:not(.has-sidebar) .container,
+  .VPDoc:not(.has-sidebar) > .container,
+  .VPDoc:not(.has-sidebar) [class*="container"],
+  .VPDoc:not(.has-sidebar) .content {
     max-width: 100% !important;
   }
 
-  /* 覆盖 VitePress 默认的 container 最大宽度限制 */
-  /* 使用通用选择器覆盖所有可能的 container 元素 */
   .VPDoc:not(.has-sidebar) .container,
   .VPDoc:not(.has-sidebar) > .container,
   .VPDoc:not(.has-sidebar) [class*="container"] {
-    max-width: 100% !important;
-    display: flex !important;
-    justify-content: center !important;
-  }
-  
-  /* 针对特定的 scoped 样式哈希值（生产环境可能变化） */
-  .VPDoc:not(.has-sidebar) .container[data-v-83890dd9] {
-    max-width: 100% !important;
     display: flex !important;
     justify-content: center !important;
   }
 }
 
-/* 覆盖 1440px 及以上屏幕的 container 最大宽度限制 */
+/* 覆盖 1440px 及以上屏幕的 container 和 content 最大宽度限制 */
 @media (min-width: 1440px) {
   .VPDoc:not(.has-sidebar) .container,
   .VPDoc:not(.has-sidebar) > .container,
-  .VPDoc:not(.has-sidebar) [class*="container"] {
-    max-width: 100% !important;
-  }
-  
-  /* 针对特定的 scoped 样式哈希值（生产环境可能变化） */
-  .VPDoc:not(.has-sidebar) .container[data-v-83890dd9] {
+  .VPDoc:not(.has-sidebar) [class*="container"],
+  .VPDoc:not(.has-sidebar) .content {
     max-width: 100% !important;
   }
 }
