@@ -114,23 +114,6 @@ if (initialTag && initialTag !== '') {
   <div class="tags">
     <div class="tags__inner">
       <div class="tags__layout" v-if="tagEntries.length">
-        <aside class="tags__aside" aria-label="标签导航">
-
-          <div class="tags__list" aria-label="标签列表">
-            <button
-              v-for="entry in tagEntries"
-              :key="entry.title"
-              type="button"
-              class="tags__item"
-              :class="{ 'is-active': selectedTagEntry && selectedTagEntry.title === entry.title }"
-              @click="toggleTag(entry.title)"
-            >
-              <span class="tags__item-name">#{{ entry.title }}</span>
-              <span class="tags__item-count">{{ entry.count }}</span>
-            </button>
-          </div>
-        </aside>
-
         <section class="tags__content">
           <div v-if="!selectedTagEntry" class="tags__empty-state">
             <EmptySvg class="tags__empty-icon" />
@@ -165,6 +148,22 @@ if (initialTag && initialTag !== '') {
           <p v-else class="tags__empty">这个标签暂时没有文章。</p>
           </template>
         </section>
+
+        <aside class="tags__aside" aria-label="标签导航">
+          <div class="tags__list" aria-label="标签列表">
+            <button
+              v-for="entry in tagEntries"
+              :key="entry.title"
+              type="button"
+              class="tags__item"
+              :class="{ 'is-active': selectedTagEntry && selectedTagEntry.title === entry.title }"
+              @click="toggleTag(entry.title)"
+            >
+              <span class="tags__item-name">#{{ entry.title }}</span>
+              <span class="tags__item-count">{{ entry.count }}</span>
+            </button>
+          </div>
+        </aside>
       </div>
 
       <p v-else class="tags__empty">暂无标签记录。</p>
@@ -174,15 +173,35 @@ if (initialTag && initialTag !== '') {
 </template>
 
 <style scoped>
+/* 确保 VitePress 容器链条都有明确的宽度 */
+:global(.VPDoc:has(.vp-doc._tags)),
+:global(.VPDoc:has(.vp-doc._tags) > *),
+:global(.VPDoc:has(.vp-doc._tags) .container),
+:global(.VPDoc:has(.vp-doc._tags) .content) {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
 :global(.vp-doc._tags) {
   height: auto;
   display: block;
   overflow: visible;
   padding-block: var(--vp-layout-top, 0) var(--vp-layout-bottom, 0);
+  /* 确保 VitePress 容器有明确的宽度 */
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 :global(.vp-doc._tags > div) {
   display: block;
+  /* 确保 VitePress 生成的容器有明确的宽度，不受子元素影响 */
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important; /* 允许收缩 */
+  box-sizing: border-box !important;
+  overflow: hidden !important;
 }
 
 :global(.vp-doc._tags .container),
@@ -193,6 +212,12 @@ if (initialTag && initialTag !== '') {
   margin: inherit;
   display: block;
   min-height: auto;
+  /* 确保 VitePress 生成的容器有明确的宽度，不受子元素影响 */
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important; /* 允许收缩 */
+  box-sizing: border-box !important;
+  overflow: hidden !important;
 }
 
 /* PC端固定高度，防止页面滚动 */
@@ -220,6 +245,18 @@ if (initialTag && initialTag !== '') {
     overflow: hidden !important;
     display: flex !important;
     flex-direction: column !important;
+    /* 确保 VitePress 生成的容器有明确的宽度，不受子元素影响 */
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important; /* 允许收缩 */
+    box-sizing: border-box !important;
+  }
+  
+  /* 确保 VPDoc 容器本身也有明确的宽度 */
+  :global(.VPDoc:has(.vp-doc._tags)) {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   :global(.VPFooter) {
@@ -231,12 +268,16 @@ if (initialTag && initialTag !== '') {
   max-width: 1200px;
   margin: 0 auto;
   color: var(--vp-c-text-1);
+  /* 使用固定宽度计算，确保有有效值 */
   width: 100%;
+  max-width: 100%; /* 确保不超过父容器 */
+  min-width: 0; /* 允许收缩 */
   padding: 0 1.5rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow: hidden; /* 防止内容溢出 */
 }
 
 /* PC端固定高度，防止页面滚动 */
@@ -260,6 +301,10 @@ if (initialTag && initialTag !== '') {
     display: flex !important;
     flex-direction: column !important;
     gap: 0 !important;
+    /* 确保宽度为 100%，不受子元素影响 */
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .tags__layout {
@@ -267,12 +312,24 @@ if (initialTag && initialTag !== '') {
     overflow: hidden !important;
     min-height: 0 !important;
     max-height: 100% !important;
+    /* 最大容器固定为 100% 宽度，不受子元素影响 */
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 4.5rem !important;
+    box-sizing: border-box !important;
   }
 
   .tags__aside {
-    flex-shrink: 0;
+    /* 固定宽度 220px，不参与 flex 增长 */
+    flex: 0 0 220px !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    width: 220px !important;
     max-height: 100%;
     overflow-y: auto;
+    box-sizing: border-box !important;
   }
 
   .tags__aside::-webkit-scrollbar {
@@ -296,12 +353,16 @@ if (initialTag && initialTag !== '') {
   }
 
   .tags__content {
-    flex: 1 !important;
+    /* 固定宽度 400px */
+    flex: 0 0 400px !important;
+    width: 400px !important;
+    min-width: 400px !important;
+    max-width: 400px !important;
     display: flex !important;
     flex-direction: column !important;
     overflow: hidden !important;
-    min-height: 0 !important;
     max-height: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .tags__content-header {
@@ -321,6 +382,11 @@ if (initialTag && initialTag !== '') {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  /* 确保宽度为 100%，不受子元素影响 */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden; /* 防止内容溢出 */
 }
 
 .tags__layout {
@@ -328,13 +394,27 @@ if (initialTag && initialTag !== '') {
   gap: 4.5rem;
   align-items: flex-start;
   flex-direction: row;
+  /* 最大容器固定宽度，确保有有效值 */
+  width: 100%;
+  max-width: 100%;
+  min-width: 0; /* 允许收缩 */
+  box-sizing: border-box;
+  /* 防止内容溢出 */
+  overflow: hidden;
+  /* 确保 flex 子元素不会撑开容器 */
+  flex-wrap: nowrap;
 }
 
 .tags__aside {
+  /* 固定宽度 220px，不参与 flex 增长 */
   flex: 0 0 220px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  width: 220px;
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
+  box-sizing: border-box;
 }
 
 .tags__kicker {
@@ -373,8 +453,6 @@ if (initialTag && initialTag !== '') {
   box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.08), 0 1px 5px -1px rgba(0, 0, 0, 0.08);
   max-height: 320px;
   overflow-y: auto;
-  transition: all 200ms ease;
-  will-change: transform;
 }
 
 .tags__list::-webkit-scrollbar {
@@ -444,6 +522,8 @@ if (initialTag && initialTag !== '') {
   border: 2px dashed rgba(82, 82, 89, 0.32);
   border-radius: 8px;
   padding: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* PC端 empty state 占据可用空间 */
@@ -451,6 +531,7 @@ if (initialTag && initialTag !== '') {
   .tags__empty-state {
     flex: 1;
     min-height: 0;
+    width: 100%;
   }
 }
 
@@ -467,11 +548,16 @@ if (initialTag && initialTag !== '') {
 }
 
 .tags__content {
-  flex: 1;
-  min-width: 0;
+  /* 固定宽度 400px */
+  flex: 0 0 400px;
+  width: 400px;
+  min-width: 400px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  box-sizing: border-box;
+  overflow: hidden; /* 防止内容溢出 */
 }
 
 .tags__content::-webkit-scrollbar {
@@ -488,7 +574,8 @@ if (initialTag && initialTag !== '') {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  overflow: visible;
+  overflow: hidden; /* 防止内容溢出撑开容器 */
+  min-width: 0; /* 允许收缩 */
 }
 
 .tags__content-header {
@@ -499,12 +586,21 @@ if (initialTag && initialTag !== '') {
   gap: 0.8rem;
   padding: 0;
   margin: 0;
+  min-width: 0; /* 防止内容撑开容器 */
+  width: 100%; /* 确保占据整个 content 宽度 */
+}
+
+.tags__content-header > div {
+  min-width: 0; /* 允许内容收缩 */
+  flex: 1; /* 占据可用空间 */
 }
 
 .tags__content-header h2 {
   margin: 0;
   padding: 0;
   font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  word-break: break-word; /* 允许长标题换行 */
+  overflow-wrap: break-word; /* 防止溢出 */
 }
 
 .tags__content-header p {
@@ -601,6 +697,8 @@ if (initialTag && initialTag !== '') {
 .tags__list-wrapper {
   display: flex;
   flex-direction: column;
+  min-width: 0; /* 允许收缩 */
+  overflow: hidden; /* 防止内容溢出撑开容器 */
 }
 
 /* PC端时间轴滚动条样式 */
@@ -628,7 +726,8 @@ if (initialTag && initialTag !== '') {
 
 .tags__timeline {
   position: relative;
-  overflow: visible;
+  overflow: hidden; /* 防止内容溢出撑开容器 */
+  min-width: 0; /* 允许收缩 */
 }
 
 .tags__timeline-list {
@@ -639,7 +738,8 @@ if (initialTag && initialTag !== '') {
   flex-direction: column;
   gap: 0;
   position: relative;
-  overflow: visible;
+  overflow: hidden; /* 防止内容溢出撑开容器 */
+  min-width: 0; /* 允许收缩 */
 }
 
 .tags__timeline-list::before {
@@ -657,7 +757,16 @@ if (initialTag && initialTag !== '') {
   display: grid;
   grid-template-columns: 0.8rem 1fr;
   column-gap: 1rem;
-  overflow: visible;
+  overflow: hidden; /* 防止内容溢出撑开容器 */
+  min-width: 0; /* 允许 grid 子元素收缩 */
+}
+
+.tags__timeline-item > *:nth-child(2) {
+  min-width: 0; /* 确保第二列（内容列）能够收缩 */
+  max-width: 100%; /* 固定最大宽度 */
+  overflow: hidden; /* 防止内容溢出 */
+  width: 100%; /* 固定宽度为 100% */
+  box-sizing: border-box;
 }
 
 .tags__timeline-dot {
@@ -683,6 +792,12 @@ if (initialTag && initialTag !== '') {
   box-shadow: none;
   backdrop-filter: none;
   transition: none;
+  /* 固定宽度，确保不会因为内容变化而变化 */
+  width: 100%;
+  max-width: 100%;
+  min-width: 0; /* 允许内容收缩 */
+  overflow: hidden; /* 防止内容溢出 */
+  box-sizing: border-box;
 }
 
 .tags__article-item:hover {
@@ -698,9 +813,16 @@ if (initialTag && initialTag !== '') {
   line-height: 1.6;
   letter-spacing: -0.01em;
   word-break: break-word;
+  overflow-wrap: break-word; /* 防止溢出 */
   display: block;
   padding-bottom: 0.3rem;
   border-bottom: 2px solid rgba(74, 144, 226, 0.4);
+  /* 固定宽度，确保不会因为标题长度变化而变化 */
+  width: 100%;
+  max-width: 100%;
+  min-width: 0; /* 允许收缩 */
+  box-sizing: border-box;
+  overflow: hidden; /* 防止内容溢出 */
 }
 
 .tags__article-link:hover {

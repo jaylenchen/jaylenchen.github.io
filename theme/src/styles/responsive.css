@@ -20,5 +20,47 @@
   .VPDoc:not(.has-sidebar) .content[data-v-da69c9d5] {
     max-width: 100% !important;
   }
+
+  /* 覆盖 VitePress 默认的 container 最大宽度限制 */
+  /* 使用通用选择器覆盖所有可能的 container 元素 */
+  .VPDoc:not(.has-sidebar) .container,
+  .VPDoc:not(.has-sidebar) > .container,
+  .VPDoc:not(.has-sidebar) [class*="container"] {
+    max-width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  
+  /* 针对特定的 scoped 样式哈希值（生产环境可能变化） */
+  .VPDoc:not(.has-sidebar) .container[data-v-83890dd9] {
+    max-width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+}
+
+/* 覆盖 1440px 及以上屏幕的 container 最大宽度限制 */
+@media (min-width: 1440px) {
+  .VPDoc:not(.has-sidebar) .container,
+  .VPDoc:not(.has-sidebar) > .container,
+  .VPDoc:not(.has-sidebar) [class*="container"] {
+    max-width: 100% !important;
+  }
+  
+  /* 针对特定的 scoped 样式哈希值（生产环境可能变化） */
+  .VPDoc:not(.has-sidebar) .container[data-v-83890dd9] {
+    max-width: 100% !important;
+  }
+}
+
+/* 确保 tags 页面的 VitePress 容器链条都有明确的宽度 */
+.VPDoc:has(.vp-doc._tags),
+.VPDoc:has(.vp-doc._tags) > *,
+.VPDoc:has(.vp-doc._tags) .container,
+.VPDoc:has(.vp-doc._tags) .content {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
 }
 
