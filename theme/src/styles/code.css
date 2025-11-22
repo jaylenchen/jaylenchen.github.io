@@ -1,0 +1,121 @@
+/* ============================================
+   代码块和行内代码样式
+   
+   界面区域：文章内容中的代码展示
+   包含：代码块（代码高亮）、行内代码
+   位置：文章正文内容中
+   ============================================ */
+
+/* Dracula 主题代码块容器 - 确保所有包裹容器都有圆角 */
+.vp-doc div[class*='language-'],
+.vp-doc div[class*='language-'].vp-adaptive-theme,
+.vp-doc .vp-adaptive-theme,
+.vp-doc pre {
+  border-radius: 8px;
+}
+
+.vp-doc pre {
+  margin: 1.6rem 0;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+  background: #282a36 !important; /* Dracula 主题背景色 */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 移动端移除代码块的负边距 */
+@media (max-width: 959px) {
+  .vp-doc div[class*='language-'],
+  .vp-block {
+    margin: 0 !important; /* 移除 margin: 16px -24px; */
+  }
+}
+
+/* 确保 Shiki 代码块使用 Dracula 背景色 */
+.vp-doc pre.shiki {
+  background: #282a36 !important;
+  color: #f8f8f2;
+}
+
+.vp-doc pre.shiki code {
+  background: transparent !important;
+  color: inherit;
+}
+
+/* 代码块滚动条 - Dracula 风格 */
+.vp-doc pre::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.vp-doc pre::-webkit-scrollbar-track {
+  background: rgba(68, 71, 90, 0.5);
+  border-radius: 4px;
+}
+
+.vp-doc pre::-webkit-scrollbar-thumb {
+  background: rgba(139, 233, 253, 0.3);
+  border-radius: 4px;
+}
+
+.vp-doc pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 233, 253, 0.5);
+}
+
+/* 行内代码样式 - 与代码块保持一致 */
+.vp-doc :not(pre) > code,
+.vp-doc code:not(pre code) {
+  font-family: 'Anonymous Pro', 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', 'Menlo', 'Consolas', 'DejaVu Sans Mono', monospace;
+  font-size: 0.85em;
+  font-weight: normal;
+  font-style: normal;
+  color: #333;
+  background: #c8d0d8;
+  padding: 0.2em 0.5em;
+  margin: 0 0.2em;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.08);
+  vertical-align: baseline;
+  line-height: 1.5;
+  letter-spacing: 0;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* 移动端行内代码优化 */
+@media (max-width: 959px) {
+  .vp-doc :not(pre) > code,
+  .vp-doc code:not(pre code) {
+    font-size: 0.82em;
+    padding: 0.2em 0.5em;
+    margin: 0 0.15em;
+  }
+}
+
+@media (max-width: 640px) {
+  .vp-doc :not(pre) > code,
+  .vp-doc code:not(pre code) {
+    font-size: 0.78em;
+    padding: 0.15em 0.4em;
+    margin: 0 0.1em;
+  }
+}
+
+/* 代码块内的 code 元素保持原样 */
+.vp-doc pre code {
+  font-size: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  font-weight: normal;
+}
+

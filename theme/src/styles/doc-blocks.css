@@ -1,0 +1,326 @@
+/* ============================================
+   文档块级元素样式
+   
+   界面区域：文章内容中的特殊块级元素
+   包含：自定义块（NOTE、TIP、WARNING）、详情折叠、引用块、表格
+   位置：文章正文内容中
+   ============================================ */
+
+/* Custom Block 样式 - NOTE、TIP、WARNING 等卡片 */
+.vp-doc .custom-block {
+  font-size: 0.875rem;
+  color: var(--vp-c-text-2);
+}
+
+.vp-doc .custom-block p {
+  font-size: 0.875rem;
+  color: var(--vp-c-text-2);
+  line-height: 1.7;
+}
+
+.vp-doc .custom-block p:first-child {
+  margin: 0;
+}
+
+.vp-doc .custom-block strong {
+  color: var(--vp-c-text-1);
+  font-weight: 600;
+}
+
+.vp-doc .custom-block code {
+  font-size: 0.85em;
+  color: var(--vp-c-text-2);
+}
+
+.vp-doc .custom-block ul,
+.vp-doc .custom-block ol {
+  font-size: 0.875rem;
+  color: var(--vp-c-text-2);
+  line-height: 1.7;
+}
+
+.vp-doc .custom-block li {
+  color: var(--vp-c-text-2);
+}
+
+/* 移动端 Custom Block 优化 */
+@media (max-width: 959px) {
+  .vp-doc .custom-block {
+    font-size: 0.85rem;
+  }
+  
+  .vp-doc .custom-block p {
+    font-size: 0.85rem;
+  }
+  
+  .vp-doc .custom-block ul,
+  .vp-doc .custom-block ol {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .vp-doc .custom-block {
+    font-size: 0.825rem;
+  }
+  
+  .vp-doc .custom-block p {
+    font-size: 0.825rem;
+  }
+  
+  .vp-doc .custom-block ul,
+  .vp-doc .custom-block ol {
+    font-size: 0.825rem;
+  }
+}
+
+/* Details/Summary 简约卡片样式 - 前置知识等折叠区域 */
+.vp-doc details {
+  margin: 1rem 0;
+  padding: 0;
+  border-radius: 8px;
+  background: #ffffff;
+  border: none;
+  overflow: hidden;
+  box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.08), 0 1px 5px -1px rgba(0, 0, 0, 0.08);
+  transition: all 200ms ease;
+  will-change: transform;
+}
+
+.vp-doc summary {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--vp-c-text-1);
+  background: rgba(74, 144, 226, 0.08);
+  border-bottom: 1px solid rgba(74, 144, 226, 0.3);
+  user-select: none;
+}
+
+.vp-doc summary:hover {
+  background: rgba(74, 144, 226, 0.06);
+}
+
+.vp-doc summary::marker {
+  color: var(--vp-c-brand-1);
+  font-size: 0.9em;
+}
+
+/* Details 内容区域 */
+.vp-doc details > *:not(summary) {
+  margin: 0;
+  margin-left: 12px;
+  color: var(--doc-text-color);
+  line-height: 1.8;
+  font-size: 1rem;
+  letter-spacing: 0.015em;
+}
+
+/* Details 内部的列表样式 - 简约风格 */
+.vp-doc details > *:not(summary) ul,
+.vp-doc details > *:not(summary) ol {
+  margin: 0 !important;
+  padding-left: 0;
+  list-style: none;
+}
+
+.vp-doc details > *:not(summary) li {
+  position: relative;
+  margin: 0.4rem 0;
+  line-height: 1.8;
+  color: var(--doc-text-color);
+}
+
+/* 简约小圆点样式 */
+.vp-doc details > *:not(summary) ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--vp-c-brand-1);
+}
+
+/* 有序列表样式 */
+.vp-doc details > *:not(summary) ol {
+  counter-reset: list-counter;
+}
+
+.vp-doc details > *:not(summary) ol li {
+  counter-increment: list-counter;
+}
+
+.vp-doc details > *:not(summary) ol li::before {
+  content: counter(list-counter) '.';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+  font-size: 0.95em;
+  line-height: 1.8;
+}
+
+/* 嵌套列表 */
+.vp-doc details > *:not(summary) ul ul,
+.vp-doc details > *:not(summary) ol ol,
+.vp-doc details > *:not(summary) ul ol,
+.vp-doc details > *:not(summary) ol ul {
+  margin: 0.4rem 0 0.4rem 1rem;
+  padding-left: 0;
+}
+
+.vp-doc details > *:not(summary) ul ul li::before {
+  width: 6px;
+  height: 6px;
+  background: var(--vp-c-brand-2);
+}
+
+/* 移动端优化 */
+@media (max-width: 959px) {
+  .vp-doc details {
+    margin: 0.875rem 0;
+  }
+
+  .vp-doc summary {
+    padding: 0.65rem 0.875rem;
+    font-size: 0.95rem;
+  }
+
+  .vp-doc details > *:not(summary) {
+    margin-left: 12px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .vp-doc details {
+    margin: 0.75rem 0;
+  }
+
+  .vp-doc summary {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .vp-doc details > *:not(summary) {
+    margin-left: 12px;
+    font-size: 0.85rem;
+  }
+}
+
+.vp-doc blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.2rem;
+  border-left: 4px solid rgba(74, 144, 226, 0.6);
+  background: #f8f8f8;
+  border-radius: 8px;
+  color: var(--doc-text-color);
+  font-style: normal;
+  line-height: 1.85;
+  font-size: 1.0625rem;
+  box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.08), 0 1px 5px -1px rgba(0, 0, 0, 0.08);
+  transition: all 200ms ease;
+  letter-spacing: 0.015em;
+}
+
+/* 移动端引用块优化 */
+@media (max-width: 959px) {
+  .vp-doc blockquote {
+    margin: 1.2rem 0;
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+}
+
+@media (max-width: 640px) {
+  .vp-doc blockquote {
+    margin: 1rem 0;
+    padding: 0.75rem 0.875rem;
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+}
+
+.vp-doc table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  margin: 1.5rem 0;
+  background: #ffffff;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.08), 0 1px 5px -1px rgba(0, 0, 0, 0.08);
+  transition: all 200ms ease;
+}
+
+/* 移动端表格滚动优化 */
+@media (max-width: 959px) {
+  .vp-doc table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+  
+  .vp-doc table thead,
+  .vp-doc table tbody,
+  .vp-doc table tr {
+    display: table;
+    width: 100%;
+    table-layout: auto;
+  }
+  
+  .vp-doc table thead {
+    display: table-header-group;
+  }
+  
+  .vp-doc table tbody {
+    display: table-row-group;
+  }
+}
+
+.vp-doc th,
+.vp-doc td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(74, 144, 226, 0.3);
+  font-size: 0.95rem;
+  color: var(--doc-text-color);
+}
+
+.vp-doc th {
+  background: rgba(74, 144, 226, 0.2);
+  font-weight: 600;
+}
+
+.vp-doc figcaption,
+.vp-doc .image-caption {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--vp-c-text-3);
+  text-align: center;
+}
+
+.VPDoc .content-container img {
+  border-radius: 5px;
+  /* 优化图片渲染性能 */
+  content-visibility: auto;
+  will-change: contents;
+}
+
+/* 图片懒加载优化 */
+.vp-doc img {
+  content-visibility: auto;
+  will-change: contents;
+}
+
+/* Archives excerpt should not clip complex content like Mermaid */
+.archives__article-excerpt {
+  overflow: visible !important;
+}
+

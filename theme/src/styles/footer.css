@@ -1,0 +1,80 @@
+/* ============================================
+   Footer 样式
+   
+   界面区域：页面底部
+   包含：版权信息、页脚导航
+   位置：页面最底部
+   ============================================ */
+
+.VPDocFooter {
+  border-top: none;
+  padding-top: 0;
+}
+
+.VPFooter,
+.VPFooter .container,
+.VPDocFooter,
+.VPDocFooter .container {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+/* VitePress 官方 Footer 样式自定义 */
+.VPFooter {
+  background: transparent !important;
+  border: none !important;
+  margin: 0 auto !important;
+  padding: 1rem 0 1rem !important;
+}
+
+.VPFooter .container {
+  text-align: center;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+.VPFooter .copyright {
+  font-size: 0.85rem;
+  color: var(--vp-c-text-3);
+  margin: 0 !important;
+}
+
+.VPDocFooter .pager,
+.VPDocFooter .prev,
+.VPDocFooter .next,
+.VPDocFooter .edit-link,
+.VPDoc .edit-info,
+.VPDoc .VPDocAsideOutline .edit-link {
+  display: none !important;
+}
+
+/* 移除 prev-next 导航的边框和分隔线 */
+.prev-next {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.prev-next .pager,
+.prev-next .pager-link {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+/* 确保版权卡片和 prev-next 导航之间没有分隔线 */
+.copyright + .prev-next,
+.prev-next + .copyright {
+  margin-top: 0 !important;
+  border-top: none !important;
+}
+
+.VPDoc .aside-curtain,
+.VPSidebar .curtain {
+  display: none !important;
+}
+

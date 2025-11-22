@@ -1,0 +1,138 @@
+/* ============================================
+   大纲导航样式（Table of Contents）
+   
+   界面区域：右侧目录导航
+   包含：当前文章的标题大纲、目录链接
+   位置：页面右侧，文章内容旁边
+   ============================================ */
+
+.VPDocAsideOutline .outline,
+.VPDocAsideOutline .outline ul,
+.VPDocAsideOutline .outline li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.VPDocAsideOutline {
+  padding: 0.8rem 0;
+}
+
+.VPDocAsideOutline .content {
+  position: relative;
+  border: 1px solid rgba(74, 144, 226, 0.25);
+  backdrop-filter: blur(10px);
+}
+
+.VPDocAsideOutline .outline-marker {
+  display: none;
+}
+
+.VPDocAsideOutline .outline-title {
+  margin: 0 0 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--vp-c-text-3);
+}
+
+.VPDocAsideOutline .outline-title::before {
+  display: none;
+}
+
+.VPDocAsideOutline .outline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0.5rem 1rem 0.8rem;
+}
+
+.VPDocAsideOutline .outline ul {
+  margin-top: 0.1rem;
+  margin-left: 0.9rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid rgba(74, 144, 226, 0.25);
+  position: relative;
+}
+
+.VPDocAsideOutline .outline li {
+  position: relative;
+  padding-left: 0.65rem;
+}
+
+.VPDocAsideOutline .outline li::before {
+  display: none;
+}
+
+.VPDocAsideOutline .outline li:last-child::after {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  left: -0.9rem;
+  width: 1px;
+  height: calc(100% - 0.5rem);
+  background: rgba(74, 144, 226, 0.25);
+}
+
+.VPDocAsideOutline .outline li:last-child > ul {
+  border-left-color: transparent;
+}
+
+.VPDocAsideOutline .outline-link {
+  position: relative;
+  display: block;
+  padding: 0.32rem 0.45rem;
+  border-radius: 0.45rem;
+  color: var(--vp-c-text-2);
+  text-decoration: none;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.VPDocAsideOutline .outline-link:hover {
+  color: var(--vp-c-brand-1);
+  background: transparent !important;
+  transition: all 200ms ease;
+}
+
+.VPDocAsideOutline .outline-link.active {
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+  background: transparent !important;
+}
+
+.VPLocalNav {
+  background: rgba(216, 224, 232, 0.9) !important;
+  border-bottom: 1px solid rgba(74, 144, 226, 0.32) !important;
+  backdrop-filter: blur(12px);
+  transition: all 200ms ease !important;
+}
+
+.VPLocalNav .container {
+  margin: 0 auto;
+  padding: 0.25rem 0.75rem;
+  gap: 0.75rem;
+  border-radius: 18px;
+}
+
+.VPLocalNavOutlineDropdown button {
+  color: var(--vp-c-text-2) !important;
+}
+
+.VPLocalNavOutlineDropdown .items {
+  border-color: rgba(74, 144, 226, 0.4) !important;
+  background: #d8e0e8 !important;
+  box-shadow: 0 20px 40px rgba(74, 144, 226, 0.22) !important;
+}
+
+.VPLocalNavOutlineDropdown .header,
+.VPLocalNavOutlineDropdown .outline {
+  background: transparent !important;
+}
+
+.VPNavBarOutlineDropdown .outline {
+  background: transparent !important;
+}
+

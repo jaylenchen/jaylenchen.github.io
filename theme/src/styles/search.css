@@ -1,0 +1,109 @@
+/* ============================================
+   搜索框样式
+   
+   界面区域：导航栏中的搜索功能
+   包含：搜索按钮、搜索模态框、搜索结果列表
+   位置：顶部导航栏右侧
+   ============================================ */
+
+.DocSearch-Button {
+  background: #f8f9fa !important;
+  border-radius: 8px !important;
+  border: none !important;
+  color: var(--vp-c-text-1) !important;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.08), 0 1px 5px -1px rgba(0, 0, 0, 0.08) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  cursor: default !important;
+}
+
+/* 移动端移除搜索按钮背景色 */
+@media (max-width: 959px) {
+  .DocSearch-Button {
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+/* 将图标放在文字后面 */
+.DocSearch-Button-Placeholder {
+  order: 1 !important;
+}
+
+.DocSearch-Search-Icon {
+  order: 2 !important;
+}
+
+/* PC端搜索按钮更紧凑 */
+@media (min-width: 960px) {
+  .DocSearch-Button {
+    height: 2rem !important;
+    padding: 0.35rem 0.75rem !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .DocSearch-Button .DocSearch-Button-Placeholder {
+    font-size: 0.85rem !important;
+  }
+}
+
+.DocSearch-Button:hover {
+  background: #f8f9fa !important;
+}
+
+.DocSearch-Modal,
+.DocSearch-Container {
+  background: #f8f9fa !important;
+  border-radius: 8px !important;
+  border: none !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.08), 0 1px 5px -1px rgba(0, 0, 0, 0.08) !important;
+}
+
+.DocSearch-Form,
+.DocSearch-Input {
+  background: #e8ecf0 !important;
+  border: none !important;
+  border-radius: 8px !important;
+}
+
+.DocSearch-Dropdown,
+.DocSearch-Hits,
+.DocSearch-Hit a,
+.DocSearch-Hit-source {
+  background: transparent !important;
+  color: var(--vp-c-text-1) !important;
+}
+
+/* 隐藏搜索结果的底部信息（xxx K） */
+.DocSearch-Footer {
+  display: none !important;
+}
+
+.DocSearch-Hit[aria-selected='true'] a {
+  background: rgba(74, 144, 226, 0.25) !important;
+  border-radius: 8px !important;
+}
+
+.DocSearch-Button-Keys,
+.DocSearch-Commands-Key {
+  background: rgba(74, 144, 226, 0.18) !important;
+  color: var(--vp-c-text-2) !important;
+  border: 1px solid rgba(74, 144, 226, 0.32) !important;
+}
+
+/* 隐藏搜索按钮中的快捷键显示 */
+.DocSearch-Button-Keys {
+  display: none !important;
+}
+
+.DocSearch-MagnifierLabel,
+.DocSearch-Label,
+.DocSearch-Footer span,
+.DocSearch-Hit-path {
+  color: var(--vp-c-text-2) !important;
+}
+

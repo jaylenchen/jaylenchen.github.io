@@ -51,12 +51,14 @@ const licenseDisplay = '自由转载-非商用-非衍生-保持署名（创意�
   margin: 2rem auto 0;
   padding: 1rem 1.2rem;
   max-width: 760px;
-  background: rgba(240, 248, 255, 0.6);
-  border: 1px solid rgba(24, 144, 255, 0.25);
+  background: #f8f9fa;
+  border: none;
   border-radius: 8px;
   color: var(--vp-c-text-2);
   font-size: 0.9rem;
   backdrop-filter: blur(6px);
+  box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.08), 0 1px 5px -1px rgba(0, 0, 0, 0.08);
+  transition: all 200ms ease;
 }
 
 .content {
@@ -115,7 +117,7 @@ a {
   font-weight: 500;
   color: var(--vp-c-brand-1);
   text-decoration: none;
-  border-bottom: 1px solid rgba(45, 45, 45, 0.4);
+  border-bottom: 1px solid rgba(74, 144, 226, 0.4);
   padding-bottom: 1px;
 }
 

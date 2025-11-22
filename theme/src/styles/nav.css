@@ -1,0 +1,100 @@
+/* ============================================
+   导航栏样式
+   
+   界面区域：页面顶部导航栏
+   包含：Logo、站点标题、导航菜单、搜索按钮
+   位置：固定在页面顶部
+   ============================================ */
+
+.VPNav,
+.VPNavBar,
+.VPNavBar .title,
+.VPNavBar .container,
+.VPNavBarMenu,
+.VPNavBarMenu .menu,
+.VPNavBarMenuGroup,
+.VPNavBarSearch,
+.VPSocialLinks,
+.VPNav .content-body,
+.VPNavScreen,
+.VPNavScreen .container,
+.VPNavScreen .items {
+  background: rgba(216, 224, 232, 0.9) !important;
+  backdrop-filter: blur(16px) !important;
+  box-shadow: none !important;
+  border: none !important;
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.VPNavScreen {
+  height: fit-content;
+}
+
+.VPNavBar {
+  background: rgba(216, 224, 232, 0.9) !important;
+  backdrop-filter: blur(16px) !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+@media (max-width: 959px) {
+  .VPNavScreen {
+    background: #d8e0e8 !important;
+  }
+}
+
+.VPNavBar::after,
+.VPNavBar::before,
+.VPNav .divider {
+  display: none !important;
+  border: none !important;
+}
+
+.VPNavBar .content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.VPNavBarSearch.search {
+  order: 99;
+  margin-left: 1.5rem;
+  flex-shrink: 0;
+}
+
+.VPSocialLinks,
+.VPNavBarExtra,
+.VPNavBarHamburger {
+  order: unset;
+  margin-left: 0;
+  flex-shrink: unset;
+}
+
+.VPNav,
+.VPNavBar,
+.VPNavBar .content-body,
+.VPNavScreen,
+.VPNavScreen .container,
+.VPNavScreen .items {
+  border-bottom: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(16px);
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.VPNavBar:not(.home) .divider-line,
+.VPNavBar:not(.home.top) .divider-line {
+  background: rgba(74, 144, 226, 0.3) !important;
+}
+

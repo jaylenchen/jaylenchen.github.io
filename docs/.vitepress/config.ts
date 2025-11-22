@@ -310,6 +310,9 @@ namespace SiteConfig {
       // DNS 预解析和预连接
       ['link', { rel: 'dns-prefetch', href: 'https://api.github.com' }],
       ['link', { rel: 'preconnect', href: 'https://api.github.com', crossorigin: '' }],
+      // 字体预加载 - 只预加载首屏最常用的字体，避免警告并防止闪烁
+      ['link', { rel: 'preconnect', href: 'https://gw.alipayobjects.com', crossorigin: 'anonymous' }],
+      ['link', { rel: 'preload', href: 'https://gw.alipayobjects.com/os/k/jinkai/tsanger-jinkai-w04-subset-119.woff2', as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }],
       // 资源提示
       ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover' }],
       ['meta', { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' }],

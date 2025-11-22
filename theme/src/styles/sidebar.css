@@ -1,0 +1,219 @@
+/* ============================================
+   侧边栏样式
+   
+   界面区域：左侧边栏（文章列表导航）
+   包含：文章目录树、时间轴、年份分组
+   位置：页面左侧，文章内容旁边
+   ============================================ */
+
+:root {
+  --vp-sidebar-bg: transparent;
+}
+
+.VPSidebar {
+  background: rgba(216, 224, 232, 0.95) !important;
+  transition: all 200ms ease !important;
+}
+
+@media (min-width: 960px) {
+  .VPSidebar {
+    background: transparent !important;
+  }
+}
+
+.VPSidebarItem,
+.VPSidebarItem .item,
+.VPSidebarItem .items,
+.VPSidebarItem .group {
+  list-style: none;
+}
+
+.VPSidebarItem {
+  margin-bottom: 0.2rem;
+}
+
+.VPSidebarItem .item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.25rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.4rem;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.VPSidebarItem.level-0 .item,
+.VPSidebarItem.level-0 .item:hover,
+.VPSidebarItem.level-0 .item:focus {
+  background: transparent !important;
+  cursor: default;
+}
+
+.VPSidebarItem:not(.level-0) > .item {
+  cursor: pointer;
+  padding: 0.3rem 0.15rem 0.3rem 0;
+  gap: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+}
+
+.VPSidebarItem:not(.level-0) > .item:hover,
+.VPSidebarItem:not(.level-0) > .item:focus-visible {
+  background: transparent;
+}
+
+.VPSidebarItem:not(.level-0).is-link > .item > .link:hover,
+.VPSidebarItem:not(.level-0).is-link > .item > .link:focus-visible {
+  background: transparent;
+}
+
+.VPSidebarItem.level-0 .text {
+  font-size: 0.96rem;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+
+.VPSidebarItem.level-0 .text::after {
+  display: none !important;
+}
+
+.VPSidebarItem.level-0 .item:hover .text,
+.VPSidebarItem.level-0 .item:focus .text {
+  color: var(--vp-c-text-1);
+}
+
+.VPSidebarItem .text {
+  font-size: 0.92rem;
+  color: var(--vp-c-text-2);
+  transition: color 0.2s ease;
+  margin: 0 !important;
+  line-height: 1.4;
+}
+
+.VPSidebarItem:not(.level-0) .text {
+  font-size: 0.9rem;
+}
+
+.VPSidebarItem:not(.level-0).is-link > .item > .link {
+  position: relative;
+  display: flex;
+  flex: 1;
+  padding: 0.05rem 0.1rem 0 0;
+}
+
+.VPSidebarItem:not(.level-0).is-link > .item > .link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1.5px;
+  background: var(--vp-c-brand-1);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s ease;
+}
+
+.VPSidebarItem:not(.level-0).is-link > .item > .link:hover::after,
+.VPSidebarItem:not(.level-0).is-link > .item > .link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.VPSidebarItem:not(.level-0) .item:hover .text,
+.VPSidebarItem:not(.level-0) .item:focus-visible .text,
+.VPSidebarItem:not(.level-0).is-link > .item > .link:hover .text,
+.VPSidebarItem:not(.level-0).is-link > .item > .link:focus-visible .text {
+  color: var(--vp-c-brand-1) !important;
+}
+
+.VPSidebarItem.is-active > .item {
+  background: transparent !important;
+  border-radius: 0;
+  box-shadow: none !important;
+  transition: all 200ms ease;
+}
+
+.VPSidebarItem.is-active > .item .text {
+  color: var(--vp-c-brand-1) !important;
+}
+
+.VPSidebarItem.level-0.has-active > .item,
+.VPSidebarItem.level-0.is-active > .item {
+  background: transparent !important;
+  padding: 0.35rem 0.55rem 0.35rem 1rem;
+}
+
+.VPSidebarItem.level-0.has-active > .item::before,
+.VPSidebarItem.level-0.is-active > .item::before {
+  content: '';
+  position: absolute;
+  left: 0.2rem;
+  top: 18%;
+  bottom: 18%;
+  width: 4px;
+  border-radius: 999px;
+  background: var(--vp-c-brand-1) !important;
+}
+
+.VPSidebarItem.level-0.has-active > .item .text,
+.VPSidebarItem.level-0.is-active > .item .text {
+  color: var(--vp-c-brand-1) !important;
+  letter-spacing: 0.02em;
+}
+
+.VPSidebarItem.is-active .text {
+  color: var(--vp-c-brand-1);
+}
+
+.VPSidebarItem.is-active .indicator {
+  background: var(--vp-c-brand-1);
+}
+
+.VPSidebarItem.level-0 .indicator {
+  display: none;
+}
+
+/* 文章列表的指示器改为时间轴圆点 */
+.VPSidebarItem:not(.level-0) .indicator {
+  position: static !important;
+  display: block;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--vp-c-brand-1);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+  flex-shrink: 0;
+  margin-top: 0.65rem;
+  margin-left: calc(0.5rem - 1.2rem - 0.225rem);
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+}
+
+.VPSidebar .items,
+.VPSidebarItem,
+.VPSidebarItem .children,
+.VPSidebarItem ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 文章列表竖线引导 - 类似标签页时间轴 */
+.VPSidebarItem.level-0 > .items {
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.VPSidebarItem.level-0 > .items::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.12);
+  z-index: 0;
+}
+

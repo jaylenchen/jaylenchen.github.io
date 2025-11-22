@@ -55,7 +55,6 @@
 .intro__kicker {
   font-size: 0.85rem;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: var(--vp-c-text-2);
 }
 

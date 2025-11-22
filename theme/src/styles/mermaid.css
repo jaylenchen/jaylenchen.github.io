@@ -1,0 +1,35 @@
+/* ============================================
+   Mermaid 图表样式
+   
+   界面区域：文章内容中的 Mermaid 图表
+   包含：流程图、时序图、甘特图等
+   位置：文章正文内容中
+   ============================================ */
+
+/* Mermaid rendering fixes: avoid SVG clipping and line-height mis-measurement */
+.vp-doc .mermaid,
+.vp-doc .mermaid > svg {
+  overflow: visible !important;
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Avoid forcing line-height globally inside Mermaid to prevent bbox miscalc */
+/* (rely on Mermaid's own metrics) */
+
+/* Try to prevent inner label clipping inside Mermaid nodes */
+.vp-doc .mermaid .node > foreignObject,
+.vp-doc .mermaid foreignObject,
+.vp-doc .mermaid .nodeLabel,
+.vp-doc .mermaid .label {
+  overflow: visible !important;
+}
+
+/* Allow wrapping only when needed; prefer Mermaid defaults */
+
+/* When Mermaid falls back to <text>, allow better spacing */
+/* Do not override text baseline; keep Mermaid defaults */
+
+/* [reverted] spacing/padding around Mermaid moved out per user request */
+
