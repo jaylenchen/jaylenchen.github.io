@@ -66,7 +66,7 @@ let sectionObserver: IntersectionObserver | null = null;
 
 // 分页相关 - 每个年份独立分页
 const yearPages = ref<Record<string, number>>({}); // 存储每个年份的当前页码
-const articlesPerPage = 6; // 每页显示6篇文章
+const articlesPerPage = 8; // 每页显示6篇文章
 
 // 项目筛选时的统一分页
 const projectPage = ref(1); // 项目筛选时的当前页码
@@ -380,6 +380,10 @@ function goToYearPage(year: string, page: number) {
         if (typeof window !== 'undefined') {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        // 检测excerpt是否需要滚动
+        setTimeout(() => {
+          checkExcerptOverflow();
+        }, 200);
       });
     });
   }
@@ -414,6 +418,10 @@ function goToProjectPage(page: number) {
         if (typeof window !== 'undefined') {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        // 检测excerpt是否需要滚动
+        setTimeout(() => {
+          checkExcerptOverflow();
+        }, 200);
       });
     });
   }
@@ -444,6 +452,10 @@ function goToAllArticlesPage(page: number) {
         if (typeof window !== 'undefined') {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        // 检测excerpt是否需要滚动
+        setTimeout(() => {
+          checkExcerptOverflow();
+        }, 200);
       });
     });
   }
@@ -651,6 +663,8 @@ onMounted(() => {
   nextTick(() => {
     setTimeout(() => {
       isLoading.value = false;
+      // 检测excerpt是否需要滚动
+      checkExcerptOverflow();
     }, 100);
   });
   
@@ -663,6 +677,131 @@ onMounted(() => {
     });
   }
 });
+
+// 检测excerpt内容是否超出，如果超出则启用自动滚动
+function checkExcerptOverflow() {
+  if (typeof document === 'undefined') return;
+  
+  nextTick(() => {
+    const excerptElements = document.querySelectorAll<HTMLElement>('.archives__article-excerpt');
+    excerptElements.forEach((excerpt) => {
+      const content = excerpt.querySelector<HTMLElement>('.archives__article-excerpt-content');
+      if (content) {
+        const excerptHeight = excerpt.offsetHeight; // 60px
+        const contentHeight = content.scrollHeight;
+        if (contentHeight > excerptHeight) {
+          excerpt.classList.add('has-overflow');
+          // 添加用户滚动检测
+          setupUserScrollDetection(excerpt);
+        } else {
+          excerpt.classList.remove('has-overflow');
+        }
+      }
+    });
+  });
+}
+
+// 设置用户滚动检测，当用户手动滚动时移除动画
+function setupUserScrollDetection(excerpt: HTMLElement) {
+  // 如果已经设置过，跳过
+  if ((excerpt as any).__scrollDetectionSetup) {
+    return;
+  }
+  (excerpt as any).__scrollDetectionSetup = true;
+  
+  let restoreTimer: ReturnType<typeof setTimeout> | null = null;
+  const RESTORE_DELAY = 3000; // 3秒后恢复自动滚动
+  
+  // 切换到用户滚动模式
+  const enableUserScrolling = () => {
+    if (!excerpt.classList.contains('user-scrolling')) {
+      excerpt.classList.add('user-scrolling');
+      excerpt.classList.remove('has-overflow');
+    }
+    // 清除之前的恢复定时器
+    if (restoreTimer) {
+      clearTimeout(restoreTimer);
+      restoreTimer = null;
+    }
+  };
+  
+  // 恢复自动滚动模式
+  const restoreAutoScroll = () => {
+    if (excerpt.classList.contains('user-scrolling')) {
+      // 先重置滚动位置到顶部，然后恢复自动滚动
+      excerpt.scrollTop = 0;
+      
+      // 使用 requestAnimationFrame 确保滚动位置已重置
+      requestAnimationFrame(() => {
+        excerpt.classList.remove('user-scrolling');
+        excerpt.classList.add('has-overflow');
+      });
+    }
+  };
+  
+  // 检测用户交互事件
+  const handleUserInteraction = () => {
+    enableUserScrolling();
+    
+    // 清除之前的定时器
+    if (restoreTimer) {
+      clearTimeout(restoreTimer);
+    }
+    
+    // 设置新的恢复定时器
+    restoreTimer = setTimeout(() => {
+      restoreAutoScroll();
+      restoreTimer = null;
+    }, RESTORE_DELAY);
+  };
+  
+  // 监听滚动事件（当用户滚动时）
+  const handleScroll = () => {
+    if (excerpt.classList.contains('user-scrolling')) {
+      // 清除之前的定时器
+      if (restoreTimer) {
+        clearTimeout(restoreTimer);
+      }
+      
+      // 设置新的恢复定时器
+      restoreTimer = setTimeout(() => {
+        restoreAutoScroll();
+        restoreTimer = null;
+      }, RESTORE_DELAY);
+    }
+  };
+  
+  // 监听各种用户交互事件
+  // wheel事件：鼠标滚轮滚动
+  excerpt.addEventListener('wheel', handleUserInteraction, { passive: true });
+  // touch事件：触摸滚动
+  excerpt.addEventListener('touchstart', handleUserInteraction, { passive: true });
+  excerpt.addEventListener('touchmove', handleUserInteraction, { passive: true });
+  // mousedown：鼠标按下（可能是要拖动滚动条）
+  excerpt.addEventListener('mousedown', handleUserInteraction);
+  // pointerdown：指针设备按下（包括鼠标和触摸）
+  excerpt.addEventListener('pointerdown', handleUserInteraction);
+  
+  // 监听滚动事件（当用户滚动时重置定时器）
+  excerpt.addEventListener('scroll', handleScroll, { passive: true });
+  
+  // 当鼠标离开卡片区域时，也考虑恢复自动滚动
+  const articleItem = excerpt.closest('.archives__article-item');
+  if (articleItem) {
+    articleItem.addEventListener('mouseleave', () => {
+      if (excerpt.classList.contains('user-scrolling')) {
+        // 鼠标离开后，延迟恢复自动滚动
+        if (restoreTimer) {
+          clearTimeout(restoreTimer);
+        }
+        restoreTimer = setTimeout(() => {
+          restoreAutoScroll();
+          restoreTimer = null;
+        }, RESTORE_DELAY);
+      }
+    });
+  }
+}
 
 // 滚动到 aside 位置的函数
 function scrollToAside() {
@@ -724,6 +863,13 @@ watch(
       if (!yearPages.value[entry.year]) {
         yearPages.value[entry.year] = 1;
       }
+    });
+    
+    // 检测excerpt是否需要滚动
+    nextTick(() => {
+      setTimeout(() => {
+        checkExcerptOverflow();
+      }, 200);
     });
   },
   { immediate: true }
@@ -817,7 +963,9 @@ watch(
                   <h3 class="archives__article-title">{{ article.title }}</h3>
                 </a>
                 <ArticleMetadata :article="article" />
-                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
+                <div v-if="article.excerpt" class="archives__article-excerpt">
+                  <div class="archives__article-excerpt-content" v-html="article.excerpt"></div>
+                </div>
                 <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
               </li>
             </ul>
@@ -869,7 +1017,9 @@ watch(
                   <h3 class="archives__article-title">{{ article.title }}</h3>
                 </a>
                 <ArticleMetadata :article="article" />
-                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
+                <div v-if="article.excerpt" class="archives__article-excerpt">
+                  <div class="archives__article-excerpt-content" v-html="article.excerpt"></div>
+                </div>
                 <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
               </li>
             </ul>
@@ -921,7 +1071,9 @@ watch(
                   <h3 class="archives__article-title">{{ article.title }}</h3>
                 </a>
                 <ArticleMetadata :article="article" />
-                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
+                <div v-if="article.excerpt" class="archives__article-excerpt">
+                  <div class="archives__article-excerpt-content" v-html="article.excerpt"></div>
+                </div>
                 <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
               </li>
             </ul>
@@ -973,7 +1125,9 @@ watch(
                   <h3 class="archives__article-title">{{ article.title }}</h3>
                 </a>
                 <ArticleMetadata :article="article" />
-                <div v-if="article.excerpt" class="archives__article-excerpt" v-html="article.excerpt"></div>
+                <div v-if="article.excerpt" class="archives__article-excerpt">
+                  <div class="archives__article-excerpt-content" v-html="article.excerpt"></div>
+                </div>
                 <a :href="article.path" target="_self" class="archives__article-read-more">阅读全文 →</a>
               </li>
             </ul>
@@ -1739,6 +1893,7 @@ watch(
 .archives__article-title-link {
   text-decoration: none;
   color: inherit;
+  flex-shrink: 0;
 }
 
 .archives__article-title {
@@ -1760,6 +1915,7 @@ watch(
 .archives__article-item :deep(.meta-wrapper) {
   margin-top: 0;
   margin-bottom: 0;
+  flex-shrink: 0;
 }
 
 .archives__article-item :deep(.article-meta) {
@@ -1770,17 +1926,84 @@ watch(
 
 .archives__article-excerpt {
   margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.8;
-  color: var(--doc-text-color);
-  overflow: hidden;
+  /* 固定高度 */
+  height: 60px;
+  flex-shrink: 0;
+  position: relative;
   font-family: 'TsangerJinKai02', "PingFang SC", Avenir, Tahoma, Arial, "Lantinghei SC", "Microsoft Yahei", "Hiragino Sans GB", "Microsoft Sans Serif", "WenQuanYi Micro Hei", Helvetica, sans-serif;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   font-variant-ligatures: common-ligatures;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* 默认隐藏溢出，使用动画滚动 */
+  overflow: hidden;
 }
+
+/* 用户滚动时，改为原生滚动 */
+.archives__article-excerpt.user-scrolling {
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* 滚动条样式 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(74, 144, 226, 0.4) rgba(0, 0, 0, 0.05);
+}
+
+.archives__article-excerpt.user-scrolling::-webkit-scrollbar {
+  width: 6px;
+}
+
+.archives__article-excerpt.user-scrolling::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.archives__article-excerpt.user-scrolling::-webkit-scrollbar-thumb {
+  background: rgba(74, 144, 226, 0.4);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.archives__article-excerpt.user-scrolling::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 144, 226, 0.6);
+}
+
+.archives__article-excerpt-content {
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: var(--doc-text-color);
+}
+
+/* 内容超出时才应用动画 */
+.archives__article-excerpt.has-overflow .archives__article-excerpt-content {
+  animation: scroll-text 12s linear infinite;
+  animation-play-state: running;
+}
+
+/* 用户滚动时移除动画 */
+.archives__article-excerpt.user-scrolling .archives__article-excerpt-content {
+  animation: none !important;
+  transform: none !important;
+}
+
+/* 鼠标悬停时暂停滚动 */
+.archives__article-item:hover .archives__article-excerpt.has-overflow .archives__article-excerpt-content {
+  animation-play-state: paused;
+}
+
+/* 自动滚动动画 - 公告式滚动效果 */
+@keyframes scroll-text {
+  0% {
+    transform: translateY(0);
+  }
+  90% {
+    transform: translateY(calc(-100% + 60px));
+  }
+  100% {
+    transform: translateY(calc(-100% + 60px));
+  }
+}
+
 
 .archives__article-excerpt :deep(p) {
   margin: 0 0 1rem;
@@ -2107,6 +2330,11 @@ watch(
     font-size: 0.72rem;
     padding: 0.25rem 0.5rem;
   }
+
+  /* 移动端描述区域高度调整 */
+  .archives__article-excerpt {
+    height: 100px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -2164,6 +2392,11 @@ watch(
   .archives__year-button {
     font-size: 0.72rem;
     padding: 0.25rem 0.5rem;
+  }
+
+  /* 小屏移动端描述区域高度调整 */
+  .archives__article-excerpt {
+    height: 90px;
   }
 }
 

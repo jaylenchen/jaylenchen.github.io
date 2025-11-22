@@ -319,8 +319,3 @@
   will-change: contents;
 }
 
-/* Archives excerpt should not clip complex content like Mermaid */
-.archives__article-excerpt {
-  overflow: visible !important;
-}
-

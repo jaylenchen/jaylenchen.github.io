@@ -15,5 +15,10 @@
   .content[data-v-da69c9d5] {
     padding: 0 32px 64px !important;
   }
+
+  /* 主页内容区域在 960px 及以上使用 100% 宽度 */
+  .VPDoc:not(.has-sidebar) .content[data-v-da69c9d5] {
+    max-width: 100% !important;
+  }
 }
 
