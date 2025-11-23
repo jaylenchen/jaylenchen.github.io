@@ -25,7 +25,8 @@
     "dayjs": "^1.11.11",
     "gitalk": "^1.8.0",
     "gray-matter": "^4.0.3",
-    "jquery": "^3.7.1"
+    "jquery": "^3.7.1",
+    "markdown-it-container": "^4.0.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.21.2",

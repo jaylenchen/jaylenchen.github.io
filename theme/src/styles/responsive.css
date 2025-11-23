@@ -16,7 +16,7 @@
   .VPDoc:not(.has-sidebar) .content {
     max-width: 100% !important;
   }
-}
+  }
 
 /* 覆盖 1440px 及以上屏幕的 content 最大宽度限制 */
 @media (min-width: 1440px) {
