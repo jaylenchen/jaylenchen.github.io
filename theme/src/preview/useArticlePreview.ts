@@ -1,6 +1,11 @@
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, inject } from 'vue'
 
-export function useArticlePreview(showPreview: (title: string, content: string) => void) {
+export function useArticlePreview(
+  showPreview: (title: string, content: string) => void,
+  loadArticleForPreviewFn?: ((path: string) => Promise<{ title: string; content: string } | null>) | null
+) {
+  // 优先使用传入的函数，如果没有则尝试注入
+  const loadArticleForPreview = loadArticleForPreviewFn || inject<((path: string) => Promise<{ title: string; content: string } | null>) | null>('loadArticleForPreview', null)
   /**
    * 从其他页面加载内容
    * 使用隐藏的 iframe 加载页面，然后提取内容（因为 VitePress 是 SPA，需要等待渲染）
@@ -245,8 +250,13 @@ export function useArticlePreview(showPreview: (title: string, content: string) 
       // 阻止默认行为（避免跳转）
       e.preventDefault()
       e.stopPropagation()
-    } else if (!href || href === 'javascript:void(0)') {
+    } else if (href === 'javascript:void(0)') {
       // 如果 href 是 javascript:void(0) 但没有 originalHref，直接返回
+      return
+    }
+    
+    // 如果 href 为空，也直接返回
+    if (!href) {
       return
     }
     
@@ -306,16 +316,28 @@ export function useArticlePreview(showPreview: (title: string, content: string) 
     }
     
     // 处理正文中的文章引用链接（不包含 # 的内部链接，且有 data-article-reference 标识）
+    // 对于文章链接，需要像标签页一样加载文章内容
     if (!hasAnchor && isArticleReference) {
+      // 必须提供 loadArticleForPreview 函数才能加载文章
+      if (!loadArticleForPreview) {
+        console.warn('loadArticleForPreview function not available, cannot load article content for:', href)
+        return
+      }
+      
       // 显示加载提示
       showPreview('加载中...', '<p>正在加载文章内容...</p>')
       
-      // 加载文章内容
-      const articleContent = await loadArticleContent(href)
-      
-      if (articleContent) {
-        showPreview(articleContent.title, articleContent.content)
-      } else {
+      // 使用加载函数加载文章内容（与标签页使用相同的逻辑）
+      try {
+        const articleContent = await loadArticleForPreview(href)
+        
+        if (articleContent) {
+          showPreview(articleContent.title, articleContent.content)
+        } else {
+          showPreview('加载失败', '<p>无法加载文章内容，请检查链接是否正确。</p>')
+        }
+      } catch (error) {
+        console.error('Failed to load article content:', error)
         showPreview('加载失败', '<p>无法加载文章内容，请检查链接是否正确。</p>')
       }
       return

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, inject, onMounted, onUnmounted } from 'vue';
 
 import { getQueryParam, countUniqueArticles } from '@blog/theme/utils/utils';
 import ArticleMetadata from '@blog/theme/components/ArticleMetadata.vue'
@@ -7,6 +7,10 @@ import EmptySvg from '@blog/theme/assets/svgs/empty.svg';
 
 // @ts-ignore
 import { data as articleData } from '@blog/docs/article.data'
+
+// 注入 preview 引用和加载函数
+const articlePreview = inject<{ value: any } | null>('articlePreview', null)
+const loadArticleForPreview = inject<((path: string) => Promise<{ title: string; content: string } | null>) | null>('loadArticleForPreview', null)
 
 
 const tagsMap = computed(() => initTags(articleData));
@@ -108,6 +112,25 @@ if (initialTag && initialTag !== '') {
   selectTag.value = initialTag;
 }
 
+// 处理文章链接点击
+async function handleArticleClick(article: any) {
+  if (!articlePreview?.value || !loadArticleForPreview) return
+  
+  const articlePath = article.path
+  
+  // 显示加载提示
+  articlePreview.value.show('加载中...', '<p>正在加载文章内容...</p>')
+  
+  // 使用提供的加载函数
+  const articleContent = await loadArticleForPreview(articlePath)
+  
+  if (articleContent) {
+    articlePreview.value.show(articleContent.title, articleContent.content)
+  } else {
+    articlePreview.value.show('加载失败', '<p>无法加载文章内容，请检查链接是否正确。</p>')
+  }
+}
+
 </script>
 
 <template>
@@ -138,7 +161,12 @@ if (initialTag && initialTag !== '') {
                 >
                   <span class="tags__timeline-dot"></span>
                   <div class="tags__article-item">
-                    <a :href="article.path" target="_self" class="tags__article-link">{{ article.title }}</a>
+                    <a 
+                      :href="article.path" 
+                      target="_self" 
+                      class="tags__article-link"
+                      @click.prevent="handleArticleClick(article)"
+                    >{{ article.title }}</a>
                     <ArticleMetadata :article="article" class="tags-meta" />
                   </div>
                 </li>

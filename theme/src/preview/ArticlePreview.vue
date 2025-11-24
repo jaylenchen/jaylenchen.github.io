@@ -24,6 +24,7 @@
             <div 
               class="article-preview-content vp-doc" 
               ref="contentRef" 
+              :key="contentKey"
               v-html="content"
               @click="handleContentClick"
             ></div>
@@ -43,6 +44,7 @@ const { isDark } = useData()
 const visible = ref(false)
 const title = ref('')
 const content = ref('')
+const contentKey = ref(0) // 用于强制重新渲染内容
 const contentRef = ref<HTMLElement | null>(null)
 
 // 拖拽相关状态
@@ -541,6 +543,8 @@ async function show(anchorTitle: string, anchorContent: string) {
   
   // 更新内容
   title.value = anchorTitle
+  // 更新 key 以强制重新渲染内容（在更新 content 之前）
+  contentKey.value++
   content.value = anchorContent
   
   // 只有在弹窗之前是关闭状态时才重置位置到初始状态
@@ -617,8 +621,11 @@ async function show(anchorTitle: string, anchorContent: string) {
     }
   } else {
     // 窗口已经打开，保持可见状态，只更新内容
-    // 这样位置不会变化
+    // 直接操作 DOM 确保内容更新（因为 v-html 可能不会触发更新）
     await nextTick()
+    if (contentRef.value) {
+      contentRef.value.innerHTML = anchorContent
+    }
   }
   
   // 等待 DOM 更新
@@ -627,6 +634,7 @@ async function show(anchorTitle: string, anchorContent: string) {
     visible.value = true
   }
   
+  // 确保内容已更新（对于已打开的窗口，需要等待 Vue 响应式更新）
   await nextTick()
   
   // 如果保存了高度，应用最小高度以保持位置
