@@ -4,9 +4,12 @@ import DefaultTheme from 'vitepress/theme'
 import { useData, useRoute } from 'vitepress'
 import md5 from 'blueimp-md5'
 
+
 import Copyright from './Copyright.vue'
 import SidebarTitleSync from './SidebarTitleSync.vue'
 import { useArticlePreview } from '../preview/useArticlePreview'
+import { SpeedInsights } from '@vercel/speed-insights/vue';
+
 
 // 使用异步组件避免构建时的循环依赖问题
 const ArticlePreview = defineAsyncComponent(() => import('../preview/ArticlePreview.vue'))
@@ -526,5 +529,6 @@ onMounted(() => {
         </template>
       </Layout>
       <ArticlePreview ref="articlePreviewRef" />
+      <SpeedInsights />
 </template>
 

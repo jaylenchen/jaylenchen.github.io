@@ -2,21 +2,14 @@
    TsangerJinKai02 仓耳今楷字体定义
    
    作用：定义自定义字体文件
-   包含：完整字体文件和常用汉字子集
+   包含：常用汉字子集和完整字体 fallback
    使用：全局字体族 'TsangerJinKai02'
+   
+   注意：子集定义在前，fallback 在后
+   这样可以优先使用子集，减少字体文件大小
    ============================================ */
 
-/* all glyphs fallback */
-@font-face {
-  font-family: 'TsangerJinKai02';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url('https://gw.alipayobjects.com/os/k/jinkai/tsanger-jinkai-w04-all.woff2') format('woff2');
-  unicode-range: U+0-10FFFF;
-}
-
-/* 常用汉字子集 */
+/* 常用汉字子集 - 优先使用子集以减小文件大小 */
 @font-face {
   font-family: 'TsangerJinKai02';
   font-style: normal;
@@ -60,5 +53,15 @@
   font-display: block;
   src: url('https://gw.alipayobjects.com/os/k/jinkai/tsanger-jinkai-w04-subset-4.woff2') format('woff2');
   unicode-range: U+1f1e9-1f1f5, U+1f1f7-1f1ff, U+1f21a, U+1f232, U+1f234-1f237, U+1f250-1f251, U+1f300, U+1f302-1f308, U+1f30a-1f311, U+1f315, U+1f319-1f320, U+1f324, U+1f327, U+1f32a, U+1f32c-1f32d, U+1f330-1f357, U+1f359-1f37e;
+}
+
+/* all glyphs fallback - 放在最后，只在子集无法匹配时使用 */
+@font-face {
+  font-family: 'TsangerJinKai02';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap; /* 改为 swap 以提供更好的加载体验 */
+  src: url('https://gw.alipayobjects.com/os/k/jinkai/tsanger-jinkai-w04-all.woff2') format('woff2');
+  /* 不指定 unicode-range，作为默认 fallback */
 }
 

@@ -21,6 +21,7 @@
     "@antv/g2plot": "^2.4.31",
     "@blog/docs": "workspace:*",
     "@blog/theme": "workspace:*",
+    "@vercel/speed-insights": "^1.2.0",
     "blueimp-md5": "^2.19.0",
     "dayjs": "^1.11.11",
     "gitalk": "^1.8.0",
