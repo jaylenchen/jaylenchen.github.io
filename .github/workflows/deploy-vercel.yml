@@ -5,10 +5,19 @@ on:
 
 jobs:
   # ============================================
+  # 设置 Vercel 项目（获取 Org ID 和创建项目）
+  # ============================================
+  setup-project:
+    name: Setup Vercel Project
+    uses: ./.github/workflows/setup-vercel-project.yml
+    secrets: inherit
+
+  # ============================================
   # 部署到 Vercel
   # ============================================
   deploy:
     name: Deploy to Vercel
+    needs: setup-project
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -17,21 +26,27 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
+      - name: Link Vercel project (create .vercel directory)
+        run: |
+          mkdir -p .vercel
+          echo "{\"projectId\":\"${{ needs.setup-project.outputs.project-id }}\",\"orgId\":\"${{ needs.setup-project.outputs.org-id }}\"}" > .vercel/project.json
+          echo "✅ Linked to project: ${{ needs.setup-project.outputs.project-id }} in org: ${{ needs.setup-project.outputs.org-id }}"
+
       - name: Pull Vercel environment information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ needs.setup-project.outputs.org-id }}
+          VERCEL_PROJECT_ID: ${{ needs.setup-project.outputs.project-id }}
 
       - name: Build project artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ needs.setup-project.outputs.org-id }}
+          VERCEL_PROJECT_ID: ${{ needs.setup-project.outputs.project-id }}
 
       - name: Deploy project artifacts to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ needs.setup-project.outputs.org-id }}
+          VERCEL_PROJECT_ID: ${{ needs.setup-project.outputs.project-id }}
 

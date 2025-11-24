@@ -184,19 +184,41 @@ A: 在 Vercel Dashboard → 选择项目 → Settings → General 页面，向�
 
 ## 🔐 配置 GitHub Secrets
 
-在 GitHub 仓库中配置 Vercel 凭证：
+### 方式一：最小配置（推荐用于首次部署）
+
+如果你想通过 GitHub Actions 自动创建项目，**只需要配置 `VERCEL_TOKEN`**：
 
 1. 进入仓库设置：`Settings` → `Secrets and variables` → `Actions`
 2. 点击 **"New repository secret"**
-3. 添加以下三个 Secrets：
+3. 添加 `VERCEL_TOKEN`：
+   - Name: `VERCEL_TOKEN`
+   - Value: 你的 Vercel API Token
+4. 点击 **"Add secret"** 保存
 
-   | Secret 名称 | 说明 | 示例值 |
-   |------------|------|--------|
-   | `VERCEL_TOKEN` | Vercel API Token | `xxxxxxxxxxxxxxxxxxxx` |
-   | `VERCEL_ORG_ID` | Vercel Team/Org ID | `team_xxxxxxxxxxxx` 或 `xxxxxxxxxxxx` |
-   | `VERCEL_PROJECT_ID` | Vercel Project ID | `prj_xxxxxxxxxxxx` |
+**首次部署后**，工作流会自动创建项目，并在日志中显示 `VERCEL_PROJECT_ID` 和 `VERCEL_ORG_ID`。之后你可以将这些值添加到 Secrets 以提升性能。
+
+### 方式二：完整配置（可选，提升性能）
+
+如果你已经有 Vercel 项目，或者想手动配置所有值：
+
+1. 进入仓库设置：`Settings` → `Secrets and variables` → `Actions`
+2. 点击 **"New repository secret"**
+3. 添加以下 Secrets：
+
+   | Secret 名称 | 是否必需 | 说明 | 示例值 |
+   |------------|---------|------|--------|
+   | `VERCEL_TOKEN` | ✅ **必需** | Vercel API Token | `xxxxxxxxxxxxxxxxxxxx` |
+   | `VERCEL_ORG_ID` | ⚪ 可选 | 自动获取（如果不提供） | `team_xxxxxxxxxxxx` 或 `xxxxxxxxxxxx` |
+   | `VERCEL_PROJECT_ID` | ⚪ 可选 | 自动创建（如果不提供） | `prj_xxxxxxxxxxxx` |
 
 4. 点击 **"Add secret"** 保存
+
+**注意**：
+- 如果只提供 `VERCEL_TOKEN`，工作流会：
+  - 自动获取 `VERCEL_ORG_ID`（通过 API）
+  - 自动创建 `VERCEL_PROJECT_ID`（通过 API）
+  - 在部署日志中显示创建的项目 ID，你可以后续添加到 Secrets
+- 如果提供所有三个值，工作流会使用现有项目，性能更好
 
 ---
 
