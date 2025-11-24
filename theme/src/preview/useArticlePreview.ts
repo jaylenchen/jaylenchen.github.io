@@ -460,6 +460,11 @@ export function useArticlePreview(showPreview: (title: string, content: string) 
         }
       }
       
+      // 特殊处理：标签页的文章链接（.tags__article-link）
+      // 这些链接应该被处理，即使它们不在 p, li 等容器中
+      const isTagsArticleLink = link.classList.contains('tags__article-link') || 
+                                link.closest('.tags__article-item') !== null
+      
       // 排除 href="#" 这种占位链接（通常用于 JavaScript 事件，不是真正的锚点）
       if (href === '#' || href === '#!') {
         return
@@ -478,11 +483,13 @@ export function useArticlePreview(showPreview: (title: string, content: string) 
       
       // 如果是文章链接（正文中的文章引用），添加特殊标识并改为 javascript:void(0)
       // 只处理在段落、列表等真正正文内容中的链接，而不是在标题、卡片等结构性元素中
+      // 但标签页的文章链接需要特殊处理
       if (isArticleLink && !link.hasAttribute('data-original-href')) {
         // 检查链接是否在真正的正文内容区域（段落、列表、引用等）
         const isInContentArea = link.closest('p, li, td, th, blockquote, dd') !== null
         
-        if (isInContentArea) {
+        // 标签页的文章链接也需要处理
+        if (isInContentArea || isTagsArticleLink) {
           // 添加标识，表明这是正文中的文章引用链接
           link.setAttribute('data-article-reference', 'true')
           link.setAttribute('data-original-href', href)
@@ -541,9 +548,17 @@ export function useArticlePreview(showPreview: (title: string, content: string) 
     }, 100)
     
     // 使用 MutationObserver 监听 DOM 变化，确保新添加的链接也被拦截
+    // 使用防抖优化性能
+    let enrichTimer: ReturnType<typeof setTimeout> | null = null
     const observer = new MutationObserver(() => {
-      // 重新 enrich 链接
-      enrichLinks()
+      // 防抖：延迟执行enrichLinks，避免频繁调用
+      if (enrichTimer) {
+        clearTimeout(enrichTimer)
+      }
+      enrichTimer = setTimeout(() => {
+        // 重新 enrich 链接
+        enrichLinks()
+      }, 50)
     })
     
     const docContent = document.querySelector('.vp-doc')

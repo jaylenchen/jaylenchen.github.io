@@ -111,20 +111,33 @@ onMounted(() => {
     
     // 延迟检查，确保URL已更新
     setTimeout(() => {
-      if (!articlePreviewRef.value || !articlePreviewRef.value.visible) {
-        currentTag.value = getTagParam()
-        return
-      }
-      
       const path = route.path
       const isTagsPage = path?.startsWith('/tags')
       
       if (isTagsPage) {
         const newTag = getTagParam()
         if (currentTag.value !== newTag) {
-          articlePreviewRef.value.close()
+          // tag切换了，关闭预览窗口
+          if (articlePreviewRef.value?.visible) {
+            articlePreviewRef.value.close()
+          }
+          currentTag.value = newTag
+          
+          // 主动触发enrichLinks，确保新渲染的链接被处理
+          // 延迟执行，确保Vue已经完成DOM更新
+          setTimeout(() => {
+            const enrichLinks = (window as any).__enrichArticlePreviewLinks
+            if (typeof enrichLinks === 'function') {
+              // 直接调用enrichLinks函数，处理新渲染的链接
+              enrichLinks()
+            }
+          }, 200)
+        } else {
           currentTag.value = newTag
         }
+      } else {
+        const newTagParam = getTagParam()
+        currentTag.value = newTagParam
       }
     }, 0)
   }
@@ -134,20 +147,32 @@ onMounted(() => {
     
     // 延迟检查，确保URL已更新
     setTimeout(() => {
-      if (!articlePreviewRef.value || !articlePreviewRef.value.visible) {
-        currentTag.value = getTagParam()
-        return
-      }
-      
       const path = route.path
       const isTagsPage = path?.startsWith('/tags')
       
       if (isTagsPage) {
-        const newTag = getTagParam()
-        if (currentTag.value !== newTag) {
-          articlePreviewRef.value.close()
-          currentTag.value = newTag
+        const newTagParam = getTagParam()
+        if (currentTag.value !== newTagParam) {
+          // tag切换了，关闭预览窗口
+          if (articlePreviewRef.value?.visible) {
+            articlePreviewRef.value.close()
+          }
+          currentTag.value = newTagParam
+          
+          // 主动触发enrichLinks，确保新渲染的链接被处理
+          setTimeout(() => {
+            const enrichLinks = (window as any).__enrichArticlePreviewLinks
+            if (typeof enrichLinks === 'function') {
+              // 直接调用enrichLinks函数，处理新渲染的链接
+              enrichLinks()
+            }
+          }, 200)
+        } else {
+          currentTag.value = newTagParam
         }
+      } else {
+        const newTagParam = getTagParam()
+        currentTag.value = newTagParam
       }
     }, 0)
   }
