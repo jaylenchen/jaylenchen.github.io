@@ -61,14 +61,51 @@ async function loadArticleForPreview(articlePath: string): Promise<{ title: stri
             return
           }
           
-          // 检查内容是否已渲染的辅助函数
+          // 检查内容是否已完全渲染的辅助函数
+          // 不仅要检测基本内容，还要检测异步内容（mermaid、metadata）是否已渲染
           const hasContent = (): boolean => {
             const contentElement = iframeDoc.querySelector('.vp-doc')
-            return !!(contentElement && (
+            if (!contentElement || contentElement.children.length === 0) {
+              return false
+            }
+            
+            // 检查基本内容是否存在
+            const hasBasicContent = !!(
               contentElement.querySelector('h1') || 
               contentElement.querySelector('p') ||
-              contentElement.children.length > 0
-            ))
+              contentElement.querySelector('ul') ||
+              contentElement.querySelector('ol')
+            )
+            
+            if (!hasBasicContent) {
+              return false
+            }
+            
+            // 检查是否有 mermaid 代码块需要等待渲染
+            const mermaidCodeBlocks = contentElement.querySelectorAll('code.language-mermaid, pre code.language-mermaid')
+            if (mermaidCodeBlocks.length > 0) {
+              // 如果还有 mermaid 代码块（未渲染成 SVG），说明还在渲染中
+              // 检查是否已经有渲染好的 mermaid SVG
+              const renderedMermaid = contentElement.querySelector('.mermaid svg, .mermaid[data-processed="true"]')
+              // 如果有代码块但没有渲染好的 SVG，说明还在处理中
+              if (!renderedMermaid) {
+                return false
+              }
+            }
+            
+            // 检查 metadata 是否已渲染（如果页面有 metadata）
+            // metadata 通常在 .vp-doc 外部，但我们可以检查整个文档
+            const hasMetadata = iframeDoc.querySelector('.ArticleMetadata, .meta-content, .meta-wrapper')
+            // 如果有 metadata 相关的类但内容为空，可能还在加载
+            if (hasMetadata) {
+              const metaText = hasMetadata.textContent || ''
+              // 如果 metadata 存在但内容很少，可能还在加载
+              if (metaText.trim().length < 10) {
+                return false
+              }
+            }
+            
+            return true
           }
           
           // 提取内容并清理的函数
@@ -86,6 +123,8 @@ async function loadArticleForPreview(articlePath: string): Promise<{ title: stri
           // 使用 MutationObserver 监听 DOM 变化（更高效）
           let observer: MutationObserver | null = null
           let fallbackTimer: ReturnType<typeof setTimeout> | null = null
+          let stableCheckTimer: ReturnType<typeof setTimeout> | null = null
+          let lastContentHash = ''
           
           const cleanup = () => {
             if (observer) {
@@ -96,28 +135,71 @@ async function loadArticleForPreview(articlePath: string): Promise<{ title: stri
               clearTimeout(fallbackTimer)
               fallbackTimer = null
             }
+            if (stableCheckTimer) {
+              clearTimeout(stableCheckTimer)
+              stableCheckTimer = null
+            }
           }
           
-          // 检查并处理内容的函数
+          // 计算内容哈希，用于检测内容是否稳定
+          const getContentHash = (): string => {
+            const contentElement = iframeDoc.querySelector('.vp-doc')
+            if (!contentElement) return ''
+            // 获取关键内容的文本和结构作为哈希
+            const text = contentElement.textContent || ''
+            const mermaidCount = contentElement.querySelectorAll('.mermaid svg, code.language-mermaid').length
+            const metaCount = iframeDoc.querySelectorAll('.ArticleMetadata, .meta-content').length
+            return `${text.length}-${mermaidCount}-${metaCount}`
+          }
+          
+          // 检查并处理内容的函数（使用稳定期检测）
           const checkAndExtract = () => {
             if (loaded) return
             
             if (hasContent()) {
-              cleanup()
-              // 内容已渲染，短暂等待确保完整（从 300ms 减少到 50ms）
-              setTimeout(extractAndResolve, 50)
+              const currentHash = getContentHash()
+              
+              // 如果内容哈希发生变化，说明还在渲染，重置稳定期检测
+              if (currentHash !== lastContentHash) {
+                lastContentHash = currentHash
+                
+                // 清除之前的稳定期定时器
+                if (stableCheckTimer) {
+                  clearTimeout(stableCheckTimer)
+                }
+                
+                // 设置新的稳定期检测：如果 200ms 内内容不再变化，则认为已稳定
+                stableCheckTimer = setTimeout(() => {
+                  if (loaded) return
+                  
+                  // 再次检查内容是否仍然完整
+                  if (hasContent() && getContentHash() === currentHash) {
+                    cleanup()
+                    extractAndResolve()
+                  }
+                }, 200)
+              }
             }
           }
           
-          // 初始等待时间从 500ms 减少到 100ms
+          // 初始等待时间从 500ms 减少到 200ms（给 VitePress 更多时间初始化）
           setTimeout(() => {
             if (loaded) return
             
+            // 初始化内容哈希
+            lastContentHash = getContentHash()
+            
             // 先检查一次，可能内容已经渲染好了
             if (hasContent()) {
-              cleanup()
-              setTimeout(extractAndResolve, 50)
-              return
+              // 使用稳定期检测，确保内容不再变化
+              const currentHash = getContentHash()
+              stableCheckTimer = setTimeout(() => {
+                if (loaded) return
+                if (hasContent() && getContentHash() === currentHash) {
+                  cleanup()
+                  extractAndResolve()
+                }
+              }, 200)
             }
             
             // 使用 MutationObserver 监听 body 或 .vp-doc 的变化
@@ -131,16 +213,16 @@ async function loadArticleForPreview(articlePath: string): Promise<{ title: stri
                 observer.observe(target, {
                   childList: true,
                   subtree: true,
-                  attributes: false
+                  attributes: true // 监听属性变化（mermaid 渲染时会改变属性）
                 })
               }
             } catch (e) {
               // MutationObserver 不支持时回退到轮询
             }
             
-            // Fallback: 使用更短的轮询间隔（从 200ms 减少到 50ms）
+            // Fallback: 使用更短的轮询间隔（从 200ms 减少到 100ms）
             let checkCount = 0
-            const maxChecks = 20 // 最多检查 20 次（1 秒）
+            const maxChecks = 30 // 最多检查 30 次（3 秒）
             
             const pollCheck = () => {
               if (loaded) return
@@ -149,7 +231,7 @@ async function loadArticleForPreview(articlePath: string): Promise<{ title: stri
               checkAndExtract()
               
               if (!loaded && checkCount < maxChecks) {
-                fallbackTimer = setTimeout(pollCheck, 50)
+                fallbackTimer = setTimeout(pollCheck, 100)
               } else if (!loaded) {
                 // 超时，尝试提取已有内容
                 cleanup()
@@ -157,8 +239,8 @@ async function loadArticleForPreview(articlePath: string): Promise<{ title: stri
               }
             }
             
-            fallbackTimer = setTimeout(pollCheck, 50)
-          }, 100)
+            fallbackTimer = setTimeout(pollCheck, 100)
+          }, 200)
         } catch (error) {
           console.error('Failed to extract content from iframe:', error)
           if (!loaded) {
