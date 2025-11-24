@@ -35,6 +35,10 @@ jobs:
     needs: build
     # 只在手动触发且选择 github 时执行
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'github'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     uses: ./.github/workflows/deploy-github.yml
     secrets: inherit
 
