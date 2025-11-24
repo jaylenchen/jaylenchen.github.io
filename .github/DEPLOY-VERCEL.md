@@ -468,12 +468,15 @@ TTL: 3600 (或自动)
 
 #### 常见 DNS 提供商配置示例
 
-**Cloudflare**:
+**Cloudflare（推荐使用 CDN 加速）**:
 1. 登录 Cloudflare Dashboard
 2. 选择你的域名
 3. 进入 **"DNS"** 标签页
 4. 点击 **"Add record"**
 5. 根据类型添加 A 或 CNAME 记录
+6. **重要**: 确保代理状态设置为 **"已代理"**（橙色云朵图标）✅
+
+> 💡 **提示**: 使用 Cloudflare 作为 CDN 代理可以显著加速访问速度，特别是在国内。详细配置请参考下面的 **"⚡ Cloudflare CDN 加速"** 部分。
 
 **阿里云/腾讯云**:
 1. 登录域名控制台
@@ -551,6 +554,182 @@ vercel domains ls
 # 删除域名
 vercel domains rm your-domain.com
 ```
+
+---
+
+## ⚡ Cloudflare CDN 加速
+
+使用 Cloudflare 作为 CDN 代理层可以加速访问 Vercel 部署的网站，特别是在国内访问时。
+
+### 配置步骤
+
+#### 1. 在 Cloudflare 添加域名
+
+1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)
+2. 点击 **"Add a Site"**
+3. 输入你的域名（如 `example.com`）
+4. 选择免费计划（Free）或其他计划
+5. 等待 Cloudflare 扫描现有的 DNS 记录
+
+#### 2. 更新 Nameservers
+
+1. 按照 Cloudflare 的提示，将域名的 Nameservers 更新为 Cloudflare 提供的地址
+2. 在你的域名注册商处修改 Nameservers
+3. 等待 Nameservers 生效（通常几分钟到几小时）
+
+#### 3. 配置 DNS 记录（通过 Cloudflare）
+
+在 Cloudflare 的 DNS 设置中，添加指向 Vercel 的记录：
+
+##### 方式一：使用 CNAME（推荐）
+
+**子域名（如 `www.example.com`）**:
+```
+类型: CNAME
+名称: www
+目标: cname.vercel-dns.com.
+代理状态: 已代理（橙色云朵）✅
+TTL: Auto
+```
+
+**根域名（example.com）** - 如果 Cloudflare 支持：
+```
+类型: CNAME
+名称: @
+目标: cname.vercel-dns.com.
+代理状态: 已代理（橙色云朵）✅
+TTL: Auto
+```
+
+**注意**：如果根域名不支持 CNAME，使用方式二。
+
+##### 方式二：使用 A 记录（根域名）
+
+如果 Cloudflare 不支持根域名的 CNAME，使用 A 记录：
+
+```
+类型: A
+名称: @
+IPv4 地址: 76.76.21.21
+代理状态: 已代理（橙色云朵）✅
+TTL: Auto
+```
+
+#### 4. 在 Vercel 中添加域名
+
+1. 进入 Vercel Dashboard → 项目 Settings → Domains
+2. 添加你的域名（已在 Cloudflare 配置的域名）
+3. Vercel 会自动检测到 DNS 配置
+
+#### 5. Cloudflare 优化设置
+
+##### SSL/TLS 设置
+
+1. 进入 Cloudflare Dashboard → SSL/TLS
+2. 选择 **"Full"** 或 **"Full (strict)"** 模式
+   - **Full**: 加密连接到源服务器（推荐）
+   - **Full (strict)**: 验证源服务器的证书（需要源服务器有有效证书）
+3. Vercel 会自动提供 SSL 证书，所以可以使用 **"Full"** 模式
+
+##### 缓存设置
+
+1. 进入 **"Caching"** → **"Configuration"**
+2. 配置缓存级别：
+   - **Caching Level**: Standard
+   - **Browser Cache TTL**: Respect Existing Headers（尊重源服务器的缓存头）
+3. 进入 **"Caching"** → **"Cache Rules"** 可以创建自定义缓存规则
+
+##### 速度优化
+
+1. **Auto Minify**: 
+   - 进入 **"Speed"** → **"Optimization"**
+   - 启用 **JavaScript**, **CSS**, **HTML** 的自动压缩
+
+2. **Brotli 压缩**:
+   - 自动启用（Cloudflare 默认支持）
+
+3. **HTTP/2 和 HTTP/3**:
+   - 自动启用
+
+##### 页面规则（可选）
+
+创建页面规则来优化特定路径的缓存：
+
+1. 进入 **"Rules"** → **"Page Rules"**
+2. 创建规则，例如：
+   - **URL**: `example.com/assets/*`
+   - **设置**:
+     - Cache Level: Cache Everything
+     - Edge Cache TTL: 1 month
+
+#### 6. 验证配置
+
+1. **检查 DNS 解析**:
+   ```bash
+   dig example.com
+   # 应该返回 Cloudflare 的 IP 地址
+   ```
+
+2. **检查代理状态**:
+   - 在 Cloudflare DNS 页面，确保记录显示 **橙色云朵**（已代理）
+   - 如果显示灰色云朵，点击切换为已代理
+
+3. **检查 SSL**:
+   - 访问 `https://example.com` 应该显示 Cloudflare 的 SSL 证书
+   - 查看证书详情，应该显示 "Issued by: Cloudflare"
+
+4. **速度测试**:
+   - 使用 [PageSpeed Insights](https://pagespeed.web.dev/) 测试速度
+   - 或使用 `curl -I https://example.com` 查看响应头
+
+### Cloudflare 加速原理
+
+```
+用户请求
+  ↓
+Cloudflare Edge Network (全球 CDN 节点)
+  ↓ (缓存未命中时)
+Vercel 服务器
+  ↓
+Cloudflare Edge Network
+  ↓
+用户浏览器
+```
+
+**优势**:
+- ✅ **全球 CDN 加速**: Cloudflare 的全球边缘节点就近提供内容
+- ✅ **智能缓存**: 静态资源缓存在 Cloudflare 边缘节点
+- ✅ **DDoS 保护**: Cloudflare 提供基础的 DDoS 防护
+- ✅ **自动压缩**: JavaScript、CSS、HTML 自动压缩
+- ✅ **HTTP/3 支持**: 更快的协议支持
+
+### 注意事项
+
+1. **SSL 证书**:
+   - Cloudflare 会自动提供 SSL 证书（Edge Certificate）
+   - 确保 SSL/TLS 模式设置为 **"Full"** 或 **"Full (strict)"**
+
+2. **缓存冲突**:
+   - Vercel 和 Cloudflare 都可能设置缓存头
+   - 建议让 Cloudflare 尊重源服务器的缓存头（Browser Cache TTL: Respect Existing Headers）
+
+3. **WebSocket 支持**:
+   - 如果需要 WebSocket，确保在 Cloudflare 的 Network 设置中启用 **"WebSockets"**
+
+4. **开发环境**:
+   - 开发时可能需要暂时禁用 Cloudflare 代理（点击灰色云朵）
+   - 或在 Cloudflare 的 Rules 中为开发子域名禁用缓存
+
+5. **HTTPS 重定向**:
+   - 在 Cloudflare 的 **"SSL/TLS"** → **"Edge Certificates"** 中启用 **"Always Use HTTPS"**
+
+### 性能监控
+
+Cloudflare 提供免费的 Analytics 和 Web Analytics：
+
+1. 进入 **"Analytics"** → **"Web Analytics"**
+2. 启用 Web Analytics 查看详细的访问统计
+3. 查看 **"Performance"** 标签页了解加载性能
 
 ---
 
