@@ -7,10 +7,10 @@ jobs:
   # ============================================
   # 设置 Vercel 项目（获取 Org ID 和创建项目）
   # ============================================
-  # setup-project:
-  #   name: Setup Vercel Project
-  #   uses: ./.github/workflows/setup-vercel-project.yml
-  #   secrets: inherit
+  setup-project:
+    name: Setup Vercel Project
+    uses: ./.github/workflows/setup-vercel-project.yml
+    secrets: inherit
 
   # ============================================
   # 部署到 Vercel
