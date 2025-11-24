@@ -47,12 +47,16 @@ const isListPage = computed(() => {
 })
 
 // 处理项目点击
-function handleProjectClick(project: string) {
+function handleProjectClick(e: Event, project: string) {
+  e.preventDefault()
+  e.stopPropagation()
   goToArchivesPage('project', project)
 }
 
 // 处理标签点击 - 跳转到 Tags 页面并选中对应标签
-function handleTagClick(tag: string) {
+function handleTagClick(e: Event, tag: string) {
+  e.preventDefault()
+  e.stopPropagation()
   goToTagsPage(tag)
 }
 
@@ -96,7 +100,7 @@ function handleTagClick(tag: string) {
       </span>
       <span class="meta-content">
         <span>
-          <a href="#" target="_self" @click="handleProjectClick(project)">
+          <a href="javascript:void(0)" target="_self" @click="handleProjectClick($event, project)">
             {{ project }}
           </a>
         </span>
@@ -110,7 +114,7 @@ function handleTagClick(tag: string) {
       </span>
       <span class="meta-content">
         <span v-for="(tag, index) in displayTags" :key="index">
-          <a href="#" target="_self" :title="tag" @click="handleTagClick(tag)">{{
+          <a href="javascript:void(0)" target="_self" :title="tag" @click="handleTagClick($event, tag)">{{
             tag
             }}</a>
           <span v-if="index !== displayTags.length - 1">｜</span>
