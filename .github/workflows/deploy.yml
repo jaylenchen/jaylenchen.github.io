@@ -1,0 +1,53 @@
+name: Deploy Blog
+
+on:
+  push:
+    branches: [main]
+  # 允许手动触发，并选择部署目标
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: '选择部署目标'
+        required: true
+        type: choice
+        options:
+          - github
+          - vercel
+        default: 'vercel'
+
+# 并发控制：同一时间只允许一个部署运行
+concurrency:
+  group: blog-deploy
+  cancel-in-progress: true
+
+jobs:
+  # ============================================
+  # 构建任务（复用 build.yml）
+  # ============================================
+  build:
+    uses: ./.github/workflows/build.yml
+
+  # ============================================
+  # 部署到 GitHub
+  # ============================================
+  deploy-github:
+    name: Deploy to GitHub
+    needs: build
+    # 只在手动触发且选择 github 时执行
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'github'
+    uses: ./.github/workflows/deploy-github.yml
+    secrets: inherit
+
+  # ============================================
+  # 部署到 Vercel
+  # ============================================
+  deploy-vercel:
+    name: Deploy to Vercel
+    # Push 到 main 分支时自动部署到 Vercel，或手动触发且选择 vercel
+    # 注意：Vercel 部署不需要依赖 build，因为它会自己 checkout 和构建
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.deploy_target == 'vercel' || github.event.inputs.deploy_target == ''))
+    uses: ./.github/workflows/deploy-vercel.yml
+    secrets: inherit
+

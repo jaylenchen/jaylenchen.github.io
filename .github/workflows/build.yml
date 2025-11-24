@@ -1,0 +1,52 @@
+name: Build Project
+
+on:
+  workflow_call:
+    outputs:
+      artifact-path:
+        description: '构建产物路径'
+        value: ${{ jobs.build.outputs.artifact-path }}
+
+jobs:
+  # ============================================
+  # 构建任务（可复用）
+  # ============================================
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-path: ${{ steps.set-output.outputs.path }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Yarn
+        run: corepack prepare yarn@stable --activate
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build project
+        run: yarn build:docs
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: docs/.vitepress/dist
+          retention-days: 1
+
+      - name: Set artifact path output
+        id: set-output
+        run: echo "path=./docs/.vitepress/dist" >> $GITHUB_OUTPUT
+
