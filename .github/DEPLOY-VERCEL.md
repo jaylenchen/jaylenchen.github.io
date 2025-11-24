@@ -184,41 +184,26 @@ A: 在 Vercel Dashboard → 选择项目 → Settings → General 页面，向�
 
 ## 🔐 配置 GitHub Secrets
 
-### 方式一：最小配置（推荐用于首次部署）
-
-如果你想通过 GitHub Actions 自动创建项目，**只需要配置 `VERCEL_TOKEN`**：
+在 GitHub 仓库中配置 Vercel 凭证（**三个 Secrets 都是必需的**）：
 
 1. 进入仓库设置：`Settings` → `Secrets and variables` → `Actions`
 2. 点击 **"New repository secret"**
-3. 添加 `VERCEL_TOKEN`：
-   - Name: `VERCEL_TOKEN`
-   - Value: 你的 Vercel API Token
-4. 点击 **"Add secret"** 保存
-
-**首次部署后**，工作流会自动创建项目，并在日志中显示 `VERCEL_PROJECT_ID` 和 `VERCEL_ORG_ID`。之后你可以将这些值添加到 Secrets 以提升性能。
-
-### 方式二：完整配置（可选，提升性能）
-
-如果你已经有 Vercel 项目，或者想手动配置所有值：
-
-1. 进入仓库设置：`Settings` → `Secrets and variables` → `Actions`
-2. 点击 **"New repository secret"**
-3. 添加以下 Secrets：
+3. 添加以下三个 Secrets：
 
    | Secret 名称 | 是否必需 | 说明 | 示例值 |
    |------------|---------|------|--------|
    | `VERCEL_TOKEN` | ✅ **必需** | Vercel API Token | `xxxxxxxxxxxxxxxxxxxx` |
-   | `VERCEL_ORG_ID` | ⚪ 可选 | 自动获取（如果不提供） | `team_xxxxxxxxxxxx` 或 `xxxxxxxxxxxx` |
-   | `VERCEL_PROJECT_ID` | ⚪ 可选 | 自动创建（如果不提供） | `prj_xxxxxxxxxxxx` |
+   | `VERCEL_ORG_ID` | ✅ **必需** | Vercel Team/Org ID | `team_xxxxxxxxxxxx` 或 `xxxxxxxxxxxx` |
+   | `VERCEL_PROJECT_ID` | ✅ **必需** | Vercel Project ID | `prj_xxxxxxxxxxxx` |
 
 4. 点击 **"Add secret"** 保存
 
-**注意**：
-- 如果只提供 `VERCEL_TOKEN`，工作流会：
-  - 自动获取 `VERCEL_ORG_ID`（通过 API）
-  - 自动创建 `VERCEL_PROJECT_ID`（通过 API）
-  - 在部署日志中显示创建的项目 ID，你可以后续添加到 Secrets
-- 如果提供所有三个值，工作流会使用现有项目，性能更好
+### 获取 Secrets 值
+
+如果还没有这些值，请参考文档开头的 **"🚀 完整设置流程"** 部分：
+- **步骤 1**: 创建 VERCEL_TOKEN
+- **步骤 2**: 创建 Vercel 项目
+- **步骤 3**: 获取 VERCEL_ORG_ID 和 VERCEL_PROJECT_ID
 
 ---
 
@@ -398,13 +383,174 @@ flowchart TD
 
 如果配置了自定义域名，可通过该域名访问。
 
-**配置自定义域名**:
+#### 配置步骤
 
-1. 进入 Vercel Dashboard → `Project Settings` → `Domains`
-2. 点击 **"Add Domain"**
-3. 输入你的域名（如：`blog.example.com`）
-4. 按照提示配置 DNS 记录
-5. 等待 DNS 生效（通常几分钟到几小时）
+**1. 在 Vercel Dashboard 中添加域名**
+
+1. 进入 [Vercel Dashboard](https://vercel.com/dashboard)
+2. 选择你的项目
+3. 点击 **"Settings"** 标签页
+4. 在左侧菜单中选择 **"Domains"**
+5. 点击 **"Add Domain"** 按钮
+6. 输入你的域名：
+   - **子域名**：`blog.example.com` 或 `www.example.com`
+   - **根域名**：`example.com`
+7. 点击 **"Add"**
+
+**2. 配置 DNS 记录**
+
+根据你添加的域名类型，Vercel 会提供相应的 DNS 配置说明：
+
+##### 方式一：根域名（example.com）
+
+如果你添加的是根域名（如 `example.com`），需要配置 **A 记录**：
+
+```
+类型: A
+名称: @ 或 (空白)
+值: 76.76.21.21
+TTL: 3600 (或自动)
+```
+
+**多个 A 记录**（推荐，提高可用性）：
+
+```
+类型: A
+名称: @
+值: 76.76.21.21
+
+类型: A
+名称: @
+值: 76.76.21.22
+```
+
+##### 方式二：子域名（www.example.com 或 blog.example.com）
+
+如果你添加的是子域名（如 `www.example.com`），需要配置 **CNAME 记录**：
+
+```
+类型: CNAME
+名称: www (或 blog)
+值: cname.vercel-dns.com.
+TTL: 3600 (或自动)
+```
+
+**注意**：
+- CNAME 记录的 `值` 必须以 `.` 结尾
+- Vercel 会在添加域名时自动生成对应的 CNAME 值
+
+##### 方式三：同时配置根域名和 www 子域名
+
+如果你想要同时支持 `example.com` 和 `www.example.com`：
+
+1. **添加根域名**：`example.com` → 配置 A 记录
+2. **添加 www 子域名**：`www.example.com` → 配置 CNAME 记录指向 `cname.vercel-dns.com.`
+
+或者使用重定向：
+- 在 Vercel 项目设置中，可以将根域名重定向到 www 子域名
+
+**3. 在 DNS 提供商处配置**
+
+1. 登录你的域名注册商或 DNS 服务商（如 Cloudflare、阿里云、GoDaddy 等）
+2. 进入域名管理页面
+3. 找到 DNS 设置或域名解析设置
+4. 添加上述对应的 DNS 记录（A 记录或 CNAME 记录）
+5. 保存配置
+
+**4. 等待 DNS 生效和 SSL 证书配置**
+
+- DNS 记录生效时间：通常 5-30 分钟，最长可能需要 24-48 小时
+- SSL 证书自动配置：Vercel 会自动为你的域名配置 SSL 证书（HTTPS）
+- 验证状态：在 Vercel Dashboard → Domains 页面可以查看域名配置状态
+  - ✅ **Valid Configuration**：配置正确，DNS 已生效
+  - ⏳ **Pending**：DNS 传播中，等待生效
+  - ❌ **Invalid Configuration**：配置有误，检查 DNS 记录
+
+#### 常见 DNS 提供商配置示例
+
+**Cloudflare**:
+1. 登录 Cloudflare Dashboard
+2. 选择你的域名
+3. 进入 **"DNS"** 标签页
+4. 点击 **"Add record"**
+5. 根据类型添加 A 或 CNAME 记录
+
+**阿里云/腾讯云**:
+1. 登录域名控制台
+2. 进入 **"域名解析"** 或 **"DNS 解析"**
+3. 选择你的域名
+4. 添加对应的解析记录
+
+**GoDaddy**:
+1. 登录 GoDaddy 账户
+2. 进入 **"My Products"** → **"DNS"**
+3. 添加对应的 DNS 记录
+
+#### 验证配置
+
+配置完成后，可以通过以下方式验证：
+
+1. **检查 DNS 解析**：
+   ```bash
+   # 检查根域名
+   dig example.com
+   nslookup example.com
+   
+   # 检查子域名
+   dig www.example.com
+   nslookup www.example.com
+   ```
+
+2. **在 Vercel Dashboard 查看**：
+   - 进入项目 Settings → Domains
+   - 查看域名状态，应该显示 ✅ Valid Configuration
+
+3. **访问测试**：
+   - 在浏览器访问 `https://your-domain.com`
+   - 确认可以正常访问且显示 HTTPS 锁图标
+
+#### 常见问题
+
+**Q: DNS 配置后还是显示 "Invalid Configuration"**
+
+A: 
+- 检查 DNS 记录是否正确添加
+- 确认 TTL 时间（建议设置为 3600 或自动）
+- 等待 DNS 传播完成（可能需要更长时间）
+- 清除浏览器缓存后重试
+
+**Q: 根域名和 www 子域名都要配置吗？**
+
+A: 
+- 不是必须的，可以只配置一个
+- 建议同时配置，并在 Vercel 中设置重定向规则
+
+**Q: SSL 证书需要手动配置吗？**
+
+A: 
+- 不需要！Vercel 会自动为所有添加的域名配置 SSL 证书
+- 证书由 Vercel 自动续期
+
+**Q: 可以配置多个自定义域名吗？**
+
+A: 
+- 可以！Vercel 支持为同一个项目配置多个域名
+- 在 Domains 页面可以添加多个域名
+
+#### 通过 Vercel CLI 配置（可选）
+
+你也可以通过 CLI 添加域名：
+
+```bash
+# 添加域名
+vercel domains add your-domain.com
+
+# 查看已添加的域名
+vercel domains ls
+
+# 删除域名
+vercel domains rm your-domain.com
+```
 
 ---
 
