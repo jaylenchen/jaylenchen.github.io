@@ -318,6 +318,7 @@ if (initialTag && initialTag !== '') {
     display: flex !important;
     flex-direction: row !important;
     gap: 4.5rem !important;
+    justify-content: center !important;
     box-sizing: border-box !important;
   }
 
@@ -394,6 +395,7 @@ if (initialTag && initialTag !== '') {
   gap: 4.5rem;
   align-items: flex-start;
   flex-direction: row;
+  justify-content: center;
   /* 最大容器固定宽度，确保有有效值 */
   width: 100%;
   max-width: 100%;
@@ -864,10 +866,14 @@ if (initialTag && initialTag !== '') {
     flex-direction: column;
     gap: 1rem;
     overflow: visible;
+    justify-content: flex-start; /* 移动端保持原有样式，不居中 */
   }
 
   .tags__aside {
     max-height: none;
+    order: -1; /* 移动端：标签容器显示在上方 */
+    width: 100% !important; /* 移动端：占据100%宽度 */
+    flex: 0 0 auto !important; /* 移动端：自动宽度 */
   }
 
   .tags__list {
@@ -876,7 +882,11 @@ if (initialTag && initialTag !== '') {
 
   .tags__content {
     overflow: visible;
-    width: 100%;
+    width: 100% !important; /* 移动端：占据100%宽度 */
+    flex: 0 0 auto !important; /* 移动端：自动宽度，覆盖PC端的固定宽度 */
+    min-width: 0 !important; /* 移动端：允许收缩 */
+    max-width: 100% !important; /* 移动端：不超过100% */
+    order: 1; /* 移动端：内容区域显示在下方 */
   }
 
 

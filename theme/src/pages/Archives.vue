@@ -1976,7 +1976,7 @@ watch(
 
 /* 内容超出时才应用动画 */
 .archives__article-excerpt.has-overflow .archives__article-excerpt-content {
-  animation: scroll-text 12s linear infinite;
+  animation: scroll-text 5s linear infinite; /* 从12s加快到8s */
   animation-play-state: running;
 }
 

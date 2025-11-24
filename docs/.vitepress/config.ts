@@ -20,7 +20,6 @@ import { Life } from "./sidebar/life";
 import { copyAssetsToPublic } from './plugins/copy-assets-to-public'
 import { watchIncludedMarkdown } from './plugins/watch-includes.ts'
 import { sidebarTitles } from './plugins/sidebar-titles'
-import { generateMarkdownIndex } from './plugins/generate-markdown-index'
 
 
 // #region theme config
@@ -380,8 +379,7 @@ namespace SiteConfig {
         svgLoader(),
         watchIncludedMarkdown(),
         sidebarTitles(),
-        copyAssetsToPublic(),
-        generateMarkdownIndex()
+        copyAssetsToPublic()
       ],
       resolve: {
         alias: {

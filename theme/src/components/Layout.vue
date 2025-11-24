@@ -1,24 +1,26 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, defineAsyncComponent } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import { useData } from 'vitepress'
 import md5 from 'blueimp-md5'
 
 import Copyright from './Copyright.vue'
 import SidebarTitleSync from './SidebarTitleSync.vue'
-import AnchorPreview from '../anchor/AnchorPreview.vue'
-import { useAnchorPreview } from '../anchor/useAnchorPreview'
+import { useArticlePreview } from '../preview/useArticlePreview'
+
+// 使用异步组件避免构建时的循环依赖问题
+const ArticlePreview = defineAsyncComponent(() => import('../preview/ArticlePreview.vue'))
 
 const { Layout } = DefaultTheme
 const { page, theme, frontmatter } = useData()
 
-const anchorPreviewRef = ref<InstanceType<typeof AnchorPreview> | null>(null)
+const articlePreviewRef = ref<any>(null)
 
-function showAnchorPreview(title: string, content: string) {
-  anchorPreviewRef.value?.show(title, content)
+function showArticlePreview(title: string, content: string) {
+  articlePreviewRef.value?.show(title, content)
 }
 
-useAnchorPreview(showAnchorPreview)
+useArticlePreview(showArticlePreview)
 </script>
 
 <template>
@@ -32,6 +34,6 @@ useAnchorPreview(showAnchorPreview)
             :key="md5(page.relativePath)" />
         </template>
       </Layout>
-      <AnchorPreview ref="anchorPreviewRef" />
+      <ArticlePreview ref="articlePreviewRef" />
 </template>
 
