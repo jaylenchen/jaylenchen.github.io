@@ -39,11 +39,11 @@ const isTagsContext = computed(() => {
 })
 const displayTags = computed(() => (isTagsContext.value ? [] : tags.value))
 
-// 判断是否在 Archives 或 Tags 页面
+// 判断是否在首页或 Tags 页面
 const isListPage = computed(() => {
   if (isTagsContext.value) return true
   const path = route.path || ''
-  return path.startsWith('/archives') || path.startsWith('/tags') || path === '/'
+  return path === '/' || path.startsWith('/tags')
 })
 
 // 处理项目点击

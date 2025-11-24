@@ -28,15 +28,27 @@ export function getQueryParam(paramName: string) {
 /**
  * 跳转到指定链接
  *
+ * @param url 目标 URL
  * @param paramName 参数名
  * @param paramValue 参数值
  */
 export function goToLink(url: string, paramName?: string, paramValue?: string) {
   if (typeof window === 'undefined') return;
+  
   if (paramName && paramValue) {
-    window.location.href = url + '?' + paramName + '=' + paramValue;
+    // 如果 URL 已经包含 #，先分离路径和 hash
+    const hashIndex = url.indexOf('#')
+    const baseUrl = hashIndex !== -1 ? url.substring(0, hashIndex) : url
+    const hash = hashIndex !== -1 ? url.substring(hashIndex) : ''
+    
+    // 检查 baseUrl 是否已经包含查询参数
+    const separator = baseUrl.includes('?') ? '&' : '?'
+    // 对参数值进行 URL 编码，确保特殊字符（如中文、空格等）被正确处理
+    const encodedValue = encodeURIComponent(paramValue)
+    
+    window.location.href = baseUrl + separator + paramName + '=' + encodedValue + hash
   } else {
-    window.location.href = url;
+    window.location.href = url
   }
 }
 

@@ -8,7 +8,7 @@
     <nav class="quick-links" aria-label="Site shortcuts">
       <a href="/life/GTD时间管理">生活修炼</a>
       <a href="/tags/">主题标签</a>
-      <a href="/archives/">全部归档</a>
+      <a href="/">全部归档</a>
     </nav>
 
     <section class="lead">
