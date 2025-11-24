@@ -1,223 +1,19 @@
 import { onMounted, onUnmounted, inject } from 'vue'
+import { delay, waitForCondition } from '@blog/theme/utils/async'
 
 export function useArticlePreview(
   showPreview: (title: string, content: string) => void,
   loadArticleForPreviewFn?: ((path: string) => Promise<{ title: string; content: string } | null>) | null
 ) {
-  // 优先使用传入的函数，如果没有则尝试注入
-  const loadArticleForPreview = loadArticleForPreviewFn || inject<((path: string) => Promise<{ title: string; content: string } | null>) | null>('loadArticleForPreview', null)
-  /**
-   * 从其他页面加载内容
-   * 使用隐藏的 iframe 加载页面，然后提取内容（因为 VitePress 是 SPA，需要等待渲染）
-   */
-  async function loadArticleContent(articlePath: string): Promise<{ title: string; content: string } | null> {
-    return new Promise((resolve) => {
-      try {
-        // 规范化路径
-        let fullPath = articlePath.startsWith('/') ? articlePath : `/${articlePath}`
-        // 移除尾部斜杠
-        fullPath = fullPath.replace(/\/$/, '')
-        
-        // 创建隐藏的 iframe 来加载页面
-        const iframe = document.createElement('iframe')
-        iframe.style.cssText = 'position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; border: none; visibility: hidden;'
-        
-        let loaded = false
-        const timeout = setTimeout(() => {
-          if (!loaded) {
-            loaded = true
-            if (iframe.parentNode) {
-              document.body.removeChild(iframe)
-            }
-            resolve(null)
-          }
-        }, 8000) // 8 秒超时
-        
-        iframe.onload = () => {
-          if (loaded) return
-          
-          try {
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
-            if (!iframeDoc) {
-              if (!loaded) {
-                loaded = true
-                clearTimeout(timeout)
-                if (iframe.parentNode) {
-                  document.body.removeChild(iframe)
-                }
-                resolve(null)
-              }
-              return
-            }
-            
-            // 等待 VitePress 和 Vue 组件渲染完成
-            let checkCount = 0
-            const maxChecks = 15 // 最多检查 15 次（3 秒）
-            
-            const checkContent = () => {
-              checkCount++
-              const contentElement = iframeDoc.querySelector('.vp-doc')
-              
-              // 检查内容是否已渲染（至少有一个 h1 或段落）
-              const hasContent = contentElement && (
-                contentElement.querySelector('h1') || 
-                contentElement.querySelector('p') ||
-                contentElement.children.length > 0
-              )
-              
-              if (hasContent && checkCount > 2) {
-                // 内容已渲染，等待一小段时间确保完整
-                setTimeout(() => {
-                  if (!loaded) {
-                    loaded = true
-                    clearTimeout(timeout)
-                    const extracted = extractContentFromDocument(iframeDoc, fullPath)
-                    if (iframe.parentNode) {
-                      document.body.removeChild(iframe)
-                    }
-                    resolve(extracted)
-                  }
-                }, 300)
-              } else if (checkCount < maxChecks) {
-                // 如果内容还没渲染，继续等待
-                setTimeout(checkContent, 200)
-              } else {
-                // 超时，尝试提取已有内容
-                if (!loaded) {
-                  loaded = true
-                  clearTimeout(timeout)
-                  const extracted = extractContentFromDocument(iframeDoc, fullPath)
-                  if (iframe.parentNode) {
-                    document.body.removeChild(iframe)
-                  }
-                  resolve(extracted)
-                }
-              }
-            }
-            
-            // 初始等待 500ms，然后开始检查
-            setTimeout(checkContent, 500)
-          } catch (error) {
-            console.error('Failed to extract content from iframe:', error)
-            if (!loaded) {
-              loaded = true
-              clearTimeout(timeout)
-              if (iframe.parentNode) {
-                document.body.removeChild(iframe)
-              }
-              resolve(null)
-            }
-          }
-        }
-        
-        iframe.onerror = () => {
-          if (loaded) return
-          loaded = true
-          clearTimeout(timeout)
-          if (iframe.parentNode) {
-            document.body.removeChild(iframe)
-          }
-          resolve(null)
-        }
-        
-        iframe.src = fullPath
-        document.body.appendChild(iframe)
-      } catch (error) {
-        console.error('Failed to load article content:', error)
-        resolve(null)
-      }
-    })
-  }
+  // 优先使用传入的函数，如果没有则尝试注入（必须在 setup 上下文中）
+  let loadArticleForPreview: ((path: string) => Promise<{ title: string; content: string } | null>) | null = null
   
-  /**
-   * 从文档中提取文章标题和内容
-   */
-  function extractContentFromDocument(doc: Document, articlePath?: string): { title: string; content: string } | null {
-    // 查找文章标题（通常是 h1 或 .vp-doc h1）
-    const titleElement = doc.querySelector('h1, .vp-doc h1, .VPContent h1, main h1')
-    const title = titleElement?.textContent?.trim() || '文章预览'
-    
-    // 查找文章内容区域
-    const contentElement = doc.querySelector('.vp-doc, .VPContent main, main .vp-doc')
-    if (!contentElement) {
-      return null
-    }
-    
-    // 克隆内容元素
-    const clonedContent = contentElement.cloneNode(true) as HTMLElement
-    
-    // 移除导航、侧边栏等不需要的元素
-    clonedContent.querySelectorAll('nav, .VPSidebar, .VPNav, header, footer, .ArticleMetadata').forEach(el => el.remove())
-    
-    // 如果提供了文章路径，将第一个 h1 标题转换为可点击链接
-    if (articlePath && titleElement) {
-      const h1InContent = clonedContent.querySelector('h1')
-      if (h1InContent) {
-        // 规范化路径
-        let fullPath = articlePath.startsWith('/') ? articlePath : `/${articlePath}`
-        fullPath = fullPath.replace(/\/$/, '')
-        
-        // 创建链接包装 h1 的内容
-        const link = document.createElement('a')
-        link.href = fullPath
-        link.style.cssText = 'text-decoration: none; color: inherit; display: inline;'
-        link.title = '点击跳转到完整文章'
-        
-        // 复制 h1 的所有子节点到链接
-        while (h1InContent.firstChild) {
-          link.appendChild(h1InContent.firstChild)
-        }
-        
-        // 替换 h1 内容为链接
-        h1InContent.innerHTML = ''
-        h1InContent.appendChild(link)
-        
-        // 添加样式类，方便后续样式化
-        h1InContent.classList.add('article-preview-title-link')
-      }
-    }
-    
-    // 限制内容长度（显示前 3 个标题及其内容，最多 25 个元素）
-    const allElements = Array.from(clonedContent.children)
-    let elementCount = 0
-    let headingCount = 0
-    const maxElements = 25
-    const maxHeadings = 3
-    
-    const filteredElements: Element[] = []
-    for (const el of allElements) {
-      if (elementCount >= maxElements) break
-      
-      // 如果是标题元素
-      if (el.tagName.match(/^H[1-6]$/)) {
-        if (headingCount >= maxHeadings && headingCount > 0) {
-          break
-        }
-        headingCount++
-      }
-      
-      filteredElements.push(el)
-      elementCount++
-    }
-    
-    // 创建新的容器，只包含过滤后的元素
-    const container = document.createElement('div')
-    container.className = 'article-preview-extracted-content'
-    filteredElements.forEach(el => container.appendChild(el.cloneNode(true)))
-    
-    // 如果内容被截断了，添加提示
-    if (elementCount < allElements.length) {
-      const moreHint = document.createElement('p')
-      moreHint.className = 'article-preview-more-hint'
-      moreHint.style.cssText = 'color: var(--vp-c-text-2); font-style: italic; margin-top: 1rem; text-align: center;'
-      moreHint.textContent = '...'
-      container.appendChild(moreHint)
-    }
-    
-    return {
-      title,
-      content: container.innerHTML
-    }
+  try {
+    // 尝试注入，但如果不在 setup 上下文中会失败
+    loadArticleForPreview = loadArticleForPreviewFn || inject<((path: string) => Promise<{ title: string; content: string } | null>) | null>('loadArticleForPreview', null)
+  } catch (error) {
+    // 如果 inject 失败，使用传入的函数或 null
+    loadArticleForPreview = loadArticleForPreviewFn || null
   }
   
   async function handleLinkClick(e: Event) {
@@ -235,8 +31,16 @@ export function useArticlePreview(
     }
     
     // 检查是否在 .vp-doc 容器内（只处理文档内的链接）
+    // 注意：需要检查链接的原始位置，因为预览窗口打开后，链接可能被移动
     const docContent = document.querySelector('.vp-doc')
-    if (!docContent || !docContent.contains(link)) {
+    if (!docContent) return
+    
+    // 检查链接是否在 .vp-doc 容器内
+    // 如果链接有 data-article-reference 或 data-heading-id，说明它是正文中的链接，应该处理
+    const hasDataAttribute = link.hasAttribute('data-article-reference') || link.hasAttribute('data-heading-id')
+    const isInDocContent = docContent.contains(link)
+    
+    if (!isInDocContent && !hasDataAttribute) {
       return
     }
     
@@ -256,9 +60,7 @@ export function useArticlePreview(
     }
     
     // 如果 href 为空，也直接返回
-    if (!href) {
-      return
-    }
+    if (!href) return
     
     // 检查是否是外部链接
     if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:')) {
@@ -273,7 +75,6 @@ export function useArticlePreview(
     // 检查是否是内部链接（包含 # 且 # 后面有内容的锚点链接，或者正文中的文章引用链接）
     const hasAnchor = href.includes('#') && href !== '#' && href !== '#!'
     const isArticleReference = link.hasAttribute('data-article-reference') // 检查是否是正文中的文章引用
-    const isInternalLink = href.startsWith('/') || (!href.startsWith('http') && !href.startsWith('mailto:'))
     
     // 只有锚点链接或正文中的文章引用链接才处理
     if (!hasAnchor && !isArticleReference) {
@@ -289,9 +90,12 @@ export function useArticlePreview(
       const headingId = link.getAttribute('data-heading-id')
       const anchor = headingId || decodeURIComponent(href.split('#')[1] || '')
       
+      // 尝试在多个位置查找标题
+      // 1. 首先在当前页面的 .vp-doc 中查找
+      let heading: Element | null = null
+      const docContent = document.querySelector('.vp-doc')
+      
       if (docContent) {
-        let heading: Element | null = null
-        
         if (headingId) {
           heading = docContent.querySelector(`#${headingId}`)
         } else if (anchor) {
@@ -300,13 +104,25 @@ export function useArticlePreview(
             return id === anchor || id.includes(anchor) || anchor.includes(id)
           }) || null
         }
+      }
+      
+      // 2. 如果没找到，尝试在整个文档中查找（可能链接不在 .vp-doc 内，但标题在）
+      if (!heading) {
+        if (headingId) {
+          heading = document.querySelector(`#${headingId}`)
+        } else if (anchor) {
+          heading = Array.from(document.querySelectorAll('h2, h3, h4, h5, h6')).find((h) => {
+            const id = h.getAttribute('id') || ''
+            return id === anchor || id.includes(anchor) || anchor.includes(id)
+          }) || null
+        }
+      }
 
-        if (heading) {
-          const extracted = extractContentFromDOM(heading)
-          if (extracted) {
-            showPreview(extracted.title, extracted.html)
-            return
-          }
+      if (heading) {
+        const extracted = extractContentFromDOM(heading)
+        if (extracted) {
+          showPreview(extracted.title, extracted.html)
+          return
         }
       }
 
@@ -320,7 +136,6 @@ export function useArticlePreview(
     if (!hasAnchor && isArticleReference) {
       // 必须提供 loadArticleForPreview 函数才能加载文章
       if (!loadArticleForPreview) {
-        console.warn('loadArticleForPreview function not available, cannot load article content for:', href)
         return
       }
       
@@ -337,7 +152,6 @@ export function useArticlePreview(
           showPreview('加载失败', '<p>无法加载文章内容，请检查链接是否正确。</p>')
         }
       } catch (error) {
-        console.error('Failed to load article content:', error)
         showPreview('加载失败', '<p>无法加载文章内容，请检查链接是否正确。</p>')
       }
       return
@@ -553,34 +367,66 @@ export function useArticlePreview(
     }
   }
   
-  // 设置和移除监听器的辅助函数
-  function setup() {
+  // 防抖用的取消标记
+  let enrichCancelToken: { cancelled: boolean } | null = null
+  
+  // 防抖执行 enrichLinks（使用协程等待机制）
+  async function debouncedEnrichLinks() {
+    // 取消之前的执行
+    if (enrichCancelToken) {
+      enrichCancelToken.cancelled = true
+    }
+    
+    // 创建新的取消标记
+    const cancelToken = { cancelled: false }
+    enrichCancelToken = cancelToken
+    
+    // 使用协程等待机制：等待延迟信号
+    // 这样可以确保异步操作按顺序执行
+    try {
+      await delay(50)
+      
+      // 检查是否被取消
+      if (!cancelToken.cancelled) {
+        enrichLinks()
+        enrichCancelToken = null
+      }
+    } catch (error) {
+      enrichCancelToken = null
+      throw error
+    }
+  }
+  
+  // 设置和移除监听器的辅助函数（使用协程等待机制）
+  async function setup() {
     // 立即移除旧的监听器，避免重复
     removeLinkListeners()
     
     // 立即设置监听器，不延迟
     setupLinkListeners()
     
-    // 延迟 enrichLinks，确保 DOM 已渲染
-    setTimeout(() => {
-      // 给链接添加 data 属性和事件监听器
-      enrichLinks()
-      // 再次设置监听器，确保新添加的链接也被拦截
-      setupLinkListeners()
-    }, 100)
+    // 使用协程等待机制：等待 DOM 渲染完成
+    // 首先等待一个初始延迟
+    await delay(100)
+    
+    // 等待 .vp-doc 容器存在
+    await waitForCondition(
+      () => document.querySelector('.vp-doc') !== null,
+      10, // 每 10ms 检查一次
+      5000 // 最多等待 5 秒
+    )
+    
+    // 给链接添加 data 属性和事件监听器
+    enrichLinks()
+    
+    // 再次设置监听器，确保新添加的链接也被拦截
+    setupLinkListeners()
     
     // 使用 MutationObserver 监听 DOM 变化，确保新添加的链接也被拦截
-    // 使用防抖优化性能
-    let enrichTimer: ReturnType<typeof setTimeout> | null = null
+    // 使用协程等待机制实现防抖
     const observer = new MutationObserver(() => {
-      // 防抖：延迟执行enrichLinks，避免频繁调用
-      if (enrichTimer) {
-        clearTimeout(enrichTimer)
-      }
-      enrichTimer = setTimeout(() => {
-        // 重新 enrich 链接
-        enrichLinks()
-      }, 50)
+      // 防抖：使用 debouncedEnrichLinks（内部使用协程等待）
+      debouncedEnrichLinks()
     })
     
     const docContent = document.querySelector('.vp-doc')

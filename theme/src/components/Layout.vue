@@ -42,7 +42,7 @@ async function loadArticleForPreview(articlePath: string): Promise<{ title: stri
           }
           resolve(null)
         }
-      }, 8000) // 8 秒超时
+      }, 60000) // 60 秒超时
       
       iframe.onload = () => {
         if (loaded) return
@@ -324,7 +324,7 @@ onMounted(() => {
     originalPushState.apply(window.history, args)
     
     // 延迟检查，确保URL已更新
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       const path = route.path
       const isTagsPage = path?.startsWith('/tags')
       
@@ -343,14 +343,14 @@ onMounted(() => {
         const newTagParam = getTagParam()
         currentTag.value = newTagParam
       }
-    }, 0)
+    })
   }
   
   window.history.replaceState = function(...args) {
     originalReplaceState.apply(window.history, args)
     
     // 延迟检查，确保URL已更新
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       const path = route.path
       const isTagsPage = path?.startsWith('/tags')
       
@@ -369,7 +369,7 @@ onMounted(() => {
         const newTagParam = getTagParam()
         currentTag.value = newTagParam
       }
-    }, 0)
+    })
   }
   
   // 清理函数

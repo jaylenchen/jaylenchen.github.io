@@ -92,9 +92,6 @@ function checkIsTagsPage(): boolean {
 
 // 使用 ref 而不是 computed，避免在初始化时访问 route
 const isTagsPage = ref(false)
-const isTagsPageStyle = computed(() => {
-  return isTagsPage.value
-})
 
 // 移动端不启用拖拽功能，卡片固定位置
 
@@ -323,7 +320,6 @@ onMounted(() => {
       }
     } catch (error) {
       // 如果 useRoute 不可用，只使用 DOM 和 location 判断
-      console.debug('Route watch not available, using DOM-based detection only')
     }
   })
 })
@@ -360,20 +356,6 @@ async function initMermaid() {
     mermaidBlocks = fragment.querySelectorAll('code') || new NodeList()
   }
   
-  // 调试：输出容器内容和找到的代码块
-  if (typeof import.meta !== 'undefined' && (import.meta as any).env?.DEV) {
-    console.debug('Mermaid init debug:', {
-      containerHTML: container.innerHTML.substring(0, 500),
-      allPreCode: container.querySelectorAll('pre code').length,
-      allCode: container.querySelectorAll('code').length,
-      mermaidBlocksCount: mermaidBlocks.length,
-      mermaidBlocks: Array.from(mermaidBlocks).map(b => ({
-        className: b.className,
-        textContent: b.textContent?.substring(0, 50)
-      }))
-    })
-  }
-  
   if (mermaidBlocks.length === 0) return
 
   try {
@@ -391,7 +373,6 @@ async function initMermaid() {
       })
     } catch (e) {
       // 如果已经初始化，忽略错误
-      console.debug('Mermaid already initialized or initialization failed:', e)
     }
 
     // 处理每个 mermaid 代码块
@@ -430,13 +411,12 @@ async function initMermaid() {
           mermaidContainer.innerHTML = svg
         }
       } catch (error) {
-        console.warn('Failed to render mermaid:', error)
         // 如果渲染失败，保留原始代码
         mermaidContainer.textContent = code
       }
     }
   } catch (error) {
-    console.warn('Failed to load mermaid:', error)
+    // 忽略 mermaid 加载错误
   }
 }
 
@@ -517,12 +497,10 @@ async function initCodeHighlight() {
           }
         }
       } catch (error) {
-        console.warn(`Failed to highlight code block (${lang}):`, error)
         // 如果高亮失败，至少保留原始代码块
       }
     }
   } catch (error) {
-    console.warn('Failed to load Shiki:', error)
   }
 }
 
@@ -621,11 +599,8 @@ async function show(anchorTitle: string, anchorContent: string) {
     }
   } else {
     // 窗口已经打开，保持可见状态，只更新内容
-    // 直接操作 DOM 确保内容更新（因为 v-html 可能不会触发更新）
+    // 不在这里清空，统一在下面处理
     await nextTick()
-    if (contentRef.value) {
-      contentRef.value.innerHTML = anchorContent
-    }
   }
   
   // 等待 DOM 更新
@@ -636,6 +611,28 @@ async function show(anchorTitle: string, anchorContent: string) {
   
   // 确保内容已更新（对于已打开的窗口，需要等待 Vue 响应式更新）
   await nextTick()
+  
+  // 如果窗口已打开，直接操作 DOM 更新内容
+  if (wasVisible && contentRef.value) {
+    // 先移除内容，强制触发更新
+    contentRef.value.innerHTML = ''
+    await nextTick()
+    
+    // 再设置新内容
+    contentRef.value.innerHTML = anchorContent
+    await nextTick()
+    
+    // 验证内容是否正确设置
+    if (contentRef.value.innerHTML.length === 0) {
+      // 重试一次
+      contentRef.value.innerHTML = anchorContent
+      await nextTick()
+    }
+    
+    // 通过更新 key 强制重新渲染
+    contentKey.value++
+    await nextTick()
+  }
   
   // 如果保存了高度，应用最小高度以保持位置
   if (savedCardHeight.value) {
@@ -651,6 +648,7 @@ async function show(anchorTitle: string, anchorContent: string) {
   
   // 然后初始化代码高亮（排除 mermaid 代码块）
   await initCodeHighlight()
+  await nextTick()
   
   // 设置预览窗口内标题链接的点击处理
   await nextTick()
