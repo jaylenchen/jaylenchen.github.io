@@ -316,6 +316,9 @@ namespace SiteConfig {
       // 资源提示
       ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover' }],
       ['meta', { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' }],
+      // Vercel Speed Insights - 添加在 head 底部，靠近 body 标签
+      ['script', {}, `window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };`],
+      ['script', { defer: 'true', src: '/_vercel/speed-insights/script.js' }],
     ],
     rewrites: {
       'technology/project/gepick/index.md': 'technology/project/gepick.md',

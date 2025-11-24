@@ -61,12 +61,12 @@ export function useArticlePreview(
     
     // 如果 href 为空，也直接返回
     if (!href) return
-    
+
     // 检查是否是外部链接
     if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:')) {
       return
     }
-    
+
     // 排除 href="#" 这种占位链接
     if (href === '#' || href === '#!') {
       return
@@ -88,21 +88,21 @@ export function useArticlePreview(
     // 处理锚点链接（当前页面的锚点）
     if (hasAnchor) {
       const headingId = link.getAttribute('data-heading-id')
-      const anchor = headingId || decodeURIComponent(href.split('#')[1] || '')
-      
+    const anchor = headingId || decodeURIComponent(href.split('#')[1] || '')
+    
       // 尝试在多个位置查找标题
       // 1. 首先在当前页面的 .vp-doc 中查找
       let heading: Element | null = null
       const docContent = document.querySelector('.vp-doc')
       
       if (docContent) {
-        if (headingId) {
-          heading = docContent.querySelector(`#${headingId}`)
-        } else if (anchor) {
-          heading = Array.from(docContent.querySelectorAll('h2, h3, h4, h5, h6')).find((h) => {
-            const id = h.getAttribute('id') || ''
-            return id === anchor || id.includes(anchor) || anchor.includes(id)
-          }) || null
+      if (headingId) {
+        heading = docContent.querySelector(`#${headingId}`)
+      } else if (anchor) {
+        heading = Array.from(docContent.querySelectorAll('h2, h3, h4, h5, h6')).find((h) => {
+          const id = h.getAttribute('id') || ''
+          return id === anchor || id.includes(anchor) || anchor.includes(id)
+        }) || null
         }
       }
       
@@ -127,7 +127,7 @@ export function useArticlePreview(
       }
 
       // 如果找不到锚点内容，显示提示
-      showPreview('未找到内容', '<p>无法在当前页面找到对应的章节内容。</p>')
+    showPreview('未找到内容', '<p>无法在当前页面找到对应的章节内容。</p>')
       return
     }
     
@@ -420,7 +420,7 @@ export function useArticlePreview(
     enrichLinks()
     
     // 再次设置监听器，确保新添加的链接也被拦截
-    setupLinkListeners()
+      setupLinkListeners()
     
     // 使用 MutationObserver 监听 DOM 变化，确保新添加的链接也被拦截
     // 使用协程等待机制实现防抖

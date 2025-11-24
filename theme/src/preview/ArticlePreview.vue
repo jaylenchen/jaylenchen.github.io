@@ -564,20 +564,20 @@ async function show(anchorTitle: string, anchorContent: string) {
         visible.value = false // 先隐藏，等处理完再显示
       } else {
         // 移动端：保持顶部定位
-        position.value = { x: 0, y: 0 }
+    position.value = { x: 0, y: 0 }
         savedCardHeight.value = null
         visible.value = false // 先隐藏，等处理完再显示
-      }
+  }
     } else {
       // PC端：正文预览也统一使用右下角位置
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || 
                        (window.matchMedia && window.matchMedia('(max-width: 959px)').matches)
-      
+  
       if (!isMobile) {
         // PC端：正文预览也定位在右下角
         visible.value = false
-        await nextTick()
-        
+  await nextTick()
+  
         // 计算右下角位置并直接设置
         const cardWidth = 520 // PC端卡片宽度
         const cardHeight = 600 // PC端统一卡片高度
@@ -606,7 +606,7 @@ async function show(anchorTitle: string, anchorContent: string) {
   // 等待 DOM 更新
   if (!wasVisible) {
     await nextTick()
-    visible.value = true
+  visible.value = true
   }
   
   // 确保内容已更新（对于已打开的窗口，需要等待 Vue 响应式更新）
