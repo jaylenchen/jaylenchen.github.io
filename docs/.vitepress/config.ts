@@ -401,10 +401,14 @@ namespace SiteConfig {
         rollupOptions: {
           output: {
             manualChunks: (id) => {
-              // Ant Design Vue
-              if (id.includes('ant-design-vue')) {
-                return 'ant-design';
+              // 不要分割 vitepress 和 vue 的核心代码，避免初始化顺序问题
+              if (id.includes('vitepress/theme') || id.includes('vitepress/client')) {
+                return
               }
+              if (id.includes('vue/dist') || id.includes('@vue/')) {
+                return
+              }
+              
               // Mermaid
               if (id.includes('mermaid')) {
                 return 'mermaid';
@@ -413,14 +417,11 @@ namespace SiteConfig {
               if (id.includes('mathjax')) {
                 return 'mathjax';
               }
-              // Vue 核心
-              if (id.includes('vue') && !id.includes('node_modules')) {
-                return 'vue-core';
-              }
-              // node_modules 中的其他大型库
+              // node_modules 中的其他大型库（排除 vitepress 和 vue）
               if (id.includes('node_modules')) {
-                if (id.includes('vitepress')) {
-                  return 'vitepress';
+                // 跳过 vitepress 和 vue 相关，让它们保持在一起
+                if (id.includes('vitepress') || id.includes('vue')) {
+                  return
                 }
                 return 'vendor';
               }

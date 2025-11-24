@@ -39,14 +39,6 @@ import { ref, watch, nextTick, computed, onMounted, onUnmounted } from 'vue'
 import { useData, useRoute } from 'vitepress'
 
 const { isDark } = useData()
-const route = useRoute()
-
-// 监听路由变化，自动关闭预览窗口
-watch(() => route.path, () => {
-  if (visible.value) {
-    close()
-  }
-})
 
 const visible = ref(false)
 const title = ref('')
@@ -69,12 +61,35 @@ const justFinishedDragging = ref(false)
 // 记录卡片高度，用于在内容切换时保持位置
 const savedCardHeight = ref<number | null>(null)
 
-// 检测是否在标签页面
-const isTagsPage = computed(() => {
-  return route.path?.startsWith('/tags') || document.querySelector('.tags__layout') !== null
-})
+// 检测是否在标签页面（使用函数形式，延迟访问 route，避免初始化顺序问题）
+function checkIsTagsPage(): boolean {
+  try {
+    if (typeof document === 'undefined') return false
+    // 优先通过 DOM 判断，避免依赖 route
+    if (document.querySelector('.tags__layout') !== null) {
+      return true
+    }
+    // 其次通过 location 判断
+    if (typeof window !== 'undefined' && window.location?.pathname?.startsWith('/tags')) {
+      return true
+    }
+    // 最后尝试使用 route（如果可用）
+    try {
+      const routeInstance = useRoute()
+      if (routeInstance?.path?.startsWith('/tags')) {
+        return true
+      }
+    } catch {
+      // route 可能还没初始化，忽略错误
+    }
+    return false
+  } catch {
+    return false
+  }
+}
 
-// 标签页面特殊样式：窗口高度更长
+// 使用 ref 而不是 computed，避免在初始化时访问 route
+const isTagsPage = ref(false)
 const isTagsPageStyle = computed(() => {
   return isTagsPage.value
 })
@@ -170,7 +185,7 @@ function handleMouseMove(e: MouseEvent) {
     const minVisibleWidth = 0 // 减小以允许更大的拖拽范围
     const minVisibleHeight = 0 // 减小以允许更大的拖拽范围
     const defaultCardWidth = 520
-    const defaultCardHeight = 450 // 默认卡片高度
+    const defaultCardHeight = 600 // 统一卡片高度
     
     const maxX = window.innerWidth / 2 - minVisibleWidth - defaultCardWidth / 2
     const minX = -(window.innerWidth / 2 - minVisibleWidth - defaultCardWidth / 2)
@@ -289,7 +304,26 @@ function handleResize() {
 
 // 组件卸载时清理事件监听
 onMounted(() => {
+  // 更新标签页状态
+  isTagsPage.value = checkIsTagsPage()
+  
   window.addEventListener('resize', handleResize)
+  
+  // 监听路由变化以更新标签页状态（路由关闭逻辑由 Layout 组件处理）
+  nextTick(() => {
+    try {
+      const routeInstance = useRoute()
+      if (routeInstance) {
+        // 监听路由变化，更新标签页状态
+        watch(() => routeInstance?.path, () => {
+          isTagsPage.value = checkIsTagsPage()
+        })
+      }
+    } catch (error) {
+      // 如果 useRoute 不可用，只使用 DOM 和 location 判断
+      console.debug('Route watch not available, using DOM-based detection only')
+    }
+  })
 })
 
 onUnmounted(() => {
@@ -512,8 +546,10 @@ async function show(anchorTitle: string, anchorContent: string) {
   // 只有在弹窗之前是关闭状态时才重置位置到初始状态
   // 如果弹窗已经打开，保持当前位置不变
   if (!wasVisible) {
-    // 检测是否在标签页面（PC端），如果是，先移动到右下角再显示，避免闪烁
-    if (isTagsPage.value) {
+    // 实时检测是否在标签页面（PC端），如果是，先移动到右下角再显示，避免闪烁
+    const isCurrentlyTagsPage = checkIsTagsPage()
+    
+    if (isCurrentlyTagsPage) {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || 
                        (window.matchMedia && window.matchMedia('(max-width: 959px)').matches)
       
@@ -551,9 +587,33 @@ async function show(anchorTitle: string, anchorContent: string) {
         visible.value = false // 先隐藏，等处理完再显示
       }
     } else {
-      position.value = { x: 0, y: 0 }
-      savedCardHeight.value = null
-      visible.value = false // 先隐藏，等处理完再显示
+      // PC端：正文预览也统一使用右下角位置
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || 
+                       (window.matchMedia && window.matchMedia('(max-width: 959px)').matches)
+      
+      if (!isMobile) {
+        // PC端：正文预览也定位在右下角
+        visible.value = false
+        await nextTick()
+        
+        // 计算右下角位置并直接设置
+        const cardWidth = 520 // PC端卡片宽度
+        const cardHeight = 600 // PC端统一卡片高度
+        const padding = 20 // 距离边缘的间距
+        
+        const targetX = window.innerWidth / 2 - padding - cardWidth / 2
+        const targetY = window.innerHeight - padding - cardHeight
+        
+        position.value = { x: targetX, y: targetY }
+        await nextTick()
+        savedCardHeight.value = null
+        visible.value = false // 先隐藏，等处理完再显示
+      } else {
+        // 移动端：保持顶部定位
+        position.value = { x: 0, y: 0 }
+        savedCardHeight.value = null
+        visible.value = false // 先隐藏，等处理完再显示
+      }
     }
   } else {
     // 窗口已经打开，保持可见状态，只更新内容
@@ -718,7 +778,8 @@ watch(visible, (newVal) => {
 
 defineExpose({
   show,
-  close
+  close,
+  visible
 })
 </script>
 
@@ -742,10 +803,10 @@ defineExpose({
 .article-preview-card {
   width: 520px;
   max-width: 90vw;
-  max-height: 450px;
+  max-height: 600px; /* 统一使用标签页预览的高度 */
   height: auto;
   background: var(--vp-c-bg);
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
@@ -762,18 +823,7 @@ defineExpose({
   left: 50%; /* 初始居中，配合 transform: translate(-50%, ...) 使用 */
 }
 
-/* 标签页面特殊样式：窗口高度更长（PC端） */
-@media (min-width: 960px) {
-  /* 标签页面窗口更高 */
-  .article-preview-card.article-preview-card--tags-page {
-    max-height: 600px !important; /* 默认450px */
-  }
-  
-  /* 标签页面的内容区域也需要相应增加高度 */
-  .article-preview-overlay .article-preview-card.article-preview-card--tags-page .article-preview-content {
-    max-height: 520px !important; /* 默认350px，现在是520px（600px - 80px头部） */
-  }
-}
+/* 标签页面特殊样式：窗口高度更长（PC端） - 已统一，不再需要特殊样式 */
 
 /* 移动端适配 */
 @media (max-width: 959px) {
@@ -785,15 +835,7 @@ defineExpose({
     touch-action: auto; /* 允许默认触摸行为，支持内容滚动 */
   }
   
-  /* 标签页面移动端特殊样式：窗口高度更高 */
-  .article-preview-card.article-preview-card--tags-page {
-    max-height: 45vh !important; /* 标签页面移动端高度为视口的 45% */
-  }
-  
-  /* 标签页面的内容区域也需要相应增加高度 */
-  .article-preview-overlay .article-preview-card.article-preview-card--tags-page .article-preview-content {
-    max-height: calc(45vh - 60px) !important; /* 标签页面内容区域更高 */
-  }
+  /* 标签页面移动端特殊样式：窗口高度更高 - 已统一，不再需要特殊样式 */
 }
 
 @media (max-width: 640px) {
@@ -805,15 +847,7 @@ defineExpose({
     touch-action: auto; /* 允许默认触摸行为，支持内容滚动 */
   }
   
-  /* 标签页面小屏幕移动端特殊样式：窗口高度更高 */
-  .article-preview-card.article-preview-card--tags-page {
-    max-height: 45vh !important; /* 标签页面移动端高度为视口的 45% */
-  }
-  
-  /* 标签页面的内容区域也需要相应增加高度 */
-  .article-preview-overlay .article-preview-card.article-preview-card--tags-page .article-preview-content {
-    max-height: calc(45vh - 50px) !important; /* 标签页面内容区域更高 */
-  }
+  /* 标签页面小屏幕移动端特殊样式：窗口高度更高 - 已统一，不再需要特殊样式 */
 }
 
 /* 桌面端拖拽光标 */
@@ -897,7 +931,7 @@ defineExpose({
   -webkit-font-smoothing: antialiased; /* 与外部正文一致 */
   -moz-osx-font-smoothing: grayscale; /* 与外部正文一致 */
   text-rendering: optimizeLegibility; /* 与外部正文一致 */
-  max-height: 350px;
+  max-height: 520px; /* 统一使用标签页预览的内容区域高度（600px - 80px头部） */
   user-select: none; /* 禁用文本选择 */
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -925,10 +959,7 @@ defineExpose({
     max-height: calc(33vh - 60px); /* 移动端高度为视口的 1/3 */
   }
   
-  /* 标签页面的内容区域在移动端也更高 */
-  .article-preview-card--tags-page .article-preview-content {
-    max-height: calc(45vh - 60px) !important; /* 标签页面移动端内容区域更高 */
-  }
+  /* 移动端内容区域高度已统一，不再需要特殊样式 */
 }
 
 @media (max-width: 640px) {
@@ -939,10 +970,7 @@ defineExpose({
     max-height: calc(33vh - 50px); /* 移动端高度为视口的 1/3 */
   }
   
-  /* 标签页面的内容区域在小屏幕移动端也更高 */
-  .article-preview-card--tags-page .article-preview-content {
-    max-height: calc(45vh - 50px) !important; /* 标签页面移动端内容区域更高 */
-  }
+  /* 小屏幕移动端内容区域高度已统一，不再需要特殊样式 */
 }
 
 /* 确保使用 VitePress 的文档样式 */

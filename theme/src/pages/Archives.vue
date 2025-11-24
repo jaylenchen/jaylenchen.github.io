@@ -1,9 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive, ref, watch, nextTick, defineAsyncComponent } from 'vue'
-import { Tag } from 'ant-design-vue'
 import ArticleMetadata from '../components/ArticleMetadata.vue'
 
-import { goToArchivesPage } from '../utils/route';
 import { getQueryParam, getChineseZodiac, countUniqueArticles } from '../utils/utils';
 // @ts-ignore
 import { data as articleData } from '@blog/docs/article.data'

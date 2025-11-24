@@ -4,12 +4,13 @@ import { useData } from 'vitepress'
 
 const { theme, frontmatter } = useData()
 
+// 使用可选链和默认值，避免初始化顺序问题
 const isOriginal = ref(frontmatter.value?.isOriginal ?? true)
-const author = ref(frontmatter.value?.author ?? theme.value.customConfig.articleMetadataConfig.author)
-const authorLink = ref(frontmatter.value?.authorLink ?? theme.value.customConfig.articleMetadataConfig.authorLink)
+const author = ref(frontmatter.value?.author ?? theme.value?.customConfig?.articleMetadataConfig?.author ?? '')
+const authorLink = ref(frontmatter.value?.authorLink ?? theme.value?.customConfig?.articleMetadataConfig?.authorLink ?? '')
 const licenseLink = ref('https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en')
-const licenseText = ref(theme.value.customConfig.copyrightConfig?.license)
-const licenseDisplay = '自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）'
+const licenseText = ref(theme.value?.customConfig?.copyrightConfig?.license ?? '')
+const licenseDisplay = '自由转载-非商用-非衍生-保持署名（创意共享4.0许可证）'
 </script>
 
 <template>
