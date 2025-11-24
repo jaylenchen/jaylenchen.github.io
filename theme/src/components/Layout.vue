@@ -61,53 +61,104 @@ async function loadArticleForPreview(articlePath: string): Promise<{ title: stri
             return
           }
           
-          // 等待 VitePress 和 Vue 组件渲染完成
-          let checkCount = 0
-          const maxChecks = 15 // 最多检查 15 次（3 秒）
-          
-          const checkContent = () => {
-            checkCount++
+          // 检查内容是否已渲染的辅助函数
+          const hasContent = (): boolean => {
             const contentElement = iframeDoc.querySelector('.vp-doc')
-            
-            // 检查内容是否已渲染（至少有一个 h1 或段落）
-            const hasContent = contentElement && (
+            return !!(contentElement && (
               contentElement.querySelector('h1') || 
               contentElement.querySelector('p') ||
               contentElement.children.length > 0
-            )
-            
-            if (hasContent && checkCount > 2) {
-              // 内容已渲染，等待一小段时间确保完整
-              setTimeout(() => {
-                if (!loaded) {
-                  loaded = true
-                  clearTimeout(timeout)
-                  const extracted = extractContentFromDocument(iframeDoc, fullPath)
-                  if (iframe.parentNode) {
-                    document.body.removeChild(iframe)
-                  }
-                  resolve(extracted)
-                }
-              }, 300)
-            } else if (checkCount < maxChecks) {
-              // 如果内容还没渲染，继续等待
-              setTimeout(checkContent, 200)
-            } else {
-              // 超时，尝试提取已有内容
-              if (!loaded) {
-                loaded = true
-                clearTimeout(timeout)
-                const extracted = extractContentFromDocument(iframeDoc, fullPath)
-                if (iframe.parentNode) {
-                  document.body.removeChild(iframe)
-                }
-                resolve(extracted)
-              }
+            ))
+          }
+          
+          // 提取内容并清理的函数
+          const extractAndResolve = () => {
+            if (loaded) return
+            loaded = true
+            clearTimeout(timeout)
+            const extracted = extractContentFromDocument(iframeDoc, fullPath)
+            if (iframe.parentNode) {
+              document.body.removeChild(iframe)
+            }
+            resolve(extracted)
+          }
+          
+          // 使用 MutationObserver 监听 DOM 变化（更高效）
+          let observer: MutationObserver | null = null
+          let fallbackTimer: ReturnType<typeof setTimeout> | null = null
+          
+          const cleanup = () => {
+            if (observer) {
+              observer.disconnect()
+              observer = null
+            }
+            if (fallbackTimer) {
+              clearTimeout(fallbackTimer)
+              fallbackTimer = null
             }
           }
           
-          // 初始等待 500ms，然后开始检查
-          setTimeout(checkContent, 500)
+          // 检查并处理内容的函数
+          const checkAndExtract = () => {
+            if (loaded) return
+            
+            if (hasContent()) {
+              cleanup()
+              // 内容已渲染，短暂等待确保完整（从 300ms 减少到 50ms）
+              setTimeout(extractAndResolve, 50)
+            }
+          }
+          
+          // 初始等待时间从 500ms 减少到 100ms
+          setTimeout(() => {
+            if (loaded) return
+            
+            // 先检查一次，可能内容已经渲染好了
+            if (hasContent()) {
+              cleanup()
+              setTimeout(extractAndResolve, 50)
+              return
+            }
+            
+            // 使用 MutationObserver 监听 body 或 .vp-doc 的变化
+            try {
+              const target = iframeDoc.body || iframeDoc.documentElement
+              if (target) {
+                observer = new MutationObserver(() => {
+                  checkAndExtract()
+                })
+                
+                observer.observe(target, {
+                  childList: true,
+                  subtree: true,
+                  attributes: false
+                })
+              }
+            } catch (e) {
+              // MutationObserver 不支持时回退到轮询
+            }
+            
+            // Fallback: 使用更短的轮询间隔（从 200ms 减少到 50ms）
+            let checkCount = 0
+            const maxChecks = 20 // 最多检查 20 次（1 秒）
+            
+            const pollCheck = () => {
+              if (loaded) return
+              
+              checkCount++
+              checkAndExtract()
+              
+              if (!loaded && checkCount < maxChecks) {
+                fallbackTimer = setTimeout(pollCheck, 50)
+              } else if (!loaded) {
+                // 超时，尝试提取已有内容
+                cleanup()
+                extractAndResolve()
+              }
+            }
+            
+            fallbackTimer = setTimeout(pollCheck, 50)
+          }, 100)
         } catch (error) {
           console.error('Failed to extract content from iframe:', error)
           if (!loaded) {
