@@ -684,16 +684,200 @@ TTL: Auto
 
 ### Cloudflare 加速原理
 
+#### 架构流程图
+
+```mermaid
+flowchart TB
+    subgraph User["👤 用户浏览器"]
+        Request[用户发起请求<br/>https://example.com]
+    end
+    
+    subgraph DNS["🌐 DNS 解析"]
+        DNSQuery[DNS 查询]
+        DNSQuery -->|代理开启<br/>橙色云朵| CFDNS[Cloudflare DNS<br/>返回 CF IP]
+        DNSQuery -->|代理关闭<br/>灰色云朵| DirectDNS[直接 DNS<br/>返回 Vercel IP]
+    end
+    
+    subgraph Cloudflare["☁️ Cloudflare CDN 网络"]
+        CFEdge[Cloudflare 边缘节点<br/>就近提供内容]
+        CacheCheck{检查缓存}
+        CacheHit[缓存命中<br/>✅ 直接从边缘返回]
+        CacheMiss[缓存未命中<br/>需要回源]
+    end
+    
+    subgraph Vercel["🚀 Vercel 源服务器"]
+        VercelServer[Vercel 应用服务器<br/>生成/返回内容]
+    end
+    
+    Request --> DNSQuery
+    CFDNS --> CFEdge
+    CFEdge --> CacheCheck
+    CacheCheck -->|缓存存在| CacheHit
+    CacheCheck -->|缓存过期或不存在| CacheMiss
+    CacheMiss --> VercelServer
+    VercelServer -->|回传内容| CFEdge
+    CFEdge -->|返回内容并缓存| User
+    CacheHit -->|直接返回| User
+    
+    DirectDNS -->|直接访问| VercelServer
+    VercelServer -->|直接返回| User
+    
+    style Request fill:#e1f5ff
+    style CFDNS fill:#fff3cd
+    style CFEdge fill:#d4edda
+    style CacheHit fill:#d1ecf1
+    style CacheMiss fill:#ffeaa7
+    style VercelServer fill:#f8d7da
+    style DirectDNS fill:#ffcccc
 ```
-用户请求
-  ↓
-Cloudflare Edge Network (全球 CDN 节点)
-  ↓ (缓存未命中时)
-Vercel 服务器
-  ↓
-Cloudflare Edge Network
-  ↓
-用户浏览器
+
+#### 简化流程图
+
+```mermaid
+sequenceDiagram
+    participant U as 👤 用户浏览器
+    participant CF as ☁️ Cloudflare CDN
+    participant V as 🚀 Vercel 服务器
+    
+    Note over U,V: 开启代理（橙色云朵）的流程
+    
+    U->>CF: 1. 请求 https://example.com
+    CF->>CF: 2. 检查边缘缓存
+    alt 缓存命中
+        CF->>U: 3a. 直接从边缘节点返回<br/>⚡ 快速响应
+    else 缓存未命中
+        CF->>V: 3b. 回源请求内容
+        V->>CF: 4. 返回内容
+        CF->>CF: 5. 缓存内容到边缘节点
+        CF->>U: 6. 返回内容给用户
+    end
+    
+    Note over U,V: 关闭代理（灰色云朵）的流程
+    
+    U->>V: 直接访问 Vercel<br/>❌ 无 CDN 加速
+    V->>U: 直接返回内容
+```
+
+#### 关键区别
+
+```mermaid
+graph TB
+    subgraph WithProxy["✅ 开启代理（橙色云朵）"]
+        A1[用户请求] --> A2[Cloudflare DNS<br/>返回 CF IP]
+        A2 --> A3[Cloudflare 边缘节点]
+        A3 --> A4{缓存检查}
+        A4 -->|命中| A5[⚡ 快速返回<br/>~50ms]
+        A4 -->|未命中| A6[回源 Vercel<br/>~200ms]
+        A6 --> A7[缓存并返回]
+    end
+    
+    subgraph WithoutProxy["❌ 关闭代理（灰色云朵）"]
+        B1[用户请求] --> B2[直接 DNS<br/>返回 Vercel IP]
+        B2 --> B3[直接访问 Vercel<br/>~300-500ms]
+        B3 --> B4[返回内容]
+    end
+    
+    style A5 fill:#d4edda
+    style A3 fill:#fff3cd
+    style B3 fill:#ffcccc
+    style B4 fill:#ffeaa7
+```
+
+#### DNS 配置原理详解
+
+**为什么 Cloudflare DNS 要指向 `vercel.cdn.yt-blog.top`？**
+
+```mermaid
+flowchart TB
+    subgraph User["👤 用户"]
+        Access[用户访问<br/>jaylenchen.com]
+    end
+    
+    subgraph CF_DNS["🌐 Cloudflare DNS 配置"]
+        CF_Record["DNS 记录配置<br/>@ CNAME → vercel.cdn.yt-blog.top<br/>www CNAME → vercel.cdn.yt-blog.top<br/>代理: 橙色云朵 ✅"]
+    end
+    
+    subgraph DNS_Query["DNS 查询过程"]
+        Query[浏览器发起 DNS 查询<br/>jaylenchen.com 的 IP 是多少?]
+        CF_Response[Cloudflare DNS 响应<br/>返回 Cloudflare 边缘节点的 IP<br/>例如: 104.x.x.x]
+    end
+    
+    subgraph CF_CDN["☁️ Cloudflare CDN 边缘节点"]
+        Connect[用户连接到<br/>Cloudflare 边缘节点]
+        CheckCache{检查缓存<br/>是否有内容?}
+        Hit[缓存命中<br/>⚡ 直接返回<br/>超快速度]
+        Miss[缓存未命中<br/>需要回源获取]
+    end
+    
+    subgraph Backend["后端服务器"]
+        VercelCDN[vercel.cdn.yt-blog.top<br/>这是 Vercel 的 CDN 域名]
+        VercelServer[Vercel 服务器<br/>实际存储内容的服务器]
+    end
+    
+    Access --> Query
+    Query --> CF_Record
+    CF_Record --> CF_Response
+    CF_Response --> Connect
+    Connect --> CheckCache
+    CheckCache -->|有缓存| Hit
+    CheckCache -->|无缓存| Miss
+    Miss --> VercelCDN
+    VercelCDN --> VercelServer
+    VercelServer -->|返回内容| VercelCDN
+    VercelCDN -->|缓存到边缘节点<br/>并返回| Connect
+    Connect -->|返回内容| Access
+    Hit --> Access
+    
+    style Access fill:#e1f5ff
+    style CF_Record fill:#fff3cd
+    style CF_Response fill:#d4edda
+    style Connect fill:#d4edda
+    style Hit fill:#d1ecf1
+    style Miss fill:#ffeaa7
+    style VercelCDN fill:#f8d7da
+    style VercelServer fill:#f8d7da
+```
+
+**DNS 指向关系说明**
+
+```mermaid
+flowchart LR
+    subgraph Why["为什么要指向 vercel.cdn.yt-blog.top?"]
+        A1[jaylenchen.com<br/>你的域名] 
+        A2["Cloudflare DNS<br/>@ CNAME → vercel.cdn.yt-blog.top"]
+        A3[vercel.cdn.yt-blog.top<br/>Vercel 的 CDN 域名]
+        A4[Vercel 服务器<br/>实际内容在这里]
+        
+        A1 -->|DNS 解析| A2
+        A2 -->|指向| A3
+        A3 -->|最终指向| A4
+        
+        Note1["原因: vercel.cdn.yt-blog.top<br/>是 Vercel 提供给你的<br/>CDN 域名, 它知道<br/>内容在哪里"]
+    end
+    
+    subgraph Flow["完整流程"]
+        B1[用户访问<br/>jaylenchen.com]
+        B2[Cloudflare DNS<br/>查询配置]
+        B3["返回 Cloudflare IP<br/>如果开启代理"]
+        B4[Cloudflare CDN<br/>边缘节点]
+        B5["回源到<br/>vercel.cdn.yt-blog.top"]
+        B6[获取内容]
+        
+        B1 --> B2
+        B2 --> B3
+        B3 --> B4
+        B4 -->|缓存未命中| B5
+        B5 --> B6
+        B6 -->|缓存并返回| B4
+        B4 -->|返回给用户| B1
+    end
+    
+    style A1 fill:#e1f5ff
+    style A2 fill:#fff3cd
+    style A3 fill:#f8d7da
+    style A4 fill:#d4edda
+    style B4 fill:#d4edda
+    style Note1 fill:#ffeaa7
 ```
 
 **优势**:

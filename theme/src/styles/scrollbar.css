@@ -6,30 +6,43 @@
    应用：侧边栏、内容区、代码块等滚动区域
    ============================================ */
 
-/* slim scroll bar for windows based web browsers - works on firefox */
+/* Firefox 滚动条样式 - 已确认生效 */
 * {
-  scrollbar-color: var(--vp-c-gutter) var(--vp-button-alt-bg);
-  scrollbar-width: thin;
+  scrollbar-color: var(--vp-c-gutter) transparent;
 }
 
-/* slim scroll bar for windows based web browsers - works on chrome, edge, and safari */
+/* WebKit 滚动条样式（Chrome、Edge、Safari） */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 8px !important;
+  height: 8px !important;
 }
 
-/* scrolling handle */
+/* 防止 hover 时宽度变大 */
+::-webkit-scrollbar:hover,
+::-webkit-scrollbar:active {
+  width: 8px !important;
+  height: 8px !important;
+}
+
+/* 滚动条滑块 */
 ::-webkit-scrollbar-thumb {
-  background: var(--vp-c-gutter);
+  background: var(--vp-c-gutter) !important;
+  border-radius: 4px;
+  transition: background 0.2s ease;
 }
 
-/* handle on hover */
+/* 滚动条滑块 hover - 与 normal 状态一致 */
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--vp-button-alt-hover-bg);
+  background: rgba(0, 0, 0, 0.12) !important;
+  border-radius: 4px;
 }
 
-/* scrolling track/backgronund color */
+/* 滚动条轨道 - 透明以匹配背景色 */
 ::-webkit-scrollbar-track {
-  background: var(--vp-button-alt-bg);
+  background: transparent !important;
 }
 
+/* 确保 hover 时轨道也保持透明 */
+*:hover::-webkit-scrollbar-track {
+  background: transparent !important;
+}
