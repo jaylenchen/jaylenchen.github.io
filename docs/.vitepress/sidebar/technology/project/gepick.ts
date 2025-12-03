@@ -34,6 +34,7 @@ export namespace Gepick {
       items: [
         item(ai('designing-chat-session-data-model')),
         item(ai('designing-cross-process-streaming-response-mechanism')),
+        item(ai('handling-variable-cycles-in-prompt-engine')),
         {
           text: 'Agent框架之Prompt模板引擎的设计与实现'
         },

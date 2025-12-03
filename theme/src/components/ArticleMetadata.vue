@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, useAttrs } from 'vue'
+import { ref, computed, useAttrs, onMounted, watch } from 'vue'
 import { useData, useRoute } from 'vitepress'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
@@ -10,7 +10,9 @@ import DateSvg from '../assets/svgs/date.svg'
 import AuthorSvg from '../assets/svgs/author.svg'
 import ProjectSvg from '../assets/svgs/project.svg'
 import TagSvg from '../assets/svgs/tag.svg'
+import ViewCountSvg from '../assets/svgs/view-count.svg'
 import { goToArchivesPage, goToTagsPage } from '../utils/route';
+import { getArticleViewCount } from '../services/article';
 
 
 interface Props {
@@ -18,6 +20,8 @@ interface Props {
     date: string
     project: string
     tags: string[]
+    path?: string
+    id?: string
   }
 }
 
@@ -33,11 +37,35 @@ dayjs.locale('zh-cn')
 const date = ref(props.article?.date ? new Date(props.article?.date) : new Date())
 const project = ref(props.article?.project ?? '')
 const tags = ref(props.article?.tags ?? [])
+const viewCount = ref<number | null>(null)
+const isLoadingViewCount = ref(false)
+
 const isTagsContext = computed(() => {
   const cls = attrs.class
   return typeof cls === 'string' && cls.split(' ').includes('tags-meta')
 })
 const displayTags = computed(() => (isTagsContext.value ? [] : tags.value))
+
+// 获取文章 ID 和 URL
+const articleId = computed(() => {
+  // 优先使用 article.id，否则使用 path 的 hash 值，或者直接使用 path
+  if (props.article?.id) {
+    return props.article.id
+  }
+  if (props.article?.path) {
+    // 使用 path 作为 ID（后端可能需要处理）
+    return props.article.path
+  }
+  // 如果在文章页面，使用当前路由路径
+  return route.path || ''
+})
+
+const articleUrl = computed(() => {
+  if (props.article?.path) {
+    return props.article.path
+  }
+  return route.path || ''
+})
 
 // 判断是否在首页或 Tags 页面
 const isListPage = computed(() => {
@@ -60,6 +88,34 @@ function handleTagClick(e: Event, tag: string) {
   goToTagsPage(tag)
 }
 
+// 获取浏览量
+function fetchViewCount() {
+  if (!articleId.value || !articleUrl.value) {
+    return
+  }
+  
+  isLoadingViewCount.value = true
+  getArticleViewCount(articleId.value, articleUrl.value, (data: any) => {
+    isLoadingViewCount.value = false
+    if (data && typeof data === 'number') {
+      viewCount.value = data
+    } else if (data && data.viewCount !== undefined) {
+      viewCount.value = data.viewCount
+    }
+  })
+}
+
+// 组件挂载时获取浏览量
+onMounted(() => {
+  fetchViewCount()
+})
+
+// 监听文章路径变化，重新获取浏览量
+watch(() => props.article?.path, () => {
+  if (props.article?.path) {
+    fetchViewCount()
+  }
+})
 
 </script>
 
@@ -119,6 +175,16 @@ function handleTagClick(e: Event, tag: string) {
             }}</a>
           <span v-if="index !== displayTags.length - 1">｜</span>
         </span>
+      </span>
+    </div>
+
+    <!-- 浏览量 -->
+    <div v-if="viewCount !== null" class="meta-item">
+      <span class="meta-icon view-count">
+        <ViewCountSvg></ViewCountSvg>
+      </span>
+      <span class="meta-content">
+        {{ viewCount }}
       </span>
     </div>
 

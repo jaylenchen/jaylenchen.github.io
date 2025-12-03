@@ -23,6 +23,7 @@
   "/technology/common/rust/如何快速学习一个crate": "如何快速学习一个crate",
   "/technology/project/gepick/ai/designing-chat-session-data-model": "设计一个聊天会话的数据模型",
   "/technology/project/gepick/ai/designing-cross-process-streaming-response-mechanism": "设计一个跨进程流式响应机制",
+  "/technology/project/gepick/ai/handling-variable-cycles-in-prompt-engine": "检测和处理Prompt模板引擎中变量的循环依赖",
   "/technology/project/gepick/basic/design-pattern-review-and-think": "回顾与思考工程中应用到的模式",
   "/technology/project/gepick/basic/designing-cross-process-logging-system": "设计一个跨进程日志系统",
   "/technology/project/gepick/basic/designing-di-framework": "设计一个基于inversifyJS更易用的DI服务框架",
