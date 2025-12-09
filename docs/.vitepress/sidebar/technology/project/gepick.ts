@@ -14,6 +14,7 @@ export namespace Gepick {
         item(basic('designing-di-framework')),
         item(basic('designing-rpc-protocol')),
         item(basic('designing-ipc-channel')),
+        item(basic('design-pattern-review-and-think')),
       ]
     },
     {
@@ -25,7 +26,6 @@ export namespace Gepick {
         {
           text: '设计一个可插拔的插件系统'
         },
-        item(basic('design-pattern-review-and-think')),
       ]
     },
     {

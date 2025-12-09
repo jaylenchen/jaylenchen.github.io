@@ -50,8 +50,8 @@ function initTags(articleData: string | any[]) {
           tags[articleTag] = [];
         }
         tags[articleTag].push(article);
-        // 文章按发布时间降序排序
-        tags[articleTag].sort((a: { date: any; }, b: { date: string; }) => b.date.localeCompare(a.date));
+        // 文章按发布时间降序排序（从最新到最旧）
+        tags[articleTag].sort((a: { date: any; }, b: { date: string; }) => new Date(b.date).getTime() - new Date(a.date).getTime());
       });
     }
   }

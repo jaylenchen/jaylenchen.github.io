@@ -609,7 +609,11 @@ const allYearEntries = computed(() => {
           const monthB = Number(String(b).replace(/[^\d]/g, '')) || 0;
           return monthB - monthA;
         })
-        .map((monthKey) => ({ month: monthKey, articles: months[monthKey] }));
+        .map((monthKey) => {
+          // 确保月份内的文章按时间降序排序（从最新到最旧）
+          const articles = [...months[monthKey]].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          return { month: monthKey, articles };
+        });
 
       const articleCount = monthEntries.reduce((total, monthEntry) => total + monthEntry.articles.length, 0);
 
@@ -632,7 +636,11 @@ const archiveEntries = computed(() => {
           const monthB = Number(String(b).replace(/[^\d]/g, '')) || 0;
           return monthB - monthA;
         })
-        .map((monthKey) => ({ month: monthKey, articles: months[monthKey] }));
+        .map((monthKey) => {
+          // 确保月份内的文章按时间降序排序（从最新到最旧）
+          const articles = [...months[monthKey]].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          return { month: monthKey, articles };
+        });
 
       const articleCount = monthEntries.reduce((total, monthEntry) => total + monthEntry.articles.length, 0);
 

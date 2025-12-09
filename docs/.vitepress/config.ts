@@ -12,6 +12,7 @@ import { installHeadingAutoNumber } from './markdown/heading-number'
 import { Gepick } from './sidebar/technology/project/gepick'
 import { Openwizard } from './sidebar/technology/project/openwizard'
 import { Thinkto } from './sidebar/technology/project/thinkto'
+import { JS } from './sidebar/technology/common/js'
 import { Docker } from './sidebar/technology/common/docker'
 import { Github } from './sidebar/technology/common/github'
 import { Mermaid } from './sidebar/technology/common/mermaid'
@@ -88,10 +89,11 @@ namespace ThemeConfig {
           {
             text: '通用',
             items: [
+              { text: 'JavaScript', link: JS.base, activeMatch: `^${JS.base.replace(/\/$/, '')}(\/|$)` },
+              { text: 'Rust', link: Rust.base, activeMatch: `^${Rust.base.replace(/\/$/, '')}(\/|$)` },
               { text: 'Docker', link: Docker.base, activeMatch: `^${Docker.base.replace(/\/$/, '')}(\/|$)` },
               { text: 'Github', link: Github.base, activeMatch: `^${Github.base.replace(/\/$/, '')}(\/|$)` },
               { text: 'Mermaid', link: Mermaid.base, activeMatch: `^${Mermaid.base.replace(/\/$/, '')}(\/|$)` },
-              { text: 'Rust', link: Rust.base, activeMatch: `^${Rust.base.replace(/\/$/, '')}(\/|$)` },
             ],
           },
         ],
@@ -117,6 +119,7 @@ namespace ThemeConfig {
       [Gepick.base]: Gepick.items,
       [Openwizard.base]: Openwizard.items,
       [Thinkto.base]: Thinkto.items,
+      [JS.base]: JS.items,
       [Docker.base]: Docker.items,
       [Github.base]: Github.items,
       [Mermaid.base]: Mermaid.items,
@@ -329,6 +332,7 @@ namespace SiteConfig {
       'technology/common/rust/index.md': 'technology/common/rust.md',
       'technology/common/mermaid/index.md': 'technology/common/mermaid.md',
       'technology/common/github/index.md': 'technology/common/github.md',
+      'technology/common/js/index.md': 'technology/common/js.md',
       'life/index.md': 'life.md'
     },
     markdown: {
