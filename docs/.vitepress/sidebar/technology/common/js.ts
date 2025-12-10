@@ -6,9 +6,11 @@ export namespace JS {
   export const basic = (subPath: string) => `${base}/${subPath.replace(/^\/+/, '')}`
 
   export const items: DefaultTheme.SidebarItem[] = [
-    item(basic('async-programming-patterns')),
+    item(basic('basic-promise')),
     item(basic('cancellation-token-source')),
-    item(basic('cancelable-promise'))
+    item(basic('cancelable-promise')),
+    item(basic('async-programming-patterns')),
+
   ]
 }
 

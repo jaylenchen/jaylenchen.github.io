@@ -2,7 +2,7 @@
 date: 2024/3/6
 project: js
 tags:
- - design
+ - async
 description: 介绍一种协作式取消机制。
 ---
 

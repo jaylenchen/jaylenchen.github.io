@@ -1146,6 +1146,7 @@ defineExpose({
   font-weight: 600;
 }
 
+/* 普通段落样式 - 排除 mermaid 图表内的 p 标签 */
 .article-preview-content :deep(p) {
   margin: 0 0 1.25rem !important;
   font-size: 0.9375rem !important; /* 比正文小一号 (15px，正文是 17px) */
@@ -1156,6 +1157,18 @@ defineExpose({
 /* 预览内容第一个段落也需要顶部间距 */
 .article-preview-content :deep(p:first-child) {
   margin-top: 1.5rem !important;
+}
+
+/* 确保 mermaid 图表内的 p 标签不受影响 - 使用更高优先级覆盖 */
+.article-preview-content :deep(.mermaid p),
+.article-preview-content :deep(.mermaid svg p),
+.article-preview-content :deep(.mermaid foreignObject p),
+.article-preview-content :deep(.mermaid .nodeLabel p),
+.article-preview-content :deep(.mermaid .edgeLabel p) {
+  margin: 0 !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
 }
 
 /* 如果第一个元素是标题链接，也需要顶部间距（已经设置了） */

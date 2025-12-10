@@ -14,6 +14,7 @@
   "/technology/common/github/index": "GitHub 工程实践",
   "/technology/common/github/探探Github Actions": "探探Github Actions",
   "/technology/common/js/async-programming-patterns": "异步编程中几种常见的经典应用模式",
+  "/technology/common/js/basic-promise": "Promise的认知细节",
   "/technology/common/js/cancelable-promise": "一种可取消的Promise：CancelablePromise",
   "/technology/common/js/cancellation-token-source": "一种协作式取消机制：CancellationTokenSource",
   "/technology/common/js/index": "JavaScript 编程实践",

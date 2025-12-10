@@ -16,9 +16,7 @@
 我们先用一个简单的例子来演示一下CancellationTokenSource的使用。
 
 ```ts
-const source = new CancellationTokenSource();
-
-function request(request:UserRequest, token: CancallationToken): Promise<SearchResponse> {
+function request(request:UserRequest, token: CancallationToken): Promise<LanguageModelResponse> {
   const stream = anthropic.messages.stream(params, { maxRetries: this.maxRetries });
 
   token.onCancellationRequest(() => {
@@ -27,6 +25,8 @@ function request(request:UserRequest, token: CancallationToken): Promise<SearchR
   
   ...
 }
+
+const source = new CancellationTokenSource();
   
 // 发起请求
 request(userRequest, source.token);
@@ -34,8 +34,9 @@ request(userRequest, source.token);
 // 取消请求
 source.cancel();
 ```
-上面代码中，我们通过`source.token`获取了一个取消令牌，然后通过`request`函数发起请求，请求过程中通过`token.onCancellationRequest`监听取消请求，当取消请求到来时，通过`stream.abort`取消请求。最后通过`source.cancel`取消请求。任务方`request`只需要等待取消请求到来，并做出相关回应和处理即可，而控制方只需要在合适的取消时机通过`source.cancel`来发起取消请求。两者完全解耦，任务方不需要知道控制方的具体实现，控制方也不需要知道任务方的具体实现，只需要通过`token`和`source`来完成取消操作。
+上面代码中，我们通过`source.token`获取了一个取消令牌，然后通过`request`函数发起请求，请求过程中通过`token.onCancellationRequest`监听取消请求，当取消请求到来时，通过`stream.abort`取消请求。最后通过`source.cancel`取消请求。
 
+对任务方来说，调用`request`函数后只需要等待取消请求到来，并做出相关回应和处理即可；而对控制方来说，只需要在合适的取消时机通过`source.cancel`来发起取消请求。两者完全解耦，任务方和控制方双方都不需要知道对方的具体实现，只需要通过`token`和`source`的配合来完成取消操作。两者的关系就是发布者(控制方)和订阅者(任务方)之间的关系，订阅者通过`token.onCancellationRequest`来监听取消请求，然后等待发布者通过`source.cancel`来发起取消请求。
 
 
 ## 实现
