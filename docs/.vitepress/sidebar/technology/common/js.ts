@@ -9,8 +9,6 @@ export namespace JS {
     item(basic('basic-promise')),
     item(basic('cancellation-token-source')),
     item(basic('cancelable-promise')),
-    item(basic('async-programming-patterns')),
-
   ]
 }
 
