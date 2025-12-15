@@ -3,7 +3,7 @@
 <details>
   <summary>前置知识</summary>
 
-- [Cancellation机制](/technology/common/js/cancellation-token-source)
+- [Cancellation机制](/technology/common/js/async/cancellation-token-source)
 </details>
 
 ## 背景
@@ -12,7 +12,7 @@
 
 ## 实现
 
-可取消`Promise`是基于[Cancellation机制](/technology/common/js/cancellation-token-source)配合原生`Promise`进行实现的，它其实是[Cancellation机制](/technology/common/js/cancellation-token-source)的一个实际应用封装。实际上通过`createCancelablePromise()`调用后获取到的`CancelablePromise`拥有原生`Promise`常用的`then`、`catch`、`finally`三个方法，而内部的实现无非就是这三个方法原路转发给原生`Promise`而已。而多出来的`cancel`方法就是新增的取消操作，核心逻辑还是[Cancellation机制](/technology/common/js/cancellation-token-source)的取消操作，即使用`cancellationTokenSource.cancel`方法发起取消请求。
+可取消`Promise`是基于[Cancellation机制](/technology/common/js/async/cancellation-token-source)配合原生`Promise`进行实现的，它其实是[Cancellation机制](/technology/common/js/async/cancellation-token-source)的一个实际应用封装。实际上通过`createCancelablePromise()`调用后获取到的`CancelablePromise`拥有原生`Promise`常用的`then`、`catch`、`finally`三个方法，而内部的实现无非就是这三个方法原路转发给原生`Promise`而已。而多出来的`cancel`方法就是新增的取消操作，核心逻辑还是[Cancellation机制](/technology/common/js/async/cancellation-token-source)的取消操作，即使用`cancellationTokenSource.cancel`方法发起取消请求。
 
 ```ts
 interface CancelablePromise<T> extends Promise<T> {
@@ -130,7 +130,7 @@ graph TD
 
 ## 总结
 
-通过[Cancellation机制](/technology/common/js/cancellation-token-source)配合`Promise`，我们就能够封装出`CancelablePromise`，核心思路就是在`Promise`中接收取消请求并进行处理，而处理的核心逻辑其实就是使用`reject`确定`Promise`的状态为`rejected`，从而抛出`CancellationError`完成`Promise`的中断。
+通过[Cancellation机制](/technology/common/js/async/cancellation-token-source)配合`Promise`，我们就能够封装出`CancelablePromise`，核心思路就是在`Promise`中接收取消请求并进行处理，而处理的核心逻辑其实就是使用`reject`确定`Promise`的状态为`rejected`，从而抛出`CancellationError`完成`Promise`的中断。
 
 > [!NOTE]
 >
