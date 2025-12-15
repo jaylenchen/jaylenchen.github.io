@@ -24,6 +24,11 @@ export namespace JS {
       items: [
         item(browser('image-upload')),
       ]
+    },
+    {
+      text: "服务交互",
+      collapsed: false,
+      items: []
     }
   ]
 }
