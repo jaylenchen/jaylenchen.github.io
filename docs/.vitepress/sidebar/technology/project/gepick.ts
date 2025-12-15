@@ -8,7 +8,7 @@ export namespace Gepick {
 
   export const items: DefaultTheme.SidebarItem[] = [
     {
-      text: "基础设施搭建",
+      text: "基础设施",
       collapsed: false,
       items: [
         item(basic('designing-di-framework')),
@@ -18,7 +18,7 @@ export namespace Gepick {
       ]
     },
     {
-      text: '核心生态构建',
+      text: '核心生态',
       collapsed: false,
       items: [
         item(basic('designing-extensible-cli-system')),
@@ -29,11 +29,11 @@ export namespace Gepick {
       ]
     },
     {
-      text: 'AI能力集成',
+      text: 'AI集成',
       collapsed: false,
       items: [
         item(ai('designing-chat-session-data-model')),
-        item(ai('designing-cross-process-streaming-response-mechanism')),
+        item(ai('cross-process-streaming-response-mechanism')),
         item(ai('handling-variable-cycles-in-prompt-engine')),
         {
           text: 'Agent框架之Prompt模板引擎的设计与实现'

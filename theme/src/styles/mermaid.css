@@ -26,6 +26,32 @@
   overflow: visible !important;
 }
 
+/* 修复桌面端 foreignObject 高度问题：使用固定 px 单位，避免 rem 导致的尺寸不匹配 */
+/* Mermaid 计算 foreignObject 高度时基于固定基准，但内容使用 rem 会导致桌面端和移动端高度不一致 */
+.vp-doc .mermaid foreignObject > div {
+  /* 使用固定字体大小，确保与 Mermaid 计算的高度匹配 */
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+.vp-doc .mermaid foreignObject p,
+.vp-doc .mermaid foreignObject .nodeLabel p,
+.vp-doc .mermaid foreignObject .nodeLabel {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  margin: 0 !important;
+}
+
+/* 桌面端：确保 div 高度不超过 foreignObject 高度 */
+@media (min-width: 960px) {
+  .vp-doc .mermaid foreignObject > div {
+    height: 100% !important;
+    max-height: 100% !important;
+    box-sizing: border-box !important;
+    vertical-align: middle !important;
+  }
+}
+
 /* Allow wrapping only when needed; prefer Mermaid defaults */
 
 /* When Mermaid falls back to <text>, allow better spacing */

@@ -6,4 +6,4 @@ tags:
 description: 总结Promise的基础认知细节
 ---
 
-!!!include(.articles/technology/common/js/basic-promise.md)!!!
+!!!include(.articles/technology/common/js/async/basic-promise.md)!!!

@@ -6,4 +6,4 @@ tags:
 description: 介绍一种协作式取消机制。
 ---
 
-!!!include(.articles/technology/common/js/cancellation-token-source.md)!!!
+!!!include(.articles/technology/common/js/async/cancellation-token-source.md)!!!
