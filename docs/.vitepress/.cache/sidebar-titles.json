@@ -17,6 +17,7 @@
   "/technology/common/js/async/cancelable-promise": "一种可取消的Promise：CancelablePromise",
   "/technology/common/js/async/cancellation-token-source": "一种协作式取消机制：CancellationTokenSource",
   "/technology/common/js/async/creating-data-stream-approaches": "可迭代结构设计：Iterator与Generator",
+  "/technology/common/js/browser/image-upload": "几种图片上传交互处理",
   "/technology/common/js/index": "JavaScript 编程实践",
   "/technology/common/mermaid/class-diagrams": "使用Mermaid绘制UML类图",
   "/technology/common/mermaid/index": "Mermaid 可视化指南",
@@ -40,6 +41,5 @@
   "/technology/project/openwizard/mobile/移动应用微信登录功能接入": "移动应用微信登录功能接入",
   "/technology/project/openwizard/wizard-transpiler/wizard缩进语法实现": "wizard缩进语法实现",
   "/technology/project/thinkto/index": "Thinkto",
-  "/technology/project/thinkto/关于我在startup项目中接入CI的经历": "关于我在startup项目中接入CI的经历",
-  "/technology/project/thinkto/几种图片上传交互处理": "几种图片上传交互处理"
+  "/technology/project/thinkto/关于我在startup项目中接入CI的经历": "关于我在startup项目中接入CI的经历"
 }
