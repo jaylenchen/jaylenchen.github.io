@@ -211,7 +211,57 @@ const iterable = {
 >
 > 从这个角度来理解，那么司机就是`for...of`等能够消费生成器的工具，而公交车就是“生成器（`Generator`）”。每当`for...of`内部调用“生成器（`Generator`）”产生的“迭代器（`Iterator`）”的`next`方法时，“生成器（`Generator`）”内的逻辑就开始往下运行（公交车开始跑动），直到碰到下一个`yield`停下来将`yield`表达式带的值送出去（公交车的乘客下车了）。当`for...of`（司机）再次调动生成器（`Generator`）产生的那个“迭代器（`Iterator`）”的`next`方法时（司机继续开车了），“生成器（`Generator`）”的逻辑再次运行下去（公交车再次跑动）。不断重复这个过程，直到“生成器（`Generator`）”逻辑跑完（公交车到达终点）。
 
-## 异步流（Async Stream）
+## 工程实践
+
+### 将数据和迭代设计在一块
+
+在工程上一个可迭代结构（`Iterable`）往往将数据存储和迭代逻辑封装在一块，这样可以让迭代状态和数据状态被统一管理。下面我们用类的方式重写下“可迭代数组”的例子：
+
+```ts
+type IterResult = IteratorResult<number>;
+
+class IterableArray implements IterableIterator<number> {
+    // 负责数据存储
+    protected data: number[] = [];
+    protected index = 0;
+
+    constructor(data: number[]) {
+        this.data = data;
+    }
+
+
+    [Symbol.iterator](): IterableIterator<number> {
+        return this;
+    }
+
+    // 负责状态推进和数据获取
+    next(): IterResult {
+        if (this.index < this.data.length) {
+            return {
+                done: false,
+                value: this.data[this.index++]
+            }
+        } else {
+            return {
+                done: true,
+                value: undefined
+            }
+        }
+    }
+
+}
+
+
+const array = new IterableArray([1, 2, 3, 4, 5]);
+
+for (const item of array) {
+    console.log(item);
+}
+
+```
+上面实现了一个可迭代结构命名为`IterableArray`。特别注意的是，我们在实现`[Symbol.iterator]`方法时返回了`this`，这是因为我们希望`IterableArray`本身就是一个迭代器（`Iterator`）。对比每次返回一个新的迭代器（`Iterator`）的方式，这种结构更加灵活，十分适合一次性使用，每次都希望拥有新的实例的场景，它表示当前结构不需要重复被迭代，数据用完就用完了。比如下面要讲的异步流（`Async Stream`）就是这种场景，我们每次都希望拥有一个新的流实例，而不是每次都希望拥有一个新的迭代器（`Iterator`）去迭代相同的数据。
+
+### 异步流（Async Stream）
 
 流是源源不断吐出数据的结构，在异步编程中我们可以基于`Promise `+ `Async Generator` + `for...await...of` 设计出流。
 
